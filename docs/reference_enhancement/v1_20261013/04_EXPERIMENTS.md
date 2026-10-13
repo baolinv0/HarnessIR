@@ -172,3 +172,6 @@ R3 的 ≥60 对是工程起点，不保证对任意效应有足够 power。R2 �
 V1 Refine不新增工具计划，始终使用diagnosis_planned_only冻结快照。Direct臂不经过Compose，固定prompt artifact与空证据快照；所有臂Verify使用同一冻结入组限制与保护rubric。固定K完整运行的终止原因统一fixed_k_complete，success由selector决定；未通过的Adaptive耗尽才记budget_exhausted。可选纯scale派生除0.5%初筛上界，还须raw_w*A_h==raw_h*A_w，比例稍有差异也不warp。
 
 冲突决策顺序固定：先检查任一STOP条件；无STOP再检查全部适用GO条件；其余PROBE。严重内容缺陷由冻结rubric给出，评审分歧按第三名裁决或保留uncertain，不由流程confidence覆盖。统计定义采用config.common.stats_metric/display_stats_v1；Yprime为显示域亮度代理，不能称传感器线性亮度或物理照度。
+
+
+实施补充（最终集成修复）：run 冻结的六模板 SHA 映射写入每个 runtime config；case 初始化记录实际模板源身份，最终导出比较实际执行冻结 contract 与 run frozen prompts，而非评估时已安装包。执行前包漂移保留 ITT 分母与真实成本、joint success=0；初始化后安装包变更不追溯否定已有真实证明。外部候选的 execution_contract 还需 execution_record_root，包含实际 case 冻结源、请求/渲染/dispatch 与事务链，绑定 case/revision/arm/A/B/config/selected asset；只有 config 文件的候选无法证明模板执行。结构化 content_preservation_annotations 在入组与 case 初始化时验证，A 保护坐标与所有规则/notes 在 Verify context 中无损保留；缺失标注统一为空列表，非法形状在 generation 前拒绝。具体字段与手交步骤见 ../EXPERIMENT_HANDOFF.md。真实 R1/pilot 仍为 not_run。

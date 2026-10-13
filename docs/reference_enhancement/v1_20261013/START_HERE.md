@@ -2,7 +2,7 @@
 
 **任务：以 Modular Neural ISP prediction A 为唯一编辑对象，使用同场景、非像素对齐的 iPhone 17 reference B 指导外观增强，得到内容稳定、rendering更接近B的候选C。**
 
-版本：`ref_enhance_v1`；日期：2026-10-13。本包由四个并行设计 Agent 产出 PRD、状态/文件协议、Prompt、实验方案，由主 Agent 统一合同与工程计划，并另设独立审查。**本轮交付工程设计包，没有运行 Controller、部署 Windows 应用或实测增强效果。**
+版本：`ref_enhance_v1`；日期：2026-10-13。本包由四个并行设计 Agent 产出 PRD、状态/文件协议、Prompt、实验方案，由主 Agent 统一合同与工程计划，并另设独立审查。设计交付之后已实现本地运行系统；请从 [实现与验证记录](../IMPLEMENTATION_STATUS.md)、[安装与命令](../../../engine/README.md) 和 [运行手册](../IMPLEMENTATION_RUNBOOK.md) 进入代码。真实模型增强与 Windows 桌面能力尚未实测。
 
 ## 1. 实施决议
 

@@ -284,3 +284,6 @@ def import_manual(task_id: str, payload_text: str | None, image: Path | None,
 仅需标准库+jsonschema/Pillow/Pydantic等既定依赖；Schema使用Draft2020-12与同目录相对`$id/$ref`。resolver先加载全部本地schema并禁网络解析。response/evidence嵌入的done/snapshot合同无需额外协议文件。结构样例见 `examples/state_protocol.example.json`，hash占位的样例只验证形状，不代表存在真实图或通过语义验证。
 
 实现验收必须覆盖：错A/B角色、缺任一图片、候选跨round、旧case/attempt响应、错request/config hash、error带payload/ok空payload、同done重复消费、同task不同合法内容冲突、文件越界与symlink、partial文件不推进、预算失败提交/后台重生成/未知提交、pause后late done、cancel后late费用、事务每个崩溃点恢复、required证据失败、不同role/cache配置未命中、snapshot改写拒绝、HDR未知不静默转换、尺寸不同strict拒绝及记录纯scale例外、重复图立即停、最后槽accepted、固定K与budget_exhausted区分、无usable回退A而baseline不是fallback。只做协议夹具测试，未经真实图片链路实测不声称模型/桌面能力或实验完成。
+
+
+实施补充（最终集成修复）：case 初始化保存六个实际模板源文件及 stage/path/SHA manifest，实际模板 SHA 映射纳入冻结 config_sha256。freeze.json 哈希源文件；Controller 与桌面导出只从 case 源文件渲染。dispatch 与事务 next_task 保存 template_source_proof（Direct 两个源 direct_ref+execute）以及 exact rendered prompt SHA，事务另绑定 dispatch SHA；Direct artifact 同时保留完整渲染文本与源身份。后续安装包变化不改变历史 case。缺少实际执行证明的旧记录不可静默补写，最终评估记 unverified/protocol_violation。请求、响应与状态 schema 不变。

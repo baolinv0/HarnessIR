@@ -1,0 +1,532 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "request.schema.json",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "ref_enhance_v1"
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+    },
+    "case_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+    },
+    "stage": {
+      "enum": [
+        "diagnose",
+        "compose",
+        "execute",
+        "verify",
+        "refine"
+      ]
+    },
+    "round": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "attempt": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "request_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "config_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "state_revision_issued": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "input_assets": {
+      "type": "array",
+      "items": {
+        "$ref": "asset.schema.json"
+      },
+      "minItems": 2,
+      "allOf": [
+        {
+          "contains": {
+            "properties": {
+              "role": {
+                "const": "prediction"
+              }
+            },
+            "required": [
+              "role"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": {
+              "role": {
+                "const": "reference"
+              }
+            },
+            "required": [
+              "role"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ]
+    },
+    "prompt_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "case_id",
+    "case_revision",
+    "task_id",
+    "stage",
+    "round",
+    "attempt",
+    "request_sha256",
+    "config_sha256",
+    "state_revision_issued",
+    "input_assets",
+    "prompt_version",
+    "payload"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "diagnose"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "comparison_policy_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "tool_profile_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "available_tools": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "T1_OCR",
+                    "T2_FACE",
+                    "T3_DEPTH",
+                    "T4_SEGMENTATION",
+                    "STATS",
+                    "ROI_COMPARE"
+                  ]
+                },
+                "minItems": 0
+              },
+              "roi_manifest_path": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "roi_manifest_sha256": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "comparison_policy_id",
+              "tool_profile_id",
+              "available_tools",
+              "roi_manifest_path",
+              "roi_manifest_sha256"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "compose"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "diagnosis_task_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+              },
+              "diagnosis_response_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "evidence_snapshot_path": {
+                "type": "string",
+                "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+              },
+              "evidence_snapshot_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "required": [
+              "diagnosis_task_id",
+              "diagnosis_response_sha256",
+              "evidence_snapshot_path",
+              "evidence_snapshot_sha256"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "execute"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "generation_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+              },
+              "edit_prompt": {
+                "type": "string",
+                "minLength": 1
+              },
+              "prompt_source_task_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+              },
+              "prediction_asset_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+              },
+              "reference_asset_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+              },
+              "geometry_policy": {
+                "type": "object",
+                "properties": {
+                  "mode": {
+                    "enum": [
+                      "strict",
+                      "aspect_preserving_resize"
+                    ]
+                  },
+                  "target_width": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "target_height": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "max_aspect_ratio_error": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 0.005
+                  }
+                },
+                "required": [
+                  "mode",
+                  "target_width",
+                  "target_height",
+                  "max_aspect_ratio_error"
+                ],
+                "additionalProperties": false,
+                "allOf": [
+                  {
+                    "if": {
+                      "properties": {
+                        "mode": {
+                          "const": "strict"
+                        }
+                      }
+                    },
+                    "then": {
+                      "properties": {
+                        "max_aspect_ratio_error": {
+                          "const": 0
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              "evidence_snapshot_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "required": [
+              "generation_id",
+              "edit_prompt",
+              "prompt_source_task_id",
+              "prediction_asset_id",
+              "reference_asset_id",
+              "geometry_policy",
+              "evidence_snapshot_sha256"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "verify"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "candidate_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+              },
+              "generation_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+              },
+              "geometry_report_path": {
+                "type": "string",
+                "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+              },
+              "geometry_report_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "rubric_version": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidence_snapshot_path": {
+                "type": "string",
+                "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+              },
+              "evidence_snapshot_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "required": [
+              "candidate_id",
+              "generation_id",
+              "geometry_report_path",
+              "geometry_report_sha256",
+              "rubric_version",
+              "evidence_snapshot_path",
+              "evidence_snapshot_sha256"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "refine"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "source_round": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "candidate_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+              },
+              "verification_task_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+              },
+              "verification_response_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "previous_edit_prompt": {
+                "type": "string",
+                "minLength": 1
+              },
+              "retry_focus": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "minItems": 0
+              },
+              "evidence_snapshot_path": {
+                "type": "string",
+                "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+              },
+              "evidence_snapshot_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "required": [
+              "source_round",
+              "candidate_id",
+              "verification_task_id",
+              "verification_response_sha256",
+              "previous_edit_prompt",
+              "retry_focus",
+              "evidence_snapshot_path",
+              "evidence_snapshot_sha256"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "enum": [
+              "diagnose",
+              "execute"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "input_assets": {
+            "maxItems": 2
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "compose"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "input_assets": {
+            "allOf": [
+              {
+                "contains": {
+                  "properties": {
+                    "role": {
+                      "const": "candidate"
+                    }
+                  },
+                  "required": [
+                    "role"
+                  ]
+                },
+                "minContains": 0,
+                "maxContains": 0
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "enum": [
+              "verify",
+              "refine"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "input_assets": {
+            "allOf": [
+              {
+                "contains": {
+                  "properties": {
+                    "role": {
+                      "const": "candidate"
+                    }
+                  },
+                  "required": [
+                    "role"
+                  ]
+                },
+                "minContains": 1,
+                "maxContains": 1
+              }
+            ],
+            "maxItems": 3
+          }
+        }
+      }
+    }
+  ],
+  "description": "请求在task目录不可变；request_sha256=删除本字段后规范JSON正文SHA，包含case_revision/state_revision_issued/input_assets。attempt是传输尝试，不是生成次数。只允许Controller写请求。"
+}
