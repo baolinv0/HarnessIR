@@ -1,0 +1,306 @@
+{
+  "schema_version": "ref_enhance_v1",
+  "manifest_version": "dataset_manifest_example_v1_20261013",
+  "manifest_kind": "example_only",
+  "example_only": true,
+  "ready_for_enrollment": false,
+  "status": "design_only_not_run",
+  "description": "结构演示。文件、全零SHA、尺寸和ROI均为显式占位，不代表真实拍摄或模型输出。实际使用须替换并验证；此清单不能直接提交实验。",
+  "placeholder_policy": {
+    "reserved_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "reject_reserved_sha256_at_enrollment": true,
+    "example_dimensions_and_ROIs_are_not_observed": true,
+    "unknown_values_must_not_be_imputed_as_observed": true
+  },
+  "dataset_id": "example_pair_dataset_do_not_run",
+  "dataset_revision": 0,
+  "dataset_root": "datasets/example_pair_dataset_do_not_run",
+  "freeze": {
+    "frozen_at": null,
+    "manifest_sha256": null,
+    "split_manifest_sha256": null,
+    "config_sha256": null,
+    "comparability_rules_version": "comparability_v1_20261013",
+    "final_rubric_version": "independent_final_rubric_v1_20261013",
+    "baseline_provenance_complete": false
+  },
+  "split_protocol": {
+    "group_key": "scene_group_id",
+    "assignment_seed": 20261013,
+    "split_names": [
+      "dev",
+      "validation",
+      "test"
+    ],
+    "same_group_cross_split_allowed": false,
+    "same_DNG_derivatives_cross_split_allowed": false,
+    "generated_descendants_inherit_source_group_and_split": true,
+    "pilot_may_be_formal_test": false,
+    "near_duplicate_check": {
+      "status": "not_run",
+      "method_version": null,
+      "report_path": null,
+      "report_sha256": null
+    }
+  },
+  "cases": [
+    {
+      "case_id": "example_case_0001",
+      "case_revision": 0,
+      "scene_group_id": "example_scene_group_0001",
+      "capture_event_id": "example_capture_event_0001",
+      "source_DNG_family_id": "example_DNG_family_0001",
+      "case_root": "cases/example_case_0001/revision_000",
+      "asset_paths_relative_to": "case_root",
+      "example_only": true,
+      "ready_for_enrollment": false,
+      "split": null,
+      "pilot_stage": null,
+      "scene": {
+        "primary_stratum": "indoor_artificial_mixed",
+        "stratum_assignment_is_example": true,
+        "tags": [
+          "readable_text",
+          "fine_texture"
+        ],
+        "scene_description": "占位：室内混合光下含文字与家具的同场景配对。",
+        "location_group": "example_location_0001",
+        "physical_scene_family": "example_scene_family_0001",
+        "human_skin_present": false,
+        "readable_text_present": true,
+        "lighting_change_observed": null,
+        "viewpoint_change_observed": null,
+        "occlusion_change_observed": null,
+        "semantic_composition_change_observed": null,
+        "capture_time_delta_seconds": null
+      },
+      "assets": [
+        {
+          "asset_id": "example_prediction_A_canonical",
+          "path": "inputs/prediction_A.canonical.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "prediction",
+          "width": 1024,
+          "height": 768,
+          "color_space": "sRGB"
+        },
+        {
+          "asset_id": "example_reference_B_canonical",
+          "path": "inputs/reference_B.canonical.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "reference",
+          "width": 1536,
+          "height": 2048,
+          "color_space": "sRGB"
+        }
+      ],
+      "source_files": {
+        "prediction_source_raw": {
+          "path": "originals/prediction_source.dng",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "format": "DNG",
+          "capture_time": null,
+          "capture_timezone": null,
+          "camera_model_observed": null,
+          "EXIF_orientation": null,
+          "exposure_time_seconds": null,
+          "ISO": null,
+          "aperture": null,
+          "raw_profile_path": null,
+          "raw_profile_sha256": null,
+          "metadata_observation_status": "not_observed"
+        },
+        "prediction_original": {
+          "path": "originals/prediction_A.original.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "original_width": null,
+          "original_height": null,
+          "EXIF_orientation": null,
+          "ICC_profile_name": null,
+          "ICC_profile_sha256": null,
+          "transfer_function": "unknown",
+          "color_space_observation_status": "not_observed"
+        },
+        "reference_original": {
+          "path": "originals/reference_B.original.heic",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "format": "HEIC",
+          "device_declared_by_task": "iPhone 17",
+          "camera_model_observed": null,
+          "device_verification_status": "not_observed",
+          "capture_time": null,
+          "capture_timezone": null,
+          "original_width": null,
+          "original_height": null,
+          "EXIF_orientation": null,
+          "ICC_profile_name": null,
+          "ICC_profile_sha256": null,
+          "transfer_function": "unknown",
+          "HDR_metadata_status": "not_observed",
+          "SDR_export_ready": false,
+          "color_space_observation_status": "not_observed"
+        }
+      },
+      "baseline_provenance": {
+        "method_declared": "Modular Neural ISP",
+        "repository_url": null,
+        "repository_commit": null,
+        "working_tree_dirty": null,
+        "working_tree_diff_sha256": null,
+        "checkpoint_path": "provenance/baseline_checkpoint.placeholder.pt",
+        "checkpoint_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "predict_command_observed": null,
+        "predict_command_template": "<EXACT_PREDICT_COMMAND_FROM_BASELINE_REPOSITORY>",
+        "predict_command_sha256": null,
+        "predict_working_directory": null,
+        "environment_manifest_path": "provenance/predict_environment.placeholder.json",
+        "environment_manifest_sha256": null,
+        "input_raw_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "prediction_output_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "prediction_time": null,
+        "provenance_complete": false
+      },
+      "canonicalization": {
+        "status": "not_run",
+        "policy_version": "SDR_sRGB_canonical_v1",
+        "tool_name": null,
+        "tool_version": null,
+        "parameters_sha256": null,
+        "destination_profile": "sRGB",
+        "destination_profile_sha256": null,
+        "prediction": {
+          "EXIF_orientation_applied": null,
+          "source_profile_explained": false,
+          "source_profile_name": null,
+          "source_profile_sha256": null,
+          "SDR_export_method": null,
+          "conversion_command": null,
+          "conversion_command_sha256": null,
+          "canonical_asset_id": "example_prediction_A_canonical"
+        },
+        "reference": {
+          "EXIF_orientation_applied": null,
+          "source_profile_explained": false,
+          "source_profile_name": null,
+          "source_profile_sha256": null,
+          "SDR_export_method": null,
+          "conversion_command": null,
+          "conversion_command_sha256": null,
+          "canonical_asset_id": "example_reference_B_canonical"
+        },
+        "unexplained_HDR_HEIC_action": "block_enrollment"
+      },
+      "comparability": {
+        "rules_version": "comparability_v1_20261013",
+        "annotated_before_any_arm_output": false,
+        "annotation_status": "example_only_not_observed",
+        "annotator": null,
+        "annotated_at": null,
+        "reference_usable": null,
+        "case_comparability": "unknown",
+        "pre_enrollment_exclusion_reason": null,
+        "coordinates": "per_asset_normalized_xywh",
+        "comparable_rendering_dimensions": [
+          "neutral_color_balance",
+          "local_tone"
+        ],
+        "ROI_pairs": [
+          {
+            "ROI_pair_id": "example_ROI_pair_01",
+            "semantic_region": "neutral_wall",
+            "prediction_asset_id": "example_prediction_A_canonical",
+            "reference_asset_id": "example_reference_B_canonical",
+            "prediction_xywh": [
+              0.1,
+              0.1,
+              0.2,
+              0.2
+            ],
+            "reference_xywh": [
+              0.3,
+              0.15,
+              0.25,
+              0.2
+            ],
+            "example_only": true,
+            "matched_semantics_observed": null,
+            "comparable_illumination_observed": null,
+            "occlusion_free_observed": null,
+            "semantic_composition_comparable_observed": null,
+            "comparable_dimensions": [
+              "neutral_color_balance",
+              "luminance_quantiles"
+            ],
+            "valid_for_auxiliary_statistics": false,
+            "annotation_notes": "A/B独立坐标；占位框不能作为真实对应。"
+          }
+        ],
+        "incomparable_regions": [],
+        "reference_limitations": [
+          "真实照明、视角、时间及区域可比较性尚未观测"
+        ],
+        "global_histogram_is_primary_quality_metric": false
+      },
+      "content_preservation_annotations": {
+        "status": "not_observed",
+        "source_anchor": "example_prediction_A_canonical",
+        "protected_face_regions": [],
+        "protected_text_regions": [],
+        "protected_geometry_landmarks": [],
+        "protected_object_regions": [],
+        "critical_content_rules_version": "content_preservation_v1",
+        "notes": "实际入组应填A坐标下的保护区域；没有人脸时不填虚构人脸。"
+      },
+      "leakage_audit": {
+        "status": "not_run",
+        "group_association_review_complete": false,
+        "same_raw_or_burst_across_splits": null,
+        "reference_or_candidates_used_for_test_tuning": null,
+        "descendant_split_inheritance_verified": false,
+        "audit_report_path": null,
+        "audit_report_sha256": null
+      },
+      "enrollment": {
+        "status": "blocked_example_only",
+        "approved_by": null,
+        "approved_at": null,
+        "preflight_report_path": null,
+        "preflight_report_sha256": null,
+        "required_missing_items": [
+          "real_files_and_observed_dimensions",
+          "non_placeholder_original_and_canonical_hashes",
+          "baseline_repo_checkpoint_predict_command_environment",
+          "explained_SDR_sRGB_conversion",
+          "actual_camera_and_capture_metadata_or_explicit_unknown",
+          "pre_output_reference_comparability_review",
+          "group_split_and_leakage_audit"
+        ]
+      }
+    }
+  ],
+  "run_linkage": {
+    "experiment_id": null,
+    "profiles_config_path": "config/experiment_profiles.json",
+    "profiles_config_sha256": null,
+    "selected_profile_ids": [],
+    "model_ui_name_observed": null,
+    "model_version": "unknown",
+    "model_seed": "unknown",
+    "capability_probe_status": "not_run",
+    "planned_case_arm_outcomes_path": null,
+    "generation_ledger_path": null,
+    "blind_evaluation_manifest_path": null,
+    "evaluation_ratings_path": null,
+    "unblinding_mapping_path": null
+  },
+  "future_pseudo_target_policy": {
+    "candidate_is_ground_truth": false,
+    "reference_is_pixel_ground_truth": false,
+    "requires_separate_reviewed_training_protocol": true,
+    "requires_geometry_alignment_to_prediction_A": true,
+    "requires_content_review_and_rejection_logs": true,
+    "formal_test_original_reference_candidate_feedback_used_for_training": false,
+    "inherit_source_scene_group_and_split": true
+  },
+  "simulation_only": true
+}
