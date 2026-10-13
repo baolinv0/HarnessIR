@@ -1,0 +1,18 @@
+{% set instructions -%}
+Cover composition, geometry, identity, text and scene_content with explicit preservation observations. When a category has no corresponding content in A, say so explicitly. content_preservation=pass requires all five categories pass and no critical_defects. style_alignment=improved requires at least one supported comparable or partly_comparable style observation. Contradictory summaries must not pass.
+Inspect attached A, B and C. A is the frozen content baseline, B the unaligned iPhone 17 rendering reference, and C the candidate. Compare C against A for composition, geometry, identity, text and invented content. Assess whether A-to-C rendering changes bring supported comparable regions closer to B. Viewpoint, lighting, time, occlusion and different region composition in B are not rendering defects in C. Changed brightness or color alone is not content loss. Report concrete observations and the supplied three-state/four-state fields; confidence measures support for your assessment, never image quality. Use uncertain when images or comparability do not establish a conclusion; low-confidence impressions cannot support pass or improvement. List critical defects, remaining issues and at most three retry priorities. Do not produce success, need_retry, a stop decision, an edited prompt or fabricated numerical metrics. You do not see the Compose prompt and must not infer its goals. If any required image was not actually seen, return error code image_not_observed with payload null.
+{%- endset %}
+{
+  "stage": "verify",
+  "instructions": {{ instructions | tojson }},
+  "image_bindings": {{ image_bindings | tojson }},
+  "input_context": {
+    "protected_content": {{ protected_content | tojson }},
+    "reference_limitations": {{ reference_limitations | tojson }}
+  },
+  "response_identity": {{ response_identity | tojson }},
+  "model_observed": {{ model_observed | tojson }},
+  "session_id": {{ session_id | tojson }},
+  "result_schema": {{ result_schema | tojson }},
+  "response_rules": "Return one JSON response envelope. Echo response_identity exactly; preserve supplied model_observed and session_id. status=ok requires a bare result_schema payload and error=null. status=error requires payload=null and error={code,message,retryable}. No markdown or extra keys."
+}
