@@ -1,0 +1,44 @@
+Verification date: 2026-10-13
+Scope: unchanged conversation attachment; offline unit tests only.
+Python 3.13.5
+test_all_ten_task_templates (test_adapter.AdapterTests.test_all_ten_task_templates) ... ok
+test_attribute_conflict_raises (test_adapter.AdapterTests.test_attribute_conflict_raises) ... ok
+test_budget_excess_rejected_not_truncated (test_adapter.AdapterTests.test_budget_excess_rejected_not_truncated) ... ok
+test_cli_errors_do_not_create_output (test_adapter.AdapterTests.test_cli_errors_do_not_create_output) ... ok
+test_cli_outputs_json (test_adapter.AdapterTests.test_cli_outputs_json) ... ok
+test_color_cast_unlocks_white_balance (test_adapter.AdapterTests.test_color_cast_unlocks_white_balance) ... ok
+test_compatible_lock_accepted (test_adapter.AdapterTests.test_compatible_lock_accepted) ... ok
+test_day_lowlight_is_not_night (test_adapter.AdapterTests.test_day_lowlight_is_not_night) ... ok
+test_denoise_does_not_add_brightening_or_sharpening (test_adapter.AdapterTests.test_denoise_does_not_add_brightening_or_sharpening) ... ok
+test_deterministic_output (test_adapter.AdapterTests.test_deterministic_output) ... ok
+test_duplicate_task_rejected (test_adapter.AdapterTests.test_duplicate_task_rejected) ... ok
+test_edit_unknown_fields_rejected (test_adapter.AdapterTests.test_edit_unknown_fields_rejected) ... ok
+test_extractor_integration (test_adapter.AdapterTests.test_extractor_integration) ... ok
+test_extractor_is_validated (test_adapter.AdapterTests.test_extractor_is_validated) ... ok
+test_input_not_mutated (test_adapter.AdapterTests.test_input_not_mutated) ... ok
+test_invalid_scene_rejected (test_adapter.AdapterTests.test_invalid_scene_rejected) ... ok
+test_invalid_strength_rejected (test_adapter.AdapterTests.test_invalid_strength_rejected) ... ok
+test_lowlight_does_not_lock_input_exposure (test_adapter.AdapterTests.test_lowlight_does_not_lock_input_exposure) ... ok
+test_mixed_exposure_needs_regions (test_adapter.AdapterTests.test_mixed_exposure_needs_regions) ... ok
+test_mixed_exposure_same_region_rejected (test_adapter.AdapterTests.test_mixed_exposure_same_region_rejected) ... ok
+test_mixed_exposure_separate_regions_has_warning (test_adapter.AdapterTests.test_mixed_exposure_separate_regions_has_warning) ... ok
+test_mixed_task_order_preserved (test_adapter.AdapterTests.test_mixed_task_order_preserved) ... ok
+test_night_alone_does_not_request_brightening (test_adapter.AdapterTests.test_night_alone_does_not_request_brightening) ... ok
+test_no_regions_invented (test_adapter.AdapterTests.test_no_regions_invented) ... ok
+test_non_list_edits_rejected (test_adapter.AdapterTests.test_non_list_edits_rejected) ... ok
+test_noop_bypasses_executor (test_adapter.AdapterTests.test_noop_bypasses_executor) ... ok
+test_raw_prompt_with_explicit_intent_is_audited (test_adapter.AdapterTests.test_raw_prompt_with_explicit_intent_is_audited) ... ok
+test_raw_prompt_without_intent_does_not_guess (test_adapter.AdapterTests.test_raw_prompt_without_intent_does_not_guess) ... ok
+test_region_newline_rejected (test_adapter.AdapterTests.test_region_newline_rejected) ... ok
+test_regions_are_explicit (test_adapter.AdapterTests.test_regions_are_explicit) ... ok
+test_sr_has_resolution_warning (test_adapter.AdapterTests.test_sr_has_resolution_warning) ... ok
+test_strength_is_per_operation (test_adapter.AdapterTests.test_strength_is_per_operation) ... ok
+test_two_intent_sources_rejected (test_adapter.AdapterTests.test_two_intent_sources_rejected) ... ok
+test_unknown_fields_rejected (test_adapter.AdapterTests.test_unknown_fields_rejected) ... ok
+test_unknown_lock_rejected (test_adapter.AdapterTests.test_unknown_lock_rejected) ... ok
+test_unknown_task_rejected (test_adapter.AdapterTests.test_unknown_task_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 36 tests in 1.238s
+
+OK

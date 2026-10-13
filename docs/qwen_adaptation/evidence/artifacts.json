@@ -1,0 +1,36 @@
+{
+  "record_date": "2026-10-13",
+  "repo_base_commit": "3c48c206bb15027366dd9326e8e1fa552c6e6542",
+  "scope": "documentation and evidence only; no runtime integration or image inference",
+  "adapter_version": "qwen21-restoration-adapter/0.1",
+  "original_attachment": {
+    "name": "qwen21_prompt_adapter_v0.1.zip",
+    "sha256": "af5ba6862bd256d68a62150c2cccdc96e8588ae49019d5b56cd5ff1c52c7adfa",
+    "full_archive_in_this_commit": false
+  },
+  "adapter_py_sha256": "a975617ea59866b9859513f41df337d40701965c24bcb982e3d3d2619510cf4e",
+  "templates_sha256": "5c25be43b10f443a9c55612eb7bcf8a75b7245fee654200aa7e4336cb3aa4333",
+  "reverification": {
+    "python": "3.13.5",
+    "command": "python -m unittest discover -s tests -v",
+    "tests": 36,
+    "failures": 0,
+    "errors": 0,
+    "image_inference": false,
+    "harness_integration_tested": false
+  },
+  "roi_data": {
+    "source": "user-provided conversation table",
+    "status": "USER_REPORTED_NOT_RECOMPUTED",
+    "rows": 9,
+    "images": 3,
+    "executor_label": "Qwen-Image-2.1",
+    "model_revision": null,
+    "metric_color_space": null,
+    "luminance_formula": null,
+    "roi_coordinates": null,
+    "run_commit": null,
+    "raw_prompt_available": false,
+    "seed_values": null
+  }
+}
