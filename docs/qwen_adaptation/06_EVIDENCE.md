@@ -2,6 +2,8 @@
 
 返回：[总览](README.md)。本次整理于 2026-10-13；所有外部网页都可能继续更新。
 
+补充维护：2026-10-14，H08与O4–O6；旧源码证据仍对应其固定SHA，不假定等于用户本地运行快照。
+
 ## 证据等级
 
 REPO_VERIFIED=本次读取仓库代码；USER_REPORTED=用户提供实验摘要，未从图像重算；LOCAL_TESTED=本次运行离线程序测试；PROPOSED=设计建议。上述标签不自动等价于 IMAGE_VALIDATED；本次没有新增任何真实图像性能验证。
@@ -42,6 +44,18 @@ O1：[Qwen 编辑改写 System Prompt](https://github.com/QwenLM/Qwen-Image-2.1/
 O2：[Qwen Prompt Enhancer README](https://github.com/QwenLM/Qwen-Image-2.1/blob/main/prompt_rewrite/README.md)：edit 需要图像与文本；原始回答和工具记录字段不同；检查 parse_ok。未下载或部署 PE。
 
 O3：[Google Cloud Nano Banana Prompting Guide](https://cloud.google.com/blog/products/ai-machine-learning/ultimate-prompting-guide-for-nano-banana)：编辑目标与保持内容的官方指导。不能从文档推出 NB2 必然白昼化，或 Qwen 必然更保守。
+
+## H07/H08 补充证据
+
+U4：2026-10-13的11图P0/P1/P2用户报告，见[H07](experiments/H07_lowlight_11_P0_P1_P2_20261013.md)；尚未提供原始图像/逐图日志。
+
+U5：2026-10-14的25图NB2/Qwen用户实验摘要，见[H08](experiments/H08_lowlight_25_NB2_Qwen_20261014.md)、[CSV](evidence/lowlight_25_arms_reported.csv)、[JSON](evidence/lowlight_25_arms_reported.json)。42个数值已校验转录存在性，不是指标重算；原始图像/指标/请求仍缺，完整性审计未执行。H07/H08重叠未知，不相加样本量。
+
+O4：[Qwen-Image-2.1官方README](https://github.com/QwenLM/Qwen-Image-2.1)，2026-10-14读取，明确圆圈/涂画/独立mask可提示局部编辑；不是区域像素硬约束或精确增益的证明。
+
+O5：[Diffusers QwenImage21文档](https://huggingface.co/docs/diffusers/main/en/api/pipelines/qwenimage21)与[源码](https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/qwenimage21/pipeline_qwenimage21.py)，2026-10-14读取：默认40步、true_cfg_scale=1.0；CFG>1需负向提示/embedding；调用签名无mask_image/逐区域lift参数。只证明所读版本接口，不是所有服务包装器的否定。
+
+O6：[Qwen-Image-Edit-2511模型卡](https://huggingface.co/Qwen/Qwen-Image-Edit-2511)，2026-10-14读取：EditPlusPipeline示例的4.0/负向空格/40步。与2.1区分，不据此认定用户混用了模型。
 
 ## 待补材料
 

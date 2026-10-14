@@ -1,0 +1,67 @@
+{
+  "evidence_status": "USER_REPORTED",
+  "independently_recomputed": false,
+  "n_images_reported": 25,
+  "rows": [
+    {
+      "arm": "Input LQ",
+      "global": 0.185,
+      "sky": 0.144,
+      "shadow": 0.213,
+      "shadow_std": 0.147,
+      "CLIPIQA": 0.353,
+      "MUSIQ": 35.35,
+      "TOPIQ": 0.259
+    },
+    {
+      "arm": "NB2 direct",
+      "global": 0.252,
+      "sky": 0.207,
+      "shadow": 0.282,
+      "shadow_std": 0.167,
+      "CLIPIQA": 0.441,
+      "MUSIQ": 64.5,
+      "TOPIQ": 0.526
+    },
+    {
+      "arm": "NB2 in-fw",
+      "global": 0.208,
+      "sky": 0.157,
+      "shadow": 0.246,
+      "shadow_std": 0.163,
+      "CLIPIQA": 0.408,
+      "MUSIQ": 58.13,
+      "TOPIQ": 0.459
+    },
+    {
+      "arm": "Qwen2.1 simple",
+      "global": 0.303,
+      "sky": 0.243,
+      "shadow": 0.353,
+      "shadow_std": 0.192,
+      "CLIPIQA": 0.455,
+      "MUSIQ": 64.45,
+      "TOPIQ": 0.519
+    },
+    {
+      "arm": "Qwen2.1 precise",
+      "global": 0.334,
+      "sky": 0.25,
+      "shadow": 0.402,
+      "shadow_std": 0.199,
+      "CLIPIQA": 0.353,
+      "MUSIQ": 54.79,
+      "TOPIQ": 0.399
+    },
+    {
+      "arm": "Qwen2.1 in-fw",
+      "global": 0.191,
+      "sky": 0.143,
+      "shadow": 0.225,
+      "shadow_std": 0.17,
+      "CLIPIQA": 0.425,
+      "MUSIQ": 54.66,
+      "TOPIQ": 0.427
+    }
+  ]
+}
