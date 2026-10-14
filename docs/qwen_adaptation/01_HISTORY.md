@@ -98,10 +98,24 @@
 
 ## H08 · 25图 NB2/Qwen：收窄模型与框架归因｜2026-10-14 会话
 
-用户报告25张、输入+五个生成条件，redo关闭。两Executor框架臂的三项NR-IQA均值都低于各自direct/simple；Qwen亮度下降较大，但Qwen simple的CLIPIQA高于NB2 direct，其他指标也不支持NB2全面支配。LVLM四张仅两张解析成功，保真观察尚待图像级复核。
+用户报告25张、输入+五个生成条件，redo关闭。两Executor框架臂的三项NR-IQA均值都低于各自direct/simple（NB2 −0.033/−6.37/−0.067，Qwen −0.030/−9.79/−0.092）；Qwen亮度下降较大，但Qwen simple的CLIPIQA 0.455高于NB2 direct 0.441，MUSIQ接近，其他指标也不支持NB2全面支配，“强模型始终优于弱模型所有臂”删除。LVLM四张仅两张解析成功，两个有效排序只支持对应样本；保真观察尚待图像级复核，不能由“更暗”推出“更保真”。
 
-**修改决策**：不采纳“框架无问题、弱模型已达天花板”；改为当前控制策略/配置与Executor交互有待隔离。官方核查2.1默认true_cfg_scale=1.0且无guidance；用户4.0可作为实验参数，需核验是否启用并补默认对照。局部mask提示能力与确定性mask/区域增益接口分开。
+**修改决策**：不采纳“框架无问题、弱模型已达天花板”；改为当前控制策略/配置与Executor交互有待隔离。本轮 redo 关闭，主要反映单次诊断与组合策略，不能判断反馈机制价值。Qwen缺少的未必是提亮能力，而是提亮与保真的联合可控性。官方核查2.1默认true_cfg_scale=1.0且无guidance；用户4.0是可测试设置但需负向提示才启用CFG，应核对实际参数和运行分支，再补默认对照，不能直接判定配错。局部mask提示能力与确定性mask/区域增益接口分开；“人物＋30%”不是确定性操作，attention injection需另行实现。
 
-**下一步**：证据/配置→D约束消融+低成本E→等预算B→A局部性验收→C/F。H07的P3/P4尚未报告执行，保留为可选分支，不自动升级为完成。
+**下一步**：先核配置，做D＋低成本E（固定诊断，分别测删冲突约束/压缩文本/增加区域目标；加确定性低光基线；同时考察可见性、夜感、内容保持）→随后B匹配生成预算（3次反馈生成 vs 3次无反馈采样＋同一选择器）→A先验收局部控制→C/F后置（25张教师图先筛选并隔离训练/测试）。H07的P3/P4尚未报告执行，保留为可选分支，不自动升级为完成。
 
 见 [H08完整记录](experiments/H08_lowlight_25_NB2_Qwen_20261014.md)。新增I-16–I-21；只维护文档，不改运行代码或启动实验。总体原主张审查no，同家族新上下文审查provisional，未执行图像/完整性审计。
+
+## H08-n1 · 下一轮第一步实测：CFG × D 消融 × 确定性基线｜2026-10-14（IMAGE_VALIDATED）
+
+按 H08 §6 第 1 项执行：先核配置，再做 D＋低成本 E。本地真跑 Qwen-Image-2.1，6 张分层开发图（exdark/jarvisir/acdc 各 2）× 5 臂（simple/compose/drop_guards/compact/region_target）× 3 配对 seed × 2 配置（true_cfg 1.0/4.0）=180 张生成 + 6 确定性 tone/gain 基线 + 6 输入 =192 张打分（CLIPIQA/MUSIQ/TOPIQ）。seed 为图内重复，先逐图平均再跨图。
+
+**配置核查**（[qwen21_config_audit](../evidence/qwen21_config_audit_20261014.md)）：pipeline=QwenImage21Pipeline、diffusers 0.41.0、步数 40、调度器 FlowMatchEuler 均与官方一致；本地 neg=" "+true_cfg=4.0 使 do_true_cfg=True，CFG 确实启用，非配错但非官方默认（1.0）。
+
+**结果**（[cfg_d_ablation](../evidence/cfg_d_ablation_20261014.md)）：
+- CFG 是显著混杂变量：cfg4.0 系统性高于/亮于 cfg1.0（simple CLIPIQA +0.043、MUSIQ +8.19，global 0.285 vs 0.199）。H08 的 Qwen 结果绑定 cfg=4.0，不能与官方默认混报。
+- 框架负收益复现：compose−simple 在 cfg1.0 −0.031、cfg4.0 −0.030 CLIPIQA（与 H08 的 −0.030 一致），非单一配置造成。
+- 机制线索：drop_guards≈compose（删保守条款几乎无收益），compact/region_target 反超 simple（cfg4.0 +0.035/+0.052）→ 主因更像原 Compose 冗余长度/结构，而非保守措辞；待独立样本与等长度对照确认。
+- 确定性 tone/gain 基线拉亮（global 0.275）但 CLIPIQA 反降至 0.186：更亮≠更高分。
+
+**对台账**：I-17 配置已查明并完成默认对照，归因结论落定（H08 Qwen 绑定 cfg=4.0）；I-01 机制线索指向长度/结构分支。仍属 6 图开发集，非泛化测试；保真未独立盲评；NB2 未重跑。脚本 compare/qwen21_cfg_d_ab.py、compare/iqa_cfg_d.py。
