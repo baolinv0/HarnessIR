@@ -85,8 +85,19 @@ NB2/Qwen 框架的全图组均值相对下降分别约 17.46%/36.96%，不等于
 H07 的官方 PE P3/P4 尚未报告执行。若继续测试，保持同一目标/Executor/配置，P4只增加冻结诊断证据；不预设PE能纠正过强提亮。该对照可作为D之后的可选分支，不能把所有新功能一起加入。
 
 **评价与决策**：先对现有25张完成隐藏臂名的人工配对复核，分别评价目标可见性、夜景关系、高光、纹理/小物件/文字及新增内容。报告逐图配对差异、置信区间、失败率和三个来源的分组结果；seed是图内重复。NR-IQA只作辅助，shadow/sky统计只作解释；GT缺失不妨碍原图内容保持检查。不能为所有照片设置shadow≥.28、sky≤.18等统一“真值”。配置/Prompt在开发集确定后，用独立未参与调参样本验收；样本扩容依据方差与目标效应，不机械以100张当充分条件。
+## 7. 下一轮第一步已执行：CFG × D 消融 × 确定性基线（2026-10-14，IMAGE_VALIDATED）
 
-## 7. 审查状态与关联
+配置核查与 6 图 × 5 臂 × 3 seed × 2 配置实测已完成，详见 [配置核查](../evidence/qwen21_config_audit_20261014.md) 与 [cfg×D 消融](../evidence/cfg_d_ablation_20261014.md)。要点：
+
+- **CFG 分支查明**：本地 pipeline=QwenImage21Pipeline、diffusers 0.41.0、步数 40、调度器 FlowMatchEuler 均与官方一致；neg=" "+true_cfg=4.0 使 `do_true_cfg=True`，CFG 确实启用，非配错但非官方默认（1.0）。
+- **CFG 是显著混杂变量**：cfg4.0 系统性高于/亮于 cfg1.0（simple 臂 CLIPIQA +0.043、MUSIQ +8.19，global 0.285 vs 0.199）。H08 的 Qwen 结果绑定 cfg=4.0，不能与官方默认混报。
+- **框架负收益复现**：compose−simple 在 cfg1.0 −0.031、cfg4.0 −0.030 CLIPIQA（后者与 H08 的 −0.030 一致），非单一配置造成。
+- **机制线索**：drop_guards≈compose（删保守条款几乎无收益），compact/region_target 反超 simple（cfg4.0 分别 +0.035/+0.052）→ 负收益主因更像原 Compose 的冗余长度/结构，而非保守措辞；待独立样本与等长度对照确认。
+- **确定性 tone/gain 基线**把图拉亮（global 0.275）但 CLIPIQA 反降至 0.186：更亮≠更高分，该基线只作亮度参照。
+
+限制：6 图开发集非泛化测试；region_target 的区域目标独立贡献未分离；无 redo/闭环；保真未独立盲评；NB2 未重跑。
+
+## 8. 审查状态与关联
 
 总体原主张“弱Executor是瓶颈、框架没问题、强模型全面胜出”的新上下文审查：`claim_supported=no`；C1策略交互=partial、C2执行器唯一瓶颈/全面胜出=no、C3数值与两个有效排序=partial、C4能力天花板=no、C5保守约束/截断归因=partial。以上较窄观察可保留；不把no改写为全部实验无效。
 
