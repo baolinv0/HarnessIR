@@ -85,17 +85,19 @@ NB2/Qwen 框架的全图组均值相对下降分别约 17.46%/36.96%，不等于
 H07 的官方 PE P3/P4 尚未报告执行。若继续测试，保持同一目标/Executor/配置，P4只增加冻结诊断证据；不预设PE能纠正过强提亮。该对照可作为D之后的可选分支，不能把所有新功能一起加入。
 
 **评价与决策**：先对现有25张完成隐藏臂名的人工配对复核，分别评价目标可见性、夜景关系、高光、纹理/小物件/文字及新增内容。报告逐图配对差异、置信区间、失败率和三个来源的分组结果；seed是图内重复。NR-IQA只作辅助，shadow/sky统计只作解释；GT缺失不妨碍原图内容保持检查。不能为所有照片设置shadow≥.28、sky≤.18等统一“真值”。配置/Prompt在开发集确定后，用独立未参与调参样本验收；样本扩容依据方差与目标效应，不机械以100张当充分条件。
-## 7. 下一轮第一步已执行：CFG × D 消融 × 确定性基线（2026-10-14，IMAGE_VALIDATED）
+## 7. 下一轮第一步已执行：CFG × D 消融 × 确定性基线（2026-10-14，生产端IMAGE_VALIDATED报告）
 
-配置核查与 6 图 × 5 臂 × 3 seed × 2 配置实测已完成，详见 [配置核查](../evidence/qwen21_config_audit_20261014.md) 与 [cfg×D 消融](../evidence/cfg_d_ablation_20261014.md)。要点：
+生产端报告配置核查与6图×5臂×3seed×2配置实测已完成，详见[配置核查](../evidence/qwen21_config_audit_20261014.md)与[cfg×D消融](../evidence/cfg_d_ablation_20261014.md)。本次只读报告，未独立取得原始图像/分数/运行脚本；报告中的生产端位置不等于当前仓库可访问资产。要点：
 
 - **CFG 分支查明**：本地 pipeline=QwenImage21Pipeline、diffusers 0.41.0、步数 40、调度器 FlowMatchEuler 均与官方一致；neg=" "+true_cfg=4.0 使 `do_true_cfg=True`，CFG 确实启用，非配错但非官方默认（1.0）。
-- **CFG 是显著混杂变量**：cfg4.0 系统性高于/亮于 cfg1.0（simple 臂 CLIPIQA +0.043、MUSIQ +8.19，global 0.285 vs 0.199）。H08 的 Qwen 结果绑定 cfg=4.0，不能与官方默认混报。
+- **CFG是受控实验因素**：cfg4.0的NR-IQA均值较高，simple也更亮。H08绑定cfg4，不与默认混报；此轮未给统计区间/检验，不能称为已证统计显著的混杂偏差。
 - **框架负收益复现**：compose−simple 在 cfg1.0 −0.031、cfg4.0 −0.030 CLIPIQA（后者与 H08 的 −0.030 一致），非单一配置造成。
-- **机制线索**：drop_guards≈compose（删保守条款几乎无收益），compact/region_target 反超 simple（cfg4.0 分别 +0.035/+0.052）→ 负收益主因更像原 Compose 的冗余长度/结构，而非保守措辞；待独立样本与等长度对照确认。
+- **机制线索**：drop_guards较compose略升但未恢复到simple；cfg4下compact/region_target三指标组均值高于simple，cfg1只有部分指标领先。支持继续检验压缩重写，不确定纯长度主因；region_target相对compact的MUSIQ还下降，区域目标独立贡献待分离。
 - **确定性 tone/gain 基线**把图拉亮（global 0.275）但 CLIPIQA 反降至 0.186：更亮≠更高分，该基线只作亮度参照。
 
 限制：6 图开发集非泛化测试；region_target 的区域目标独立贡献未分离；无 redo/闭环；保真未独立盲评；NB2 未重跑。
+
+H08-n1报告审查：`claim_supported=partial`、`review_independence=same-family`、`acceptance_status=provisional`、`integrity_status=unavailable`。新上下文审查只判断报告与主张关系，不独立验证生产执行。I-17生产侧报告已补齐，I-01开放；H08-n1与H08按报告精度均为−0.030不能证明独立复制。旧“显著混杂/纯长度主因/两配置均反超”表述修正，生产端所有组均值原样保留。先补资产与lineage，独立样本验收冻结单次候选，再做等预算B。
 
 ## 8. 审查状态与关联
 

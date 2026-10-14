@@ -1,9 +1,10 @@
 # H08 下一轮·第一步实测：CFG 配置 × D 消融 × 确定性基线
 
-运行日期：2026-10-14。级别：IMAGE_VALIDATED（本地真跑 Qwen-Image-2.1，6 图 × 5 臂 × 3 seed × 2 配置 = 180 张生成 + 6 确定性基线 + 6 输入 = 192 张打分）。样本为分层开发集（exdark/jarvisir/acdc 各 2 张），不是泛化测试；seed 是图内重复，聚合先逐图平均再跨 6 图，不把 seed 当独立样本。
+运行日期：2026-10-14。生产端标记：IMAGE_VALIDATED（用户报告本地真跑 Qwen-Image-2.1，6 图 × 5 臂 × 3 seed × 2 配置 = 180 张生成 + 6 确定性基线 + 6 输入 = 192 张打分）。本次文档审查读取仓库报告，未取得原始图像/分数/执行源码，属于报告级复核，不是独立复现。样本为分层开发集（exdark/jarvisir/acdc 各 2 张），不是泛化测试；seed 是图内重复，聚合先逐图平均再跨 6 图，不把 seed 当独立样本。
 
-- 脚本：[compare/qwen21_cfg_d_ab.py](../../../../compare/qwen21_cfg_d_ab.py)、[compare/iqa_cfg_d.py](../../../../compare/iqa_cfg_d.py)
-- 原始分：[iqa_raw.json](../../../../compare/qwen21_cfg_d/iqa_raw.json)；聚合：[aggregate.json](../../../../compare/qwen21_cfg_d/aggregate.json)；区域亮度：[cfg1p0/region_stats.json](../../../../compare/qwen21_cfg_d/cfg1p0/region_stats.json)、[cfg4p0/region_stats.json](../../../../compare/qwen21_cfg_d/cfg4p0/region_stats.json)
+- 生产端脚本位置：`compare/qwen21_cfg_d_ab.py`、`compare/iqa_cfg_d.py`。
+- 生产端原始分：`compare/qwen21_cfg_d/iqa_raw.json`；聚合：`compare/qwen21_cfg_d/aggregate.json`；区域亮度：`compare/qwen21_cfg_d/cfg1p0/region_stats.json`、`compare/qwen21_cfg_d/cfg4p0/region_stats.json`。
+- 上述路径由生产端报告，2026-10-14审查时未见于当前仓库树；原相对链接会越出仓库，已改为位置说明，避免冒充可下载证据。待补逐图/逐seed记录、实际prompt及可访问资产位置。
 
 ## 1. 三项 NR-IQA 组均值（n=6 图，先逐图对 3 seed 平均）
 
@@ -24,19 +25,30 @@
 
 ## 2. 三个可判定结论
 
-**(a) CFG 是显著混杂变量，H08 与官方默认不可直接比。** 同一臂 cfg4.0−cfg1.0：simple +0.043/+8.19/+0.103，region_target +0.084/+9.36/+0.121。cfg4.0（H08 实际配置）系统性地更高也更亮（simple 臂 global 0.285 vs 0.199）。H08 的 Qwen 结果绑定 cfg=4.0，不能当作官方默认行为。pipeline/调度器/步数已核对与官方一致（见 [配置核查](qwen21_config_audit_20261014.md)）。
+**(a) CFG 是影响较大的受控实验因素，跨配置比较必须分开报告。** 用户报告同一臂 cfg4.0−cfg1.0：simple +0.043/+8.19/+0.103，region_target +0.084/+9.36/+0.121。cfg4.0（H08 实际配置）的NR-IQA组均值更高，simple臂也更亮（global 0.285 vs 0.199）。H08 的 Qwen 结果绑定 cfg=4.0，不能当作官方默认行为。此轮CFG被主动交叉控制，不是本轮已证明的混杂偏差；未提供配对区间/检验，不使用统计“显著”结论。按生产端核查，pipeline/调度器/步数与官方一致（见 [配置核查](qwen21_config_audit_20261014.md)）。
 
-**(b) 框架臂负收益在两种配置下都复现。** compose−simple：cfg1.0 −0.031/−6.97/−0.070；cfg4.0 −0.030/−13.35/−0.135（CLIPIQA −0.030 与 H08 报告的 −0.030 完全一致）。负收益不是单一配置造成。
+**(b) 原Compose的NR-IQA组均值负收益在两种配置下均出现。** 用户报告compose−simple：cfg1.0 −0.031/−6.97/−0.070；cfg4.0 −0.030/−13.35/−0.135。cfg4.0的CLIPIQA差值按报告精度与H08同为−0.030；这只说明方向/数量级一致，不证明独立样本复制或相同原因，6图与H08的样本交集尚未说明。结果不支持“只由CFG4造成负收益”，也不证明负收益大小与CFG无关。
 
-**(c) 机制线索：问题更像“冗余长度/结构”，不是“保守约束条款”。**
+**(c) 有效候选是压缩重写；纯长度与语义/结构贡献尚未分离。**
 - drop_guards ≈ compose（cfg4.0: 0.370 vs 0.369 CLIPIQA）：**只删“保持夜感/不要变亮/不要改动”这类条款几乎无收益**。
-- compact（同义压缩重写）与 region_target（压缩+正向区域目标）**反超 simple**：cfg4.0 compact +0.035、region_target +0.052 CLIPIQA；cfg1.0 也由负转正。
-- 解释：原 Compose prompt 的长篇重复表达才是负收益主因；压缩重写消除冗余后恢复并超过 direct。这支持 I-01 的“长度/结构”分支，弱化“保守措辞”分支。但 drop_guards 同时缩短文本不多（3848→3090 字），compact 缩到 ~533 字，长度与语义压缩仍部分共变，需在更大样本和等长度对照上确认。
+- cfg4.0下，compact/region_target的三项NR-IQA组均值都高于simple；用户报告CLIPIQA增量为+0.035/+0.052。cfg1.0下只在部分指标领先，不能概括为整体反超。
+- 工作假设：压缩重写整体比本次drop_guards规则更值得推进。drop_guards只由3848缩到3090字，compact约533字；长度、重复、表达重点、语义组织和指令优先级同时可能改变，未核对完整文本，不能把收益归结为“纯长度主因”。删条款未见收益也不证明所有保守约束都无害。
+
+### 按展示组均值复算：相对simple的差值
+
+| CFG / 臂 | ΔCLIPIQA | ΔMUSIQ | ΔTOPIQ |
+|---|---:|---:|---:|
+| 1.0 compact | +0.003 | +0.13 | −0.007 |
+| 1.0 region_target | +0.011 | −1.13 | −0.011 |
+| 4.0 compact | +0.034 | +1.86 | +0.005 |
+| 4.0 region_target | +0.051 | +0.04 | +0.007 |
+
+cfg4.0下region_target−compact为+0.017/−1.82/+0.002：区域版本没有全面优于compact。上表从四舍五入后的展示值相减；与生产端报告差值的末位差异（如+0.034与+0.035）可能来自原始精度，需原始JSON核实，不能自行补造更高精度。
 
 ## 3. 不能下的结论
 
 - 确定性 tone/gain 基线把图拉亮（global 0.275 vs 输入 0.194），但 CLIPIQA 反而更低（0.186）：**“更亮”不等于“更高质量分”**，该基线只作亮度参照，不作质量目标。
-- region_target/compact 在 6 张开发图上领先，尚未在独立样本验收；region_target 加了区域目标但与 compact 共变，区域目标的独立贡献未分离。
+- region_target/compact在cfg4.0的6张开发图组均值领先，cfg1.0存在指标权衡；尚未在独立样本验收。region_target加了区域目标但与compact共变，区域目标的独立贡献未分离。
 - 本轮仍无 redo/闭环；所有臂都是单次生成。内容保真（身份、小物件）未独立盲评，NR-IQA 不验证保真。
 - NB2 未在本轮重跑；cfg 对照只针对本地 Qwen。
 
@@ -44,5 +56,11 @@
 
 1. **配置**：D 类消融若要跟 H08 可比，沿用 cfg=4.0；若要对接官方默认，需全套重跑 cfg=1.0。两配置结果分开报告，不混用。
 2. **Prompt**：把“压缩重写”作为独立臂推进；region_target 需在压缩基底上单独加减区域目标以分离其贡献；等长度近似改写作为残余混杂对照。
-3. **B（等预算闭环）**：在 compact/region_target 这条已转正的单次路径上，再做 3 次反馈生成 vs 3 次无反馈采样＋同一选择器，分离反馈收益与额外计算。
+3. **先验收单次路径，再做B**：冻结cfg4.0、Prompt与评价标准，在未用于调参的样本比较simple、compact与仅增加区域目标的compact+region；独立盲评检查身份/小物件/文字/新增内容。候选稳定后，再做3次反馈生成vs3次无反馈采样＋同一选择器；每臂包括首轮在内最多3次Executor调用，并报告CFG实际前向成本/总耗时，分离反馈收益与额外计算。
 4. 失败/逐图离群（如个别 seed CLIPIQA 跌到 0.23）需保留并查因，不得静默删除。
+
+## 5. H08-n1报告审查与决策修订（2026-10-14）
+
+本次审查保留所有生产端组均值，不独立重算图像分数。旧表述“冗余长度是主因”“两配置均反超”“显著混杂变量”修正为：压缩重写在cfg4.0开发集形成候选收益；纯长度机制、区域独立贡献与泛化/保真未成立，CFG是受控因素且可能与Prompt交互。此前以保守措辞作为首要解释的判断需降权，不能换成另一个未经隔离的唯一根因。
+
+配置分支I-17按生产端报告已查明；本次独立运行核验及原始证据完整性未完成。D开发消融和确定性参照已报告完成；专用低光模型E、独立样本验收及B闭环仍未报告完成。

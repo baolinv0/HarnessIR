@@ -110,12 +110,14 @@
 
 按 H08 §6 第 1 项执行：先核配置，再做 D＋低成本 E。本地真跑 Qwen-Image-2.1，6 张分层开发图（exdark/jarvisir/acdc 各 2）× 5 臂（simple/compose/drop_guards/compact/region_target）× 3 配对 seed × 2 配置（true_cfg 1.0/4.0）=180 张生成 + 6 确定性 tone/gain 基线 + 6 输入 =192 张打分（CLIPIQA/MUSIQ/TOPIQ）。seed 为图内重复，先逐图平均再跨图。
 
-**配置核查**（[qwen21_config_audit](../evidence/qwen21_config_audit_20261014.md)）：pipeline=QwenImage21Pipeline、diffusers 0.41.0、步数 40、调度器 FlowMatchEuler 均与官方一致；本地 neg=" "+true_cfg=4.0 使 do_true_cfg=True，CFG 确实启用，非配错但非官方默认（1.0）。
+**配置核查**（[qwen21_config_audit](evidence/qwen21_config_audit_20261014.md)）：按生产端报告，pipeline=QwenImage21Pipeline、diffusers 0.41.0、步数40、调度器FlowMatchEuler与官方一致；neg=" "+true_cfg=4.0使do_true_cfg=True。实际分支已按报告查明；本次未读取生产端运行快照。
 
-**结果**（[cfg_d_ablation](../evidence/cfg_d_ablation_20261014.md)）：
-- CFG 是显著混杂变量：cfg4.0 系统性高于/亮于 cfg1.0（simple CLIPIQA +0.043、MUSIQ +8.19，global 0.285 vs 0.199）。H08 的 Qwen 结果绑定 cfg=4.0，不能与官方默认混报。
+**结果**（[cfg_d_ablation](evidence/cfg_d_ablation_20261014.md)）：
+- CFG是影响较大的受控因素：cfg4.0 NR-IQA组均值高于cfg1.0，simple也更亮。H08的Qwen结果绑定cfg4，不能与官方默认混报；无配对区间/检验，不使用统计显著结论。
 - 框架负收益复现：compose−simple 在 cfg1.0 −0.031、cfg4.0 −0.030 CLIPIQA（与 H08 的 −0.030 一致），非单一配置造成。
-- 机制线索：drop_guards≈compose（删保守条款几乎无收益），compact/region_target 反超 simple（cfg4.0 +0.035/+0.052）→ 主因更像原 Compose 冗余长度/结构，而非保守措辞；待独立样本与等长度对照确认。
+- 机制线索：drop_guards只较compose略升且未恢复到simple；cfg4下compact/region_target三指标均值高于simple，cfg1结果混合。压缩重写可作候选，不能确定纯长度主因或区域独立收益；需独立样本、近似等长度与语义匹配对照。
 - 确定性 tone/gain 基线拉亮（global 0.275）但 CLIPIQA 反降至 0.186：更亮≠更高分。
 
-**对台账**：I-17 配置已查明并完成默认对照，归因结论落定（H08 Qwen 绑定 cfg=4.0）；I-01 机制线索指向长度/结构分支。仍属 6 图开发集，非泛化测试；保真未独立盲评；NB2 未重跑。脚本 compare/qwen21_cfg_d_ab.py、compare/iqa_cfg_d.py。
+**对台账**：I-17配置分支/默认对照按生产端报告已补齐（H08绑定cfg4），并非完整独立审计已完成；I-01开放。仍属6图开发集，非泛化测试；保真未独立盲评；NB2未重跑。脚本compare/qwen21_cfg_d_ab.py、compare/iqa_cfg_d.py是生产端位置，当前未入库。
+
+**本次结论修订**：原记录曾用“冗余长度是主因”“显著混杂”“两配置均反超”概括；2026-10-14依据完整组均值和新上下文审查收窄如上，保留原始数值。按显示表cfg1 compact−simple=+0.003/+0.13/−0.007，region_target−simple=+0.011/−1.13/−0.011；区域目标的独立贡献仍未知。下一步先冻结候选作独立单次验收，再做等预算B。
