@@ -1,0 +1,1630 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "state.schema.json",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "ref_enhance_v1"
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+    },
+    "case_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "workflow_state": {
+      "enum": [
+        "CREATED",
+        "WAIT_DIAGNOSIS",
+        "WAIT_EVIDENCE",
+        "WAIT_COMPOSITION",
+        "WAIT_EXECUTION",
+        "WAIT_VERIFICATION",
+        "WAIT_REFINEMENT",
+        "PAUSED",
+        "COMPLETED",
+        "FAILED",
+        "CANCELLED"
+      ]
+    },
+    "resume_state": {
+      "anyOf": [
+        {
+          "enum": [
+            "CREATED",
+            "WAIT_DIAGNOSIS",
+            "WAIT_EVIDENCE",
+            "WAIT_COMPOSITION",
+            "WAIT_EXECUTION",
+            "WAIT_VERIFICATION",
+            "WAIT_REFINEMENT"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "pause_reason": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "round": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "config_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "profile_id": {
+      "enum": [
+        "baseline",
+        "direct_ref",
+        "agent_single",
+        "agent_adaptive",
+        "direct_best_of_3"
+      ]
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "asset.schema.json"
+      },
+      "minItems": 2,
+      "maxItems": 2,
+      "allOf": [
+        {
+          "contains": {
+            "properties": {
+              "role": {
+                "const": "prediction"
+              }
+            },
+            "required": [
+              "role"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": {
+              "role": {
+                "const": "reference"
+              }
+            },
+            "required": [
+              "role"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ]
+    },
+    "pending_task": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "task_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+            },
+            "stage": {
+              "enum": [
+                "diagnose",
+                "compose",
+                "execute",
+                "verify",
+                "refine"
+              ]
+            },
+            "round": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "attempt": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "request_sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "state_revision_issued": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "request_path": {
+              "type": "string",
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+            }
+          },
+          "required": [
+            "task_id",
+            "stage",
+            "round",
+            "attempt",
+            "request_sha256",
+            "state_revision_issued",
+            "request_path"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "evidence_plan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "plan_item_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+          },
+          "tool_id": {
+            "enum": [
+              "T1_OCR",
+              "T2_FACE",
+              "T3_DEPTH",
+              "T4_SEGMENTATION",
+              "STATS",
+              "ROI_COMPARE"
+            ]
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "prediction",
+                "reference",
+                "candidate"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 3
+          },
+          "roi_pair_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+            },
+            "minItems": 0
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "ok",
+              "error",
+              "unavailable"
+            ]
+          },
+          "evidence_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "plan_item_id",
+          "tool_id",
+          "roles",
+          "roi_pair_ids",
+          "required",
+          "status",
+          "evidence_id"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "evidence_snapshot": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "evidence_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+              },
+              "minItems": 0
+            },
+            "frozen_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "path",
+            "sha256",
+            "evidence_ids",
+            "frozen_at"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "budget": {
+      "type": "object",
+      "properties": {
+        "max_generations": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "reserved": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "consumed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ledger": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "generation_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+              },
+              "task_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+              },
+              "round": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "status": {
+                "enum": [
+                  "reserved",
+                  "submitted",
+                  "released_unsubmitted"
+                ]
+              },
+              "charged_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "submitted_at": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "outcome": {
+                "enum": [
+                  "pending",
+                  "ok",
+                  "error",
+                  "unknown",
+                  "duplicate",
+                  "cancelled",
+                  null
+                ]
+              }
+            },
+            "required": [
+              "generation_id",
+              "task_id",
+              "round",
+              "status",
+              "charged_count",
+              "submitted_at",
+              "outcome"
+            ],
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "status": {
+                      "const": "submitted"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "charged_count": {
+                      "minimum": 1
+                    },
+                    "submitted_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "reserved",
+                        "released_unsubmitted"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "charged_count": {
+                      "const": 0
+                    },
+                    "submitted_at": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "max_generations",
+        "reserved",
+        "consumed",
+        "ledger"
+      ],
+      "additionalProperties": false
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "candidate_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+          },
+          "asset": {
+            "$ref": "asset.schema.json",
+            "allOf": [
+              {
+                "properties": {
+                  "role": {
+                    "const": "candidate"
+                  }
+                }
+              }
+            ]
+          },
+          "round": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "generation_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+          },
+          "geometry": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "pending",
+                  "pass",
+                  "fail",
+                  "uncertain"
+                ]
+              },
+              "policy": {
+                "type": "object",
+                "properties": {
+                  "mode": {
+                    "enum": [
+                      "strict",
+                      "aspect_preserving_resize"
+                    ]
+                  },
+                  "target_width": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "target_height": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "max_aspect_ratio_error": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 0.005
+                  }
+                },
+                "required": [
+                  "mode",
+                  "target_width",
+                  "target_height",
+                  "max_aspect_ratio_error"
+                ],
+                "additionalProperties": false,
+                "allOf": [
+                  {
+                    "if": {
+                      "properties": {
+                        "mode": {
+                          "const": "strict"
+                        }
+                      }
+                    },
+                    "then": {
+                      "properties": {
+                        "max_aspect_ratio_error": {
+                          "const": 0
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              "report_path": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "report_sha256": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "derived_asset": {
+                "anyOf": [
+                  {
+                    "$ref": "asset.schema.json"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "status",
+              "policy",
+              "report_path",
+              "report_sha256",
+              "derived_asset"
+            ],
+            "additionalProperties": false
+          },
+          "verification_task_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verification_response_sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verification": {
+            "anyOf": [
+              {
+                "$ref": "verification.schema.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "usable": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "accepted": {
+            "type": "boolean"
+          },
+          "duplicate_of": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "candidate_id",
+          "asset",
+          "round",
+          "generation_id",
+          "geometry",
+          "verification_task_id",
+          "verification_response_sha256",
+          "verification",
+          "usable",
+          "accepted",
+          "duplicate_of"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "success": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "terminal_reason": {
+      "anyOf": [
+        {
+          "enum": [
+            "accepted",
+            "single_pass_complete",
+            "budget_exhausted",
+            "duplicate_output",
+            "canonical_duplicate_output",
+            "no_prompt_change",
+            "unusable_reference",
+            "capability_unavailable",
+            "generation_error",
+            "verification_error",
+            "evidence_unavailable",
+            "protocol_integrity_error",
+            "extra_sampling",
+            "no_usable_candidate",
+            "cancelled",
+            "operator_stop",
+            "fixed_k_complete",
+            "baseline_only",
+            "no_supported_refinement"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "selection": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "enum": [
+                "candidate",
+                "baseline"
+              ]
+            },
+            "asset_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+            },
+            "candidate_id": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "fallback": {
+              "type": "boolean"
+            },
+            "review_required": {
+              "type": "boolean"
+            },
+            "selected_round": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "asset_id",
+            "candidate_id",
+            "fallback",
+            "review_required",
+            "selected_round"
+          ],
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "kind": {
+                    "const": "baseline"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "candidate_id": {
+                    "type": "null"
+                  },
+                  "fallback": {
+                    "type": "boolean"
+                  },
+                  "selected_round": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "kind": {
+                    "const": "candidate"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "candidate_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+                  },
+                  "fallback": {
+                    "const": false
+                  },
+                  "selected_round": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "deviations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "at"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "schema_version",
+    "case_id",
+    "case_revision",
+    "revision",
+    "workflow_state",
+    "resume_state",
+    "pause_reason",
+    "round",
+    "config_sha256",
+    "profile_id",
+    "inputs",
+    "pending_task",
+    "evidence_plan",
+    "evidence_snapshot",
+    "budget",
+    "candidates",
+    "success",
+    "terminal_reason",
+    "selection",
+    "deviations",
+    "created_at",
+    "updated_at"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "workflow_state": {
+            "const": "PAUSED"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "resume_state": {
+            "enum": [
+              "CREATED",
+              "WAIT_DIAGNOSIS",
+              "WAIT_EVIDENCE",
+              "WAIT_COMPOSITION",
+              "WAIT_EXECUTION",
+              "WAIT_VERIFICATION",
+              "WAIT_REFINEMENT"
+            ]
+          },
+          "pause_reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "success": {
+            "type": "null"
+          },
+          "terminal_reason": {
+            "type": "null"
+          },
+          "selection": {
+            "type": "null"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "resume_state": {
+            "type": "null"
+          },
+          "pause_reason": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "workflow_state": {
+            "enum": [
+              "COMPLETED",
+              "FAILED",
+              "CANCELLED"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "pending_task": {
+            "type": "null"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "terminal_reason": {
+            "enum": [
+              "accepted",
+              "single_pass_complete",
+              "budget_exhausted",
+              "duplicate_output",
+              "canonical_duplicate_output",
+              "no_prompt_change",
+              "unusable_reference",
+              "capability_unavailable",
+              "generation_error",
+              "verification_error",
+              "evidence_unavailable",
+              "protocol_integrity_error",
+              "extra_sampling",
+              "no_usable_candidate",
+              "cancelled",
+              "operator_stop",
+              "fixed_k_complete",
+              "baseline_only",
+              "no_supported_refinement"
+            ]
+          },
+          "selection": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "enum": [
+                  "candidate",
+                  "baseline"
+                ]
+              },
+              "asset_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+              },
+              "candidate_id": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "fallback": {
+                "type": "boolean"
+              },
+              "review_required": {
+                "type": "boolean"
+              },
+              "selected_round": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "asset_id",
+              "candidate_id",
+              "fallback",
+              "review_required",
+              "selected_round"
+            ],
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "kind": {
+                      "const": "baseline"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "candidate_id": {
+                      "type": "null"
+                    },
+                    "fallback": {
+                      "type": "boolean"
+                    },
+                    "selected_round": {
+                      "type": "null"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "kind": {
+                      "const": "candidate"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "candidate_id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+                    },
+                    "fallback": {
+                      "const": false
+                    },
+                    "selected_round": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "success": {
+            "type": "null"
+          },
+          "terminal_reason": {
+            "type": "null"
+          },
+          "selection": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "success": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "workflow_state": {
+            "const": "COMPLETED"
+          },
+          "terminal_reason": {
+            "enum": [
+              "accepted",
+              "fixed_k_complete",
+              "duplicate_output",
+              "canonical_duplicate_output"
+            ]
+          },
+          "selection": {
+            "properties": {
+              "kind": {
+                "const": "candidate"
+              },
+              "review_required": {
+                "const": false
+              },
+              "fallback": {
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "workflow_state": {
+            "enum": [
+              "FAILED",
+              "CANCELLED"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "success": {
+            "const": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "workflow_state": {
+            "enum": [
+              "CREATED",
+              "WAIT_EVIDENCE"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "pending_task": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "workflow_state": {
+            "const": "WAIT_DIAGNOSIS"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "pending_task": {
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "task_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+                  },
+                  "stage": {
+                    "enum": [
+                      "diagnose",
+                      "compose",
+                      "execute",
+                      "verify",
+                      "refine"
+                    ]
+                  },
+                  "round": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "attempt": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "request_sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "state_revision_issued": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "request_path": {
+                    "type": "string",
+                    "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+                  }
+                },
+                "required": [
+                  "task_id",
+                  "stage",
+                  "round",
+                  "attempt",
+                  "request_sha256",
+                  "state_revision_issued",
+                  "request_path"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "properties": {
+                  "stage": {
+                    "const": "diagnose"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "workflow_state": {
+            "const": "WAIT_COMPOSITION"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "pending_task": {
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "task_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+                  },
+                  "stage": {
+                    "enum": [
+                      "diagnose",
+                      "compose",
+                      "execute",
+                      "verify",
+                      "refine"
+                    ]
+                  },
+                  "round": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "attempt": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "request_sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "state_revision_issued": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "request_path": {
+                    "type": "string",
+                    "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+                  }
+                },
+                "required": [
+                  "task_id",
+                  "stage",
+                  "round",
+                  "attempt",
+                  "request_sha256",
+                  "state_revision_issued",
+                  "request_path"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "properties": {
+                  "stage": {
+                    "const": "compose"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "workflow_state": {
+            "const": "WAIT_EXECUTION"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "pending_task": {
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "task_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+                  },
+                  "stage": {
+                    "enum": [
+                      "diagnose",
+                      "compose",
+                      "execute",
+                      "verify",
+                      "refine"
+                    ]
+                  },
+                  "round": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "attempt": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "request_sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "state_revision_issued": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "request_path": {
+                    "type": "string",
+                    "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+                  }
+                },
+                "required": [
+                  "task_id",
+                  "stage",
+                  "round",
+                  "attempt",
+                  "request_sha256",
+                  "state_revision_issued",
+                  "request_path"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "properties": {
+                  "stage": {
+                    "const": "execute"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "workflow_state": {
+            "const": "WAIT_VERIFICATION"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "pending_task": {
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "task_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+                  },
+                  "stage": {
+                    "enum": [
+                      "diagnose",
+                      "compose",
+                      "execute",
+                      "verify",
+                      "refine"
+                    ]
+                  },
+                  "round": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "attempt": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "request_sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "state_revision_issued": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "request_path": {
+                    "type": "string",
+                    "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+                  }
+                },
+                "required": [
+                  "task_id",
+                  "stage",
+                  "round",
+                  "attempt",
+                  "request_sha256",
+                  "state_revision_issued",
+                  "request_path"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "properties": {
+                  "stage": {
+                    "const": "verify"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "workflow_state": {
+            "const": "WAIT_REFINEMENT"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "pending_task": {
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "task_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+                  },
+                  "stage": {
+                    "enum": [
+                      "diagnose",
+                      "compose",
+                      "execute",
+                      "verify",
+                      "refine"
+                    ]
+                  },
+                  "round": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "attempt": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "request_sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "state_revision_issued": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "request_path": {
+                    "type": "string",
+                    "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+                  }
+                },
+                "required": [
+                  "task_id",
+                  "stage",
+                  "round",
+                  "attempt",
+                  "request_sha256",
+                  "state_revision_issued",
+                  "request_path"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "properties": {
+                  "stage": {
+                    "const": "refine"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "profile_id": {
+            "const": "baseline"
+          },
+          "workflow_state": {
+            "enum": [
+              "COMPLETED",
+              "FAILED",
+              "CANCELLED"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "success": {
+            "const": false
+          },
+          "selection": {
+            "properties": {
+              "kind": {
+                "const": "baseline"
+              },
+              "fallback": {
+                "const": false
+              },
+              "review_required": {
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "profile_id": {
+            "enum": [
+              "direct_ref",
+              "agent_single",
+              "agent_adaptive",
+              "direct_best_of_3"
+            ]
+          },
+          "workflow_state": {
+            "enum": [
+              "COMPLETED",
+              "FAILED",
+              "CANCELLED"
+            ]
+          },
+          "selection": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "const": "baseline"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "selection": {
+            "properties": {
+              "fallback": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "terminal_reason": {
+            "enum": [
+              "budget_exhausted",
+              "baseline_only"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "success": {
+            "const": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "profile_id": {
+            "const": "baseline"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "budget": {
+            "properties": {
+              "max_generations": {
+                "const": 0
+              },
+              "reserved": {
+                "const": 0
+              },
+              "consumed": {
+                "const": 0
+              },
+              "ledger": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "budget": {
+            "properties": {
+              "max_generations": {
+                "minimum": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "terminal_reason": {
+            "const": "accepted"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "success": {
+            "const": true
+          }
+        }
+      }
+    }
+  ],
+  "description": "Controller独占写state；revision是每次已提交事务递增值，case_revision是冻结输入版本。success只在终态布尔，否则null。ledger预算和选择门禁须运行语义校验；schema不替代哈希/文件/交叉字段检查。"
+}

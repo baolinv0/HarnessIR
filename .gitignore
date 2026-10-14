@@ -19,3 +19,10 @@ checkpoints/
 # Local configuration
 .env
 *.local.json
+
+# Reference enhancement controller local data
+.work/
+.pytest_cache/
+engine/build/
+engine/dist/
+Data/ref_enhance_cases/

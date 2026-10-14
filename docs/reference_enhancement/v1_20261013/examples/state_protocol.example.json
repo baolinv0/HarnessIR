@@ -1,0 +1,809 @@
+{
+  "simulation_only": true,
+  "assets": [
+    {
+      "asset_id": "A",
+      "path": "input/canonical/A.png",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "role": "prediction",
+      "width": 4,
+      "height": 3,
+      "color_space": "sRGB"
+    },
+    {
+      "asset_id": "B",
+      "path": "input/canonical/B.png",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "role": "reference",
+      "width": 4,
+      "height": 3,
+      "color_space": "sRGB"
+    },
+    {
+      "asset_id": "C0",
+      "path": "tasks/execute_0/submissions/s1/pending/canonical.png",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "role": "candidate",
+      "width": 4,
+      "height": 3,
+      "color_space": "sRGB",
+      "source_file": {
+        "path": "tasks/execute_0/submissions/s1/pending/raw.png",
+        "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "media_type": "image/png",
+        "color_description": "sRGB",
+        "icc_sha256": null,
+        "exif_orientation": 1,
+        "hdr": false
+      },
+      "canonicalization": {
+        "canonicalizer_version": "fixture_rgb8_v1",
+        "conversion_policy_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "orientation_applied": false,
+        "icc_converted": false,
+        "sdr_export_record": null
+      },
+      "pixel_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "candidate_binding": {
+        "case_id": "fixture_case",
+        "case_revision": 0,
+        "task_id": "execute_0",
+        "round": 0,
+        "generation_id": "g0",
+        "prediction_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "reference_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "asset_id": "ev_depth",
+      "path": "evidence/records/depth.npy",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "role": "evidence",
+      "width": 4,
+      "height": 3,
+      "color_space": null,
+      "evidence_format": {
+        "kind": "array",
+        "dtype": "float32",
+        "value_range": [
+          0,
+          1
+        ],
+        "coordinate_asset_id": "A"
+      }
+    }
+  ],
+  "requests": [
+    {
+      "schema_version": "ref_enhance_v1",
+      "case_id": "fixture_case",
+      "case_revision": 0,
+      "state_revision_issued": 1,
+      "task_id": "diagnose_0",
+      "stage": "diagnose",
+      "round": 0,
+      "attempt": 0,
+      "request_sha256": "d90effcbd013deda7f3499bca7ae6e07ef058bebcbe7d60ed3caf8b433a61c38",
+      "config_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "input_assets": [
+        {
+          "asset_id": "A",
+          "path": "input/canonical/A.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "prediction",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        },
+        {
+          "asset_id": "B",
+          "path": "input/canonical/B.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "reference",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        }
+      ],
+      "prompt_version": "fixture_v1",
+      "payload": {
+        "comparison_policy_id": "manual_v1",
+        "tool_profile_id": "cpu_v1",
+        "available_tools": [
+          "STATS"
+        ],
+        "roi_manifest_path": null,
+        "roi_manifest_sha256": null
+      }
+    },
+    {
+      "schema_version": "ref_enhance_v1",
+      "case_id": "fixture_case",
+      "case_revision": 0,
+      "state_revision_issued": 2,
+      "task_id": "execute_0",
+      "stage": "execute",
+      "round": 0,
+      "attempt": 0,
+      "request_sha256": "4dbe92e3057c3d196d4f4aeeee0f0a33c9252ddaa9590cacd8026b888cf2ca61",
+      "config_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "input_assets": [
+        {
+          "asset_id": "A",
+          "path": "input/canonical/A.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "prediction",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        },
+        {
+          "asset_id": "B",
+          "path": "input/canonical/B.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "reference",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        }
+      ],
+      "prompt_version": "fixture_v1",
+      "payload": {
+        "generation_id": "g0",
+        "edit_prompt": "仅模拟协议，保持A内容；参考B外观。",
+        "prompt_source_task_id": "direct_prompt_fixture_case_rev_0",
+        "prediction_asset_id": "A",
+        "reference_asset_id": "B",
+        "geometry_policy": {
+          "mode": "strict",
+          "target_width": 4,
+          "target_height": 3,
+          "max_aspect_ratio_error": 0
+        },
+        "evidence_snapshot_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "schema_version": "ref_enhance_v1",
+      "case_id": "fixture_case",
+      "case_revision": 0,
+      "state_revision_issued": 3,
+      "task_id": "verify_0",
+      "stage": "verify",
+      "round": 0,
+      "attempt": 0,
+      "request_sha256": "965a16c10b60f41095aa4a4c4f3fb2e9e9fca1f024e800a063505c04aa84f435",
+      "config_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "input_assets": [
+        {
+          "asset_id": "A",
+          "path": "input/canonical/A.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "prediction",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        },
+        {
+          "asset_id": "B",
+          "path": "input/canonical/B.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "reference",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        },
+        {
+          "asset_id": "C0",
+          "path": "tasks/execute_0/submissions/s1/pending/canonical.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "candidate",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB",
+          "source_file": {
+            "path": "tasks/execute_0/submissions/s1/pending/raw.png",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+            "media_type": "image/png",
+            "color_description": "sRGB",
+            "icc_sha256": null,
+            "exif_orientation": 1,
+            "hdr": false
+          },
+          "canonicalization": {
+            "canonicalizer_version": "fixture_rgb8_v1",
+            "conversion_policy_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "source_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+            "orientation_applied": false,
+            "icc_converted": false,
+            "sdr_export_record": null
+          },
+          "pixel_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "candidate_binding": {
+            "case_id": "fixture_case",
+            "case_revision": 0,
+            "task_id": "execute_0",
+            "round": 0,
+            "generation_id": "g0",
+            "prediction_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "reference_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+          }
+        }
+      ],
+      "prompt_version": "fixture_v1",
+      "payload": {
+        "candidate_id": "C0",
+        "generation_id": "g0",
+        "geometry_report_path": "rounds/r000/geometry.json",
+        "geometry_report_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "rubric_version": "manual_v1",
+        "evidence_snapshot_path": "evidence/snapshots/snapshot_fixture.json",
+        "evidence_snapshot_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ],
+  "responses": [
+    {
+      "schema_version": "ref_enhance_v1",
+      "case_id": "fixture_case",
+      "case_revision": 0,
+      "state_revision_issued": 1,
+      "task_id": "diagnose_0",
+      "stage": "diagnose",
+      "round": 0,
+      "attempt": 0,
+      "request_sha256": "d90effcbd013deda7f3499bca7ae6e07ef058bebcbe7d60ed3caf8b433a61c38",
+      "config_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "input_assets": [
+        {
+          "asset_id": "A",
+          "path": "input/canonical/A.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "prediction",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        },
+        {
+          "asset_id": "B",
+          "path": "input/canonical/B.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "reference",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        }
+      ],
+      "prompt_version": "fixture_v1",
+      "status": "ok",
+      "model_observed": {
+        "ui_model_name": "unknown",
+        "exact_model_version": null,
+        "seed": null,
+        "observed_at": "2026-10-13T00:00:00Z",
+        "transport": "fixture",
+        "operator_steps": [
+          "simulation_only；未调用模型"
+        ]
+      },
+      "session_id": null,
+      "payload": {
+        "reference_usable": "unknown",
+        "comparability": [
+          {
+            "scope": "global",
+            "roi_pair_id": null,
+            "status": "unknown",
+            "reasons": [
+              "simulation_only，未看真实图"
+            ],
+            "confidence": 0
+          }
+        ],
+        "global_gaps": [],
+        "local_gaps": [],
+        "style_targets": [],
+        "preservation_constraints": [],
+        "tool_plan": [],
+        "uncertainties": [
+          "simulation_only"
+        ]
+      },
+      "error": null
+    },
+    {
+      "schema_version": "ref_enhance_v1",
+      "case_id": "fixture_case",
+      "case_revision": 0,
+      "state_revision_issued": 3,
+      "task_id": "verify_0",
+      "stage": "verify",
+      "round": 0,
+      "attempt": 0,
+      "request_sha256": "965a16c10b60f41095aa4a4c4f3fb2e9e9fca1f024e800a063505c04aa84f435",
+      "config_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "input_assets": [
+        {
+          "asset_id": "A",
+          "path": "input/canonical/A.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "prediction",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        },
+        {
+          "asset_id": "B",
+          "path": "input/canonical/B.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "reference",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        },
+        {
+          "asset_id": "C0",
+          "path": "tasks/execute_0/submissions/s1/pending/canonical.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "candidate",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB",
+          "source_file": {
+            "path": "tasks/execute_0/submissions/s1/pending/raw.png",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+            "media_type": "image/png",
+            "color_description": "sRGB",
+            "icc_sha256": null,
+            "exif_orientation": 1,
+            "hdr": false
+          },
+          "canonicalization": {
+            "canonicalizer_version": "fixture_rgb8_v1",
+            "conversion_policy_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "source_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+            "orientation_applied": false,
+            "icc_converted": false,
+            "sdr_export_record": null
+          },
+          "pixel_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "candidate_binding": {
+            "case_id": "fixture_case",
+            "case_revision": 0,
+            "task_id": "execute_0",
+            "round": 0,
+            "generation_id": "g0",
+            "prediction_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "reference_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+          }
+        }
+      ],
+      "prompt_version": "fixture_v1",
+      "status": "error",
+      "model_observed": {
+        "ui_model_name": "unknown",
+        "exact_model_version": null,
+        "seed": null,
+        "observed_at": "2026-10-13T00:00:00Z",
+        "transport": "fixture",
+        "operator_steps": [
+          "simulation_only；未调用模型"
+        ]
+      },
+      "session_id": null,
+      "payload": null,
+      "error": {
+        "code": "image_not_observed",
+        "message": "仅模拟错误响应，不是实测结果。",
+        "retryable": true
+      }
+    },
+    {
+      "schema_version": "ref_enhance_v1",
+      "case_id": "fixture_case",
+      "case_revision": 0,
+      "state_revision_issued": 2,
+      "task_id": "execute_0",
+      "stage": "execute",
+      "round": 0,
+      "attempt": 0,
+      "request_sha256": "4dbe92e3057c3d196d4f4aeeee0f0a33c9252ddaa9590cacd8026b888cf2ca61",
+      "config_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "input_assets": [
+        {
+          "asset_id": "A",
+          "path": "input/canonical/A.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "prediction",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        },
+        {
+          "asset_id": "B",
+          "path": "input/canonical/B.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "reference",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        }
+      ],
+      "prompt_version": "fixture_v1",
+      "status": "ok",
+      "model_observed": {
+        "ui_model_name": "unknown",
+        "exact_model_version": null,
+        "seed": null,
+        "observed_at": "2026-10-13T00:00:00Z",
+        "transport": "fixture",
+        "operator_steps": [
+          "simulation_only；未调用模型"
+        ]
+      },
+      "session_id": null,
+      "payload": {
+        "generation_id": "g0",
+        "candidate_asset": {
+          "asset_id": "C0",
+          "path": "tasks/execute_0/submissions/s1/pending/canonical.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "candidate",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB",
+          "source_file": {
+            "path": "tasks/execute_0/submissions/s1/pending/raw.png",
+            "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+            "media_type": "image/png",
+            "color_description": "sRGB",
+            "icc_sha256": null,
+            "exif_orientation": 1,
+            "hdr": false
+          },
+          "canonicalization": {
+            "canonicalizer_version": "fixture_rgb8_v1",
+            "conversion_policy_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "source_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+            "orientation_applied": false,
+            "icc_converted": false,
+            "sdr_export_record": null
+          },
+          "pixel_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "candidate_binding": {
+            "case_id": "fixture_case",
+            "case_revision": 0,
+            "task_id": "execute_0",
+            "round": 0,
+            "generation_id": "g0",
+            "prediction_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "reference_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+          }
+        },
+        "submitted_at": "2026-10-13T00:00:00Z",
+        "actual_generation_count": 1,
+        "provider_order": 0,
+        "selection_rule": "first_complete_provider_order",
+        "extras": [],
+        "geometry_observations": [
+          "simulation_only"
+        ]
+      },
+      "error": null
+    }
+  ],
+  "states": [
+    {
+      "schema_version": "ref_enhance_v1",
+      "case_id": "fixture_case",
+      "case_revision": 0,
+      "revision": 0,
+      "workflow_state": "CREATED",
+      "resume_state": null,
+      "pause_reason": null,
+      "round": 0,
+      "config_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "profile_id": "agent_adaptive",
+      "inputs": [
+        {
+          "asset_id": "A",
+          "path": "input/canonical/A.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "prediction",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        },
+        {
+          "asset_id": "B",
+          "path": "input/canonical/B.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "reference",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        }
+      ],
+      "pending_task": null,
+      "evidence_plan": [],
+      "evidence_snapshot": null,
+      "budget": {
+        "max_generations": 3,
+        "reserved": 0,
+        "consumed": 0,
+        "ledger": []
+      },
+      "candidates": [],
+      "success": null,
+      "terminal_reason": null,
+      "selection": null,
+      "deviations": [],
+      "created_at": "2026-10-13T00:00:00Z",
+      "updated_at": "2026-10-13T00:00:00Z"
+    },
+    {
+      "schema_version": "ref_enhance_v1",
+      "case_id": "fixture_case",
+      "case_revision": 0,
+      "revision": 1,
+      "workflow_state": "WAIT_DIAGNOSIS",
+      "resume_state": null,
+      "pause_reason": null,
+      "round": 0,
+      "config_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "profile_id": "agent_adaptive",
+      "inputs": [
+        {
+          "asset_id": "A",
+          "path": "input/canonical/A.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "prediction",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        },
+        {
+          "asset_id": "B",
+          "path": "input/canonical/B.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "reference",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        }
+      ],
+      "pending_task": {
+        "task_id": "diagnose_0",
+        "stage": "diagnose",
+        "round": 0,
+        "attempt": 0,
+        "request_sha256": "d90effcbd013deda7f3499bca7ae6e07ef058bebcbe7d60ed3caf8b433a61c38",
+        "state_revision_issued": 1,
+        "request_path": "tasks/diagnose_0/attempts/000/request.json"
+      },
+      "evidence_plan": [],
+      "evidence_snapshot": null,
+      "budget": {
+        "max_generations": 3,
+        "reserved": 0,
+        "consumed": 0,
+        "ledger": []
+      },
+      "candidates": [],
+      "success": null,
+      "terminal_reason": null,
+      "selection": null,
+      "deviations": [],
+      "created_at": "2026-10-13T00:00:00Z",
+      "updated_at": "2026-10-13T00:00:00Z"
+    },
+    {
+      "schema_version": "ref_enhance_v1",
+      "case_id": "fixture_case",
+      "case_revision": 0,
+      "revision": 2,
+      "workflow_state": "PAUSED",
+      "resume_state": "WAIT_DIAGNOSIS",
+      "pause_reason": "simulation_only",
+      "round": 0,
+      "config_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "profile_id": "agent_adaptive",
+      "inputs": [
+        {
+          "asset_id": "A",
+          "path": "input/canonical/A.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "prediction",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        },
+        {
+          "asset_id": "B",
+          "path": "input/canonical/B.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "reference",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        }
+      ],
+      "pending_task": {
+        "task_id": "diagnose_0",
+        "stage": "diagnose",
+        "round": 0,
+        "attempt": 0,
+        "request_sha256": "d90effcbd013deda7f3499bca7ae6e07ef058bebcbe7d60ed3caf8b433a61c38",
+        "state_revision_issued": 1,
+        "request_path": "tasks/diagnose_0/attempts/000/request.json"
+      },
+      "evidence_plan": [],
+      "evidence_snapshot": null,
+      "budget": {
+        "max_generations": 3,
+        "reserved": 0,
+        "consumed": 0,
+        "ledger": []
+      },
+      "candidates": [],
+      "success": null,
+      "terminal_reason": null,
+      "selection": null,
+      "deviations": [],
+      "created_at": "2026-10-13T00:00:00Z",
+      "updated_at": "2026-10-13T00:00:00Z"
+    },
+    {
+      "schema_version": "ref_enhance_v1",
+      "case_id": "fixture_case",
+      "case_revision": 0,
+      "revision": 1,
+      "workflow_state": "COMPLETED",
+      "resume_state": null,
+      "pause_reason": null,
+      "round": 0,
+      "config_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "profile_id": "baseline",
+      "inputs": [
+        {
+          "asset_id": "A",
+          "path": "input/canonical/A.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "prediction",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        },
+        {
+          "asset_id": "B",
+          "path": "input/canonical/B.png",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "role": "reference",
+          "width": 4,
+          "height": 3,
+          "color_space": "sRGB"
+        }
+      ],
+      "pending_task": null,
+      "evidence_plan": [],
+      "evidence_snapshot": null,
+      "budget": {
+        "max_generations": 0,
+        "reserved": 0,
+        "consumed": 0,
+        "ledger": []
+      },
+      "candidates": [],
+      "success": false,
+      "terminal_reason": "baseline_only",
+      "selection": {
+        "kind": "baseline",
+        "asset_id": "A",
+        "candidate_id": null,
+        "fallback": false,
+        "review_required": false,
+        "selected_round": null
+      },
+      "deviations": [],
+      "created_at": "2026-10-13T00:00:00Z",
+      "updated_at": "2026-10-13T00:00:00Z"
+    }
+  ],
+  "evidence_records": [
+    {
+      "schema_version": "ref_enhance_v1",
+      "evidence_id": "ev_fixture",
+      "case_id": "fixture_case",
+      "case_revision": 0,
+      "tool_id": "STATS",
+      "status": "unavailable",
+      "binding": {
+        "inputs": [
+          {
+            "asset_id": "A",
+            "role": "prediction",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "width": 4,
+            "height": 3,
+            "candidate_id": null
+          }
+        ],
+        "plan_item_id": "p0",
+        "roi_pair_ids": []
+      },
+      "cache_key_sha256": "ad43d9b3f57e90b0b93a6d6615c0c36c955172dfbd471a51e6d346aefef677c6",
+      "cache_contract": {
+        "schema_version": "ref_enhance_v1",
+        "tool_id": "STATS",
+        "tool_version": "fixture_stats_v1",
+        "inputs": [
+          {
+            "role": "prediction",
+            "canonical_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "width": 4,
+            "height": 3
+          }
+        ],
+        "canonicalizer_version": "fixture_rgb8_v1",
+        "model": {
+          "name": "cpu_algorithm",
+          "revision": "fixture_v1",
+          "weights_sha256": null,
+          "components": []
+        },
+        "preprocess_version": "fixture_v1",
+        "preprocess_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "parameters": {},
+        "backend": {
+          "implementation": "fixture",
+          "version": "1",
+          "device": "cpu",
+          "precision": "float64",
+          "profile_id": "cpu_v1",
+          "environment_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "roi_manifest_sha256": null,
+        "prompt_set_sha256": null
+      },
+      "produced_at": "2026-10-13T00:00:00Z",
+      "producer": "offline",
+      "payload": null,
+      "assets": [],
+      "error": {
+        "code": "fixture_only",
+        "message": "模拟不可用记录，未运行工具。",
+        "retryable": false
+      }
+    }
+  ],
+  "snapshots": [
+    {
+      "schema_version": "ref_enhance_v1",
+      "case_id": "fixture_case",
+      "case_revision": 0,
+      "config_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "diagnosis_task_id": null,
+      "plan_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "scope": "composition",
+      "candidate_id": null,
+      "evidence": [],
+      "unavailable": [],
+      "frozen_at": "2026-10-13T00:00:00Z"
+    }
+  ],
+  "done_manifests": [
+    {
+      "schema_version": "ref_enhance_v1",
+      "case_id": "fixture_case",
+      "case_revision": 0,
+      "task_id": "verify_0",
+      "request_sha256": "965a16c10b60f41095aa4a4c4f3fb2e9e9fca1f024e800a063505c04aa84f435",
+      "response_file": "tasks/verify_0/submissions/s1/pending/response.json",
+      "response_sha256": "71564773fb9e1cf52745a531c5638f7b7bcef1eb8074e25a0c0e4085709bb2ba",
+      "artifacts": [],
+      "completed_at": "2026-10-13T00:00:00Z",
+      "writer": "fixture"
+    }
+  ]
+}
