@@ -1,3 +1,14 @@
+## v2 生成式参考增强设计（2026-10-15）
+
+基于已实现的 v1 hre 工程，新增 **G0 DirectRef / G1 AgentText / G2 条件性 AgentMask** 实验设计，以及非对齐 ROI 的 A/B/C 属性评价。只保留生成式编辑，不引入确定性 Renderer；Mask 仅在相同 Executor 真实验证后启用。当前文档已提交，**运行代码尚未按 v2 修改，未完成真实 G0/G1/G2 实验**。
+
+- [v2 总入口](docs/reference_enhancement/v2_20261015/START_HERE.md)
+- [工程设计](docs/reference_enhancement/v2_20261015/DESIGN.md)
+- [实验计划](docs/reference_enhancement/v2_20261015/EXPERIMENT_PLAN.md)
+- [工程任务与验收](docs/reference_enhancement/v2_20261015/IMPLEMENTATION_CHECKLIST.md)
+
+旧 v1 设计、实现与真实 R1 未跑状态保留如下。
+
 # HarnessRefEnhance：参考引导图像增强工程方案
 
 实现入口：**[安装与命令](engine/README.md)**、**[运行与恢复手册](docs/reference_enhancement/IMPLEMENTATION_RUNBOOK.md)**、**[实现与验证记录](docs/reference_enhancement/IMPLEMENTATION_STATUS.md)**。设计依据见 **[工程交付总方案](docs/reference_enhancement/v1_20261013/START_HERE.md)**。
