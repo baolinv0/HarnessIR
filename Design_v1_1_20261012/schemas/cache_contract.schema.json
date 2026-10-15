@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harnessir.example/schemas/v1_1/cache_contract.schema.json",
+  "type": "object",
+  "properties": {
+    "contract_version": {
+      "const": "1.1"
+    },
+    "canonical_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "canonicalizer_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tool_id": {
+      "enum": [
+        "T1_OCR",
+        "T2_FACE",
+        "T3_DEPTH",
+        "T4_SEGMENTATION"
+      ]
+    },
+    "model_bundle_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "backend": {
+      "type": "object",
+      "properties": {
+        "implementation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "framework": {
+          "type": "string",
+          "minLength": 1
+        },
+        "framework_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "device": {
+          "type": "string",
+          "minLength": 1
+        },
+        "precision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "environment_lock_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "implementation",
+        "source_revision",
+        "framework",
+        "framework_version",
+        "device",
+        "precision",
+        "environment_lock_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "parameters": {
+      "type": "object"
+    },
+    "prompt_set_sha256": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "adapter_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "roi_policy_id": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "contract_version",
+    "canonical_sha256",
+    "canonicalizer_version",
+    "tool_id",
+    "model_bundle_sha256",
+    "backend",
+    "parameters",
+    "prompt_set_sha256",
+    "adapter_version",
+    "roi_policy_id"
+  ],
+  "additionalProperties": false
+}

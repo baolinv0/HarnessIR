@@ -1,0 +1,107 @@
+You are the Composer. Inspect the attached ORIGINAL photograph and the supplied evidence images with their legends. Write one self-contained text instruction for ChatGPT image editing. You are not editing an image in this task.
+
+Fixed intent: Restore low-light visibility and preserve the night mood.
+Diagnosis: {"content": "Synthetic fixture: a dark street containing a sign and a small face. This is not a real image experiment.", "degradations": [{"type": "low-light", "severity": "moderate", "spatial": "global", "location": "whole image", "worst_at": "left doorway", "mildest_at": "upper sign", "evidence": "Synthetic protocol example only"}], "sensitive": {"has_text": true, "has_faces": true, "has_layered_depth": false, "has_complex_semantics": false, "notes": "Fixture only; do not use as a real diagnosis."}, "tool_plan": [{"tool": "T1_OCR", "reason": "Protect the visible sign characters."}, {"tool": "T2_FACE", "reason": "Protect the small face at the doorway."}], "difficulty_hint": "medium", "difficulty_reason": "Synthetic protocol fixture."}
+Evidence manifest and text records: {"protocol_version": "1.0", "tool_id": "T1_OCR", "input_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "status": "ok", "model_name": "Synthetic fixture, no OCR was called", "checkpoint_sha256": null, "source_width": 1024, "source_height": 768, "tool_width": 1024, "tool_height": 768, "coordinates": "canonical_norm", "source_to_tool": [[1, 0, 0], [0, 1, 0], [0, 0, 1]], "detections": [{"bbox_norm": [0.4, 0.1, 0.7, 0.25], "label": null, "text": null, "confidence": 0.4, "ambiguous": true}], "assets": [], "data": {"fixture_only": true}, "error": null}
+Attached image order and legends: [{"label": "original", "path": "input/canonical.png"}, {"label": "attempt 0 (round 1)", "path": "rounds/round_001/output.png"}]
+
+Translate evidence into locations visible in the photograph: the sign over the doorway, the left foreground face, or the distant buildings. Read available depth/segmentation maps; a file path alone is not a visual observation. Do not cite map colours, picture numbers, tool names or JSON fields in the editor instruction. Never pass diagnostic maps to the editor.
+
+Describe concrete restoration end states for the diagnosed target problems and their affected regions, while keeping the scene, framing, object geometry, lighting character, real colours and any intended depth of field consistent with the fixed intent. Do not equate night restoration with a daylight conversion. Prevent plastic skin, invented fine texture, halos and content substitution. OCR is fallible: use exact characters only when supported by readable original evidence; preserve ambiguous text without guessing. Protect original faces without beautifying or inventing features. Do not promise recovery of information absent from the source.
+
+Use plain English. Start with an image-restoration role sentence, then one or two scene sentences, then regional repair and protection directives. Aim for 150–350 words, without padding; express strength through visible end states. Do not mention metrics or evaluation, and do not request unrelated beautification. instruction must stand alone and request one restored photograph; only its text and the original photo reach the editor.
+
+Return only JSON: task_type, treat[], preserve[], region_notes[{region,anchor,issue,action,directive}], evidence_used[], instruction. anchor must be visual, depth, semantic or permitted combinations in the schema. evidence_used is audit metadata and is not sent to the editor. Do not claim evidence you did not inspect.
+
+Full output schema:
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harnessir.example/schemas/v1/composition.schema.json",
+  "type": "object",
+  "properties": {
+    "task_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "treat": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "preserve": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "region_notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "anchor": {
+            "enum": [
+              "visual",
+              "depth",
+              "semantic",
+              "depth and semantic",
+              "visual and depth",
+              "visual and semantic",
+              "visual and depth and semantic"
+            ]
+          },
+          "issue": {
+            "type": "string",
+            "minLength": 1
+          },
+          "action": {
+            "enum": [
+              "treat",
+              "protect"
+            ]
+          },
+          "directive": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "region",
+          "anchor",
+          "issue",
+          "action",
+          "directive"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "evidence_used": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "instruction": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 10000
+    }
+  },
+  "required": [
+    "task_type",
+    "treat",
+    "preserve",
+    "region_notes",
+    "evidence_used",
+    "instruction"
+  ],
+  "additionalProperties": false
+}

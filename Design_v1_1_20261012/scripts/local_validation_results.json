@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "checks": {
+    "local_invalid_fixture_rejections": 10,
+    "cache_key_binding_checks": 4,
+    "cache_invalidation_checks": 10,
+    "synthetic_geometry_and_label_checks": 3,
+    "cpu_gpu_profile_and_registry_checks": "PASS"
+  },
+  "not_tested": [
+    "model deployment",
+    "real inference",
+    "hardware resource budgets",
+    "Worker/Scheduler implementation",
+    "Windows install",
+    "GPU migration"
+  ]
+}

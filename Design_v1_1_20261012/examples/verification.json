@@ -1,0 +1,39 @@
+{
+  "reasoning": "Synthetic fixture only. The newest example has residual shadow noise. A further attempt may address it. The first example is the only attempt. This record is not a real image assessment.",
+  "checklist": {
+    "C1": "fail",
+    "C2": "pass",
+    "C3": "pass",
+    "C4": "pass",
+    "C5": "pass",
+    "C6": "pass",
+    "C7": "fail"
+  },
+  "defects": [
+    {
+      "location": "left doorway",
+      "bbox_norm": [
+        0.1,
+        0.2,
+        0.4,
+        0.8
+      ],
+      "issue": "Residual shadow noise",
+      "item": "C7",
+      "severity": "moderate"
+    }
+  ],
+  "scores": {
+    "restoration_sufficiency": 5,
+    "fidelity": 8,
+    "scope_discipline": 8,
+    "naturalness": 6
+  },
+  "overall": 6,
+  "failure_mode": "under_doing",
+  "verdict": "incorrect",
+  "needs_redo": true,
+  "redo_priority": 5,
+  "best_round": 0,
+  "best_round_why": "Only one synthetic example attempt."
+}

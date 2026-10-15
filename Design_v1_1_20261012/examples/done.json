@@ -1,0 +1,7 @@
+{
+  "task_id": "fixture_case_diagnose_r001",
+  "response_file": "tasks/fixture_case_diagnose_r001/response.json",
+  "response_sha256": "7ba9acaadf3492aad1b87139a06d22c6b213dbc2da4442d85612328122f3212f",
+  "artifact_hashes": [],
+  "committed_at": "2026-10-12T13:17:16Z"
+}

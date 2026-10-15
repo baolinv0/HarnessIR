@@ -1,0 +1,316 @@
+{
+  "automatic_download": false,
+  "registry_status": "warmup_required",
+  "tools": {
+    "T1_OCR": {
+      "artifact_paths": {
+        "detection_model_dir": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\ppocrv6_medium\\det\\PP-OCRv6_medium_det_infer",
+        "recognition_model_dir": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\ppocrv6_medium\\rec\\PP-OCRv6_medium_rec_infer"
+      },
+      "backend": {
+        "device": "cpu",
+        "environment_lock_sha256": "d1a813e0057c1554900cd4d9cad26842f9ab42cc7b60f9944267592ba975fede",
+        "framework": "paddlepaddle",
+        "framework_version": "3.3.1",
+        "implementation": "paddleocr_pipeline",
+        "precision": "fp32",
+        "source_revision": "paddleocr-3.7.0_paddlepaddle-3.3.1"
+      },
+      "components": [
+        {
+          "name": "det/inference.json",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\ppocrv6_medium\\det\\PP-OCRv6_medium_det_infer\\inference.json",
+          "sha256": "0f1a7ec35da36173529c7a60238b7f7919e3831929c3f700ad90ad4896adecd5"
+        },
+        {
+          "name": "det/inference.pdiparams",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\ppocrv6_medium\\det\\PP-OCRv6_medium_det_infer\\inference.pdiparams",
+          "sha256": "85218d2e3d98f5a21c58b4220627be923a97aee5db3cc71f39536ab31ac53960"
+        },
+        {
+          "name": "det/inference.yml",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\ppocrv6_medium\\det\\PP-OCRv6_medium_det_infer\\inference.yml",
+          "sha256": "7298d5ead546584af2504d03355f881ac7a7bc0eb1e282d3e159277c1d0af871"
+        },
+        {
+          "name": "rec/inference.json",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\ppocrv6_medium\\rec\\PP-OCRv6_medium_rec_infer\\inference.json",
+          "sha256": "0b2e25e990bd072f1bf77d59d67d508bce6c4bd44af6624e0fb27d6da2cd00e8"
+        },
+        {
+          "name": "rec/inference.pdiparams",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\ppocrv6_medium\\rec\\PP-OCRv6_medium_rec_infer\\inference.pdiparams",
+          "sha256": "1b01c79a914587933f615569e75de54f2e638ebb5d3f3b3c1b38c24ede8c7319"
+        },
+        {
+          "name": "rec/inference.yml",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\ppocrv6_medium\\rec\\PP-OCRv6_medium_rec_infer\\inference.yml",
+          "sha256": "991b700facf5b50a7de193468207d5f4255b538dde0d312ae3b7c7a9b6873129"
+        }
+      ],
+      "environment_lock_file": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\preprocessing\\environments\\t1_cpu.freeze.txt",
+      "environment_lock_sha256": "d1a813e0057c1554900cd4d9cad26842f9ab42cc7b60f9944267592ba975fede",
+      "model_bundle_sha256": "64c4ab52ac32637b64a688a7fd7f614d2ddcd583810cc2a930db1dd115043ac5",
+      "model_name": "PP-OCRv6_medium_det+rec",
+      "python_executable": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\preprocessing\\environments\\venv_t1_cpu\\Scripts\\python.exe",
+      "ready": false,
+      "source_revision": "paddleocr-3.7.0_paddlepaddle-3.3.1",
+      "warmup_evidence": null
+    },
+    "T2_FACE": {
+      "artifact_paths": {
+        "checkpoint": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\scrfd\\det_10g.onnx",
+        "scrfd_source": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\scrfd\\scrfd.py"
+      },
+      "backend": {
+        "device": "cpu",
+        "environment_lock_sha256": "901865ca6345bbb7e5ac1b543878720701d299492483c80ee88c8efef8183a4d",
+        "framework": "onnxruntime",
+        "framework_version": "1.23.2",
+        "implementation": "insightface_scrfd_detector_only",
+        "precision": "fp32",
+        "source_revision": "3e6486942a1be2da0e5b475fac375ea73264bd21"
+      },
+      "components": [
+        {
+          "name": "detector",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\scrfd\\det_10g.onnx",
+          "sha256": "5838f7fe053675b1c7a08b633df49e7af5495cee0493c7dcf6697200b85b5b91"
+        },
+        {
+          "name": "scrfd_source",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\scrfd\\scrfd.py",
+          "sha256": "64b0b787e4c235ff80c1141614a77f2b2c24c90ba5b920f1bc91fde80cbef9f9"
+        }
+      ],
+      "environment_lock_sha256": "901865ca6345bbb7e5ac1b543878720701d299492483c80ee88c8efef8183a4d",
+      "model_bundle_sha256": "428ea1dccc74c5c68dbff6af66a19c8c6f80a19b0f294dab63ef3a5b216e5b70",
+      "model_name": "SCRFD_det_10g",
+      "python_executable": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\preprocessing\\environments\\venv_t2_cpu\\Scripts\\python.exe",
+      "ready": false,
+      "source_revision": "3e6486942a1be2da0e5b475fac375ea73264bd21",
+      "warmup_evidence": null,
+      "environment_lock_file": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\preprocessing\\environments\\t2_cpu.freeze.txt"
+    },
+    "T3_DEPTH": {
+      "artifact_paths": {
+        "checkpoint": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\depth_anything_v2_vits.pth",
+        "source_dir": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf"
+      },
+      "backend": {
+        "device": "cpu",
+        "environment_lock_sha256": "dfcd604716cd2ab9696e7f55a552c5a9d2883b032aeaab251eec58825afe10e7",
+        "framework": "torch",
+        "framework_version": "2.10.0+cpu",
+        "implementation": "depth_anything_author_api",
+        "precision": "fp32",
+        "source_revision": "a561b849ebae10a6f5ef49e26c83cbbcd36c71bf"
+      },
+      "components": [
+        {
+          "name": "checkpoint",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\depth_anything_v2_vits.pth",
+          "sha256": "715fade13be8f229f8a70cc02066f656f2423a59effd0579197bbf57860e1378"
+        },
+        {
+          "name": "source/app.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\app.py",
+          "sha256": "52fe296af84ccb9a784e5e7c8a204b817fe150eefbdea81e07010c3415acf4f4"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\depth_anything_v2\\dinov2.py",
+          "sha256": "d22df8d0da44c8525ebed898fd9c33b3acfcda919a84d577cc2a08bfd3d50ac1"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2_layers/__init__.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\depth_anything_v2\\dinov2_layers\\__init__.py",
+          "sha256": "e3c28c7b775165b6844000eb69f44d104d6c3803ac7da5d59f6ac3ecfb46d9d8"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2_layers/attention.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\depth_anything_v2\\dinov2_layers\\attention.py",
+          "sha256": "0d2410ce8b8b4499a6b0cdab939ae2bceab8971efd8660d999b0f3088f28cbf7"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2_layers/block.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\depth_anything_v2\\dinov2_layers\\block.py",
+          "sha256": "093266ea08084c7cce7b8ddd779ecfaaa13055735faa8a7d68b5924f385b395b"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2_layers/drop_path.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\depth_anything_v2\\dinov2_layers\\drop_path.py",
+          "sha256": "949100aac4d9c19c9d65319dbd362886c5d46a72d7586ba4fd500e9f1d51570c"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2_layers/layer_scale.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\depth_anything_v2\\dinov2_layers\\layer_scale.py",
+          "sha256": "356817b5d1390737128cbcc03a5333fd3060b73beae478772282ccb851d0ef85"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2_layers/mlp.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\depth_anything_v2\\dinov2_layers\\mlp.py",
+          "sha256": "c18c5b3f021408597a473bb710070ec3fb3b39f5a2e42e88ae83ced425a608b5"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2_layers/patch_embed.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\depth_anything_v2\\dinov2_layers\\patch_embed.py",
+          "sha256": "b3f82e19926c9cfb63f10136aca5e8a723bde1ad62dae1d04f90d405f9439baf"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2_layers/swiglu_ffn.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\depth_anything_v2\\dinov2_layers\\swiglu_ffn.py",
+          "sha256": "df81d9901240214edc1831ce1b77558dcd6227b29a2f000fc5f546df55d2d09a"
+        },
+        {
+          "name": "source/depth_anything_v2/dpt.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\depth_anything_v2\\dpt.py",
+          "sha256": "7cc9a29b41d31e1628e5c8b8705e25ae95bc6490f779dbb695297ce2341566f5"
+        },
+        {
+          "name": "source/depth_anything_v2/util/blocks.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\depth_anything_v2\\util\\blocks.py",
+          "sha256": "351aa24b8af4bef923ebe3bed5e5e8503b08e39bf06ee045d6444a485a2036a8"
+        },
+        {
+          "name": "source/depth_anything_v2/util/transform.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\depth_anything_v2\\util\\transform.py",
+          "sha256": "a97df1dbb687457a40c387fdc3482edee7ddc5c142c7d2735ca6235a8ae2885f"
+        },
+        {
+          "name": "source/metric_depth/dataset/hypersim.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\dataset\\hypersim.py",
+          "sha256": "4b0d8a02bf824c44333db2ffc5325040d9225431d0c277765fd67b6ca7447617"
+        },
+        {
+          "name": "source/metric_depth/dataset/kitti.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\dataset\\kitti.py",
+          "sha256": "30794974e677419313d6f0e29f9e8467e059a03e6d68eb1a17123b1c5476bc11"
+        },
+        {
+          "name": "source/metric_depth/dataset/transform.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\dataset\\transform.py",
+          "sha256": "684a884faf897d0be24b18fb215140d0226dd62b8b27cb8aab740f9066715965"
+        },
+        {
+          "name": "source/metric_depth/dataset/vkitti2.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\dataset\\vkitti2.py",
+          "sha256": "e6951506752e4bbedc683c25f3197aeafe02fda191fb63a496f3d5a027ddfc40"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\depth_anything_v2\\dinov2.py",
+          "sha256": "0ceeaecd4e8026f8218694014642515fb7a0943c1833b75edc91ae7a79ac9690"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2_layers/__init__.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\depth_anything_v2\\dinov2_layers\\__init__.py",
+          "sha256": "e3c28c7b775165b6844000eb69f44d104d6c3803ac7da5d59f6ac3ecfb46d9d8"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2_layers/attention.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\depth_anything_v2\\dinov2_layers\\attention.py",
+          "sha256": "0d2410ce8b8b4499a6b0cdab939ae2bceab8971efd8660d999b0f3088f28cbf7"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2_layers/block.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\depth_anything_v2\\dinov2_layers\\block.py",
+          "sha256": "093266ea08084c7cce7b8ddd779ecfaaa13055735faa8a7d68b5924f385b395b"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2_layers/drop_path.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\depth_anything_v2\\dinov2_layers\\drop_path.py",
+          "sha256": "949100aac4d9c19c9d65319dbd362886c5d46a72d7586ba4fd500e9f1d51570c"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2_layers/layer_scale.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\depth_anything_v2\\dinov2_layers\\layer_scale.py",
+          "sha256": "356817b5d1390737128cbcc03a5333fd3060b73beae478772282ccb851d0ef85"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2_layers/mlp.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\depth_anything_v2\\dinov2_layers\\mlp.py",
+          "sha256": "c18c5b3f021408597a473bb710070ec3fb3b39f5a2e42e88ae83ced425a608b5"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2_layers/patch_embed.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\depth_anything_v2\\dinov2_layers\\patch_embed.py",
+          "sha256": "b3f82e19926c9cfb63f10136aca5e8a723bde1ad62dae1d04f90d405f9439baf"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2_layers/swiglu_ffn.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\depth_anything_v2\\dinov2_layers\\swiglu_ffn.py",
+          "sha256": "df81d9901240214edc1831ce1b77558dcd6227b29a2f000fc5f546df55d2d09a"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dpt.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\depth_anything_v2\\dpt.py",
+          "sha256": "120698fd0ad9a4d169b4b9ef26035ad0cb11eed4089af53e07e38f5717024b1d"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/util/blocks.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\depth_anything_v2\\util\\blocks.py",
+          "sha256": "351aa24b8af4bef923ebe3bed5e5e8503b08e39bf06ee045d6444a485a2036a8"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/util/transform.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\depth_anything_v2\\util\\transform.py",
+          "sha256": "a97df1dbb687457a40c387fdc3482edee7ddc5c142c7d2735ca6235a8ae2885f"
+        },
+        {
+          "name": "source/metric_depth/depth_to_pointcloud.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\depth_to_pointcloud.py",
+          "sha256": "d4d30d0ce76c2fdbf539cd97bed01948d7506acd8fe75481ab4b32c4170310d7"
+        },
+        {
+          "name": "source/metric_depth/run.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\run.py",
+          "sha256": "ce2ecbb342933ff442f6fefab14ef5f5b7aea42c7987325f6f3166c9c73f84cb"
+        },
+        {
+          "name": "source/metric_depth/train.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\train.py",
+          "sha256": "1461b9a4ffc880085b3a1d193d052da5ce416a999421c65b792267e65fccfb10"
+        },
+        {
+          "name": "source/metric_depth/util/dist_helper.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\util\\dist_helper.py",
+          "sha256": "97eb1d0eaa639c2599813c3b5578cb39d9d415efe99aea1ff7cf6eab1ea8e9c8"
+        },
+        {
+          "name": "source/metric_depth/util/loss.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\util\\loss.py",
+          "sha256": "4acc0c1c805bc16dba34e7bd0ee9ffb9ba50d374868412cf96dffff087023a2b"
+        },
+        {
+          "name": "source/metric_depth/util/metric.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\util\\metric.py",
+          "sha256": "595ae2f0c8bda88f6588d35b199b5ec9d4ba7ad531f58bd593d5ef4d28263794"
+        },
+        {
+          "name": "source/metric_depth/util/utils.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\metric_depth\\util\\utils.py",
+          "sha256": "e69aa66e267e9b251826dbb0386b6f47fdd5fc4a4e2bfd1c98405f4bb1be526b"
+        },
+        {
+          "name": "source/run.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\run.py",
+          "sha256": "b8beab6341314bc864cfc0283e0e303f55571af4e2e456c3d3afbc4aae67249a"
+        },
+        {
+          "name": "source/run_video.py",
+          "path": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\models\\depth_anything_v2_small\\source\\Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf\\run_video.py",
+          "sha256": "208c173e383c0515a3a23d35b2a4cde816560f1c01af19913fc4dedc4b1cf32c"
+        }
+      ],
+      "environment_lock_file": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\preprocessing\\environments\\venv_t3_cpu.freeze.txt",
+      "environment_lock_sha256": "dfcd604716cd2ab9696e7f55a552c5a9d2883b032aeaab251eec58825afe10e7",
+      "model_bundle_sha256": "27c5f39281528e5c9e3a9f801be126f0dfa69bc48ba33132fcaae773244dfb30",
+      "model_name": "Depth-Anything-V2-Small",
+      "python_executable": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\preprocessing\\environments\\venv_t3_cpu\\Scripts\\python.exe",
+      "ready": false,
+      "source_revision": "a561b849ebae10a6f5ef49e26c83cbbcd36c71bf",
+      "warmup_evidence": null
+    }
+  }
+}

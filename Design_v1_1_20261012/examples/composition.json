@@ -1,0 +1,25 @@
+{
+  "task_type": "low-light",
+  "treat": [
+    "low-light",
+    "shadow noise"
+  ],
+  "preserve": [
+    "night mood",
+    "readable text",
+    "face identity"
+  ],
+  "region_notes": [
+    {
+      "region": "left doorway",
+      "anchor": "visual",
+      "issue": "low visibility",
+      "action": "treat",
+      "directive": "Lift supported shadow detail while retaining night mood."
+    }
+  ],
+  "evidence_used": [
+    "OCR fixture: ambiguous text"
+  ],
+  "instruction": "You are an image restoration expert. Restore this photograph as a faithful record of its original scene. The photograph shows a street at night, with a sign above a doorway and a person near the left side of the entrance. Keep the nighttime atmosphere and the direction of the existing illumination. Lift the visibility of the shadowed doorway so that the already visible person and surrounding objects can be distinguished without turning the frame into a daytime scene. Reduce visible noise in the darker wall and clothing while retaining the original edges and supported surface detail. Keep the bright sign under control so its existing readable characters and strokes remain consistent with the source. Do not replace ambiguous characters with plausible new words. Preserve the person’s identity, facial proportions and natural skin texture without adding facial features. Keep the positions and shapes of the doorway, walls and background objects. Avoid halos, plastic surfaces and invented fine detail. Return one restored photograph with the original composition and no unrelated colour grade."
+}

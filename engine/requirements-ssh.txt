@@ -1,0 +1,2 @@
+# Optional SSH transport environment, separate from Controller and model SDKs.
+paramiko==4.0.0

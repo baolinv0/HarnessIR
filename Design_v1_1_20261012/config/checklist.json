@@ -1,0 +1,16 @@
+{
+  "profile_id": "chatgpt_adapted_v1",
+  "items": {
+    "C1": "target degradation sufficiently removed",
+    "C2": "source-grounded scene, structure and texture",
+    "C3": "text fidelity",
+    "C4": "face fidelity",
+    "C5": "composition and geometry",
+    "C6": "task scope and scene character",
+    "C7": "restoration artifacts"
+  },
+  "na_allowed": [
+    "C3",
+    "C4"
+  ]
+}

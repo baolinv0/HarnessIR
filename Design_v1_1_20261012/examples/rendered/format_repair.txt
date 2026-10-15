@@ -1,0 +1,211 @@
+This is a FORMAT repair for the existing verify task, not a new diagnosis, composition, image generation or visual evaluation. Return the same substantive result as strict JSON matching the schema. Do not alter your earlier conclusions to improve the score. If your previous conclusions were internally contradictory, explain the contradiction in the reasoning field and use the actual image evidence to resolve it. Do not call the image editor.
+Validation errors: []
+Previous raw response: {}
+Output schema: {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harnessir.example/schemas/v1/verification.schema.json",
+  "type": "object",
+  "properties": {
+    "reasoning": {
+      "type": "string",
+      "minLength": 1
+    },
+    "checklist": {
+      "type": "object",
+      "properties": {
+        "C1": {
+          "enum": [
+            "pass",
+            "fail",
+            "na"
+          ]
+        },
+        "C2": {
+          "enum": [
+            "pass",
+            "fail",
+            "na"
+          ]
+        },
+        "C3": {
+          "enum": [
+            "pass",
+            "fail",
+            "na"
+          ]
+        },
+        "C4": {
+          "enum": [
+            "pass",
+            "fail",
+            "na"
+          ]
+        },
+        "C5": {
+          "enum": [
+            "pass",
+            "fail",
+            "na"
+          ]
+        },
+        "C6": {
+          "enum": [
+            "pass",
+            "fail",
+            "na"
+          ]
+        },
+        "C7": {
+          "enum": [
+            "pass",
+            "fail",
+            "na"
+          ]
+        }
+      },
+      "required": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "C7"
+      ],
+      "additionalProperties": false
+    },
+    "defects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "minLength": 1
+          },
+          "bbox_norm": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "issue": {
+            "type": "string",
+            "minLength": 1
+          },
+          "item": {
+            "enum": [
+              "C1",
+              "C2",
+              "C3",
+              "C4",
+              "C5",
+              "C6",
+              "C7"
+            ]
+          },
+          "severity": {
+            "enum": [
+              "mild",
+              "moderate",
+              "severe"
+            ]
+          }
+        },
+        "required": [
+          "location",
+          "bbox_norm",
+          "issue",
+          "item",
+          "severity"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "scores": {
+      "type": "object",
+      "properties": {
+        "restoration_sufficiency": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "fidelity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "scope_discipline": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "naturalness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        }
+      },
+      "required": [
+        "restoration_sufficiency",
+        "fidelity",
+        "scope_discipline",
+        "naturalness"
+      ],
+      "additionalProperties": false
+    },
+    "overall": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "failure_mode": {
+      "enum": [
+        "none",
+        "under_doing",
+        "over_reach",
+        "both"
+      ]
+    },
+    "verdict": {
+      "enum": [
+        "correct",
+        "incorrect"
+      ]
+    },
+    "needs_redo": {
+      "type": "boolean"
+    },
+    "redo_priority": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "best_round": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "best_round_why": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "reasoning",
+    "checklist",
+    "defects",
+    "scores",
+    "overall",
+    "failure_mode",
+    "verdict",
+    "needs_redo",
+    "redo_priority",
+    "best_round",
+    "best_round_why"
+  ],
+  "additionalProperties": false
+}

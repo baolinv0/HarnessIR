@@ -1,0 +1,54 @@
+{
+  "protocol_version": "1.0",
+  "task_id": "fixture_case_diagnose_r001",
+  "case_id": "fixture_case",
+  "role": "diagnose",
+  "round": 1,
+  "expected_state_revision": 1,
+  "input_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "status": "ok",
+  "payload": {
+    "content": "Synthetic fixture: a dark street containing a sign and a small face. This is not a real image experiment.",
+    "degradations": [
+      {
+        "type": "low-light",
+        "severity": "moderate",
+        "spatial": "global",
+        "location": "whole image",
+        "worst_at": "left doorway",
+        "mildest_at": "upper sign",
+        "evidence": "Synthetic protocol example only"
+      }
+    ],
+    "sensitive": {
+      "has_text": true,
+      "has_faces": true,
+      "has_layered_depth": false,
+      "has_complex_semantics": false,
+      "notes": "Fixture only; do not use as a real diagnosis."
+    },
+    "tool_plan": [
+      {
+        "tool": "T1_OCR",
+        "reason": "Protect the visible sign characters."
+      },
+      {
+        "tool": "T2_FACE",
+        "reason": "Protect the small face at the doorway."
+      }
+    ],
+    "difficulty_hint": "medium",
+    "difficulty_reason": "Synthetic protocol fixture."
+  },
+  "error": null,
+  "provenance": {
+    "model_display_name": "Synthetic fixture, no model was called",
+    "model_version": null,
+    "model_version_source": "not_exposed",
+    "session_id": null,
+    "transport_mode": "clipboard_import",
+    "writer": "manual_import",
+    "started_at": "2026-10-12T13:17:16Z",
+    "completed_at": "2026-10-12T13:17:16Z"
+  }
+}

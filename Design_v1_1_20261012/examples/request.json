@@ -1,0 +1,29 @@
+{
+  "protocol_version": "1.0",
+  "task_id": "fixture_case_diagnose_r001",
+  "case_id": "fixture_case",
+  "role": "diagnose",
+  "round": 1,
+  "attempt_index": 0,
+  "expected_state_revision": 1,
+  "input_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "profile_id": "chatgpt_adapted_v1",
+  "template_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "prompt_file": "tasks/fixture_case_diagnose_r001/prompt.txt",
+  "payload_schema": "diagnosis.schema.json",
+  "allowed_assets": [
+    {
+      "path": "input/canonical.png",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kind": "photo",
+      "width": 1024,
+      "height": 768
+    }
+  ],
+  "context": {
+    "fixture_only": true,
+    "intent": "Restore low-light visibility and preserve the night mood."
+  },
+  "response_file": "tasks/fixture_case_diagnose_r001/response.json",
+  "ready_marker": "tasks/fixture_case_diagnose_r001/done.json"
+}

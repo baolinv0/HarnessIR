@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harnessir.example/schemas/v1/state.schema.json",
+  "type": "object",
+  "properties": {
+    "protocol_version": {
+      "const": "1.0"
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "workflow_status": {
+      "enum": [
+        "INIT",
+        "WAIT_DIAGNOSIS",
+        "WAIT_EVIDENCE",
+        "WAIT_COMPOSITION",
+        "WAIT_EXECUTION",
+        "WAIT_VERIFICATION",
+        "WAIT_REFINEMENT",
+        "FINISHED"
+      ]
+    },
+    "operation_status": {
+      "enum": [
+        "active",
+        "paused",
+        "blocked",
+        "cancelled"
+      ]
+    },
+    "round": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "pending_task_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "input_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "profile_id": {
+      "const": "chatgpt_adapted_v1"
+    },
+    "config_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "required_tools": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "T1_OCR",
+          "T2_FACE",
+          "T3_DEPTH",
+          "T4_SEGMENTATION"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "received_tools": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "T1_OCR",
+          "T2_FACE",
+          "T3_DEPTH",
+          "T4_SEGMENTATION"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "budget": {
+      "type": "object",
+      "properties": {
+        "max_generations": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "reserved": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "consumed": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "max_generations",
+        "reserved",
+        "consumed"
+      ],
+      "additionalProperties": false
+    },
+    "next_action": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "required_artifacts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "target_role": {
+          "enum": [
+            "diagnose",
+            "compose",
+            "execute",
+            "verify",
+            "refine",
+            null
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "required_artifacts",
+        "target_role"
+      ],
+      "additionalProperties": false
+    },
+    "workflow_completed": {
+      "type": "boolean"
+    },
+    "restoration_success": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "selected_round": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "terminal_reason": {
+      "enum": [
+        null,
+        "accepted",
+        "no_further_gain",
+        "budget_exhausted",
+        "duplicate_output",
+        "no_prompt_change",
+        "cancelled",
+        "no_valid_output"
+      ]
+    },
+    "deviated": {
+      "type": "boolean"
+    },
+    "block_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "protocol_version",
+    "case_id",
+    "revision",
+    "workflow_status",
+    "operation_status",
+    "round",
+    "pending_task_id",
+    "input_sha256",
+    "profile_id",
+    "config_sha256",
+    "required_tools",
+    "received_tools",
+    "budget",
+    "next_action",
+    "workflow_completed",
+    "restoration_success",
+    "selected_round",
+    "terminal_reason",
+    "deviated",
+    "block_reason",
+    "created_at",
+    "updated_at"
+  ],
+  "additionalProperties": false
+}

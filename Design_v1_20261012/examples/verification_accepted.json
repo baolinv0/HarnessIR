@@ -1,0 +1,26 @@
+{
+  "reasoning": "Synthetic accepted fixture only; no model was called.",
+  "checklist": {
+    "C1": "pass",
+    "C2": "pass",
+    "C3": "pass",
+    "C4": "pass",
+    "C5": "pass",
+    "C6": "pass",
+    "C7": "pass"
+  },
+  "defects": [],
+  "scores": {
+    "restoration_sufficiency": 5,
+    "fidelity": 8,
+    "scope_discipline": 8,
+    "naturalness": 6
+  },
+  "overall": 6,
+  "failure_mode": "none",
+  "verdict": "correct",
+  "needs_redo": false,
+  "redo_priority": 0,
+  "best_round": 0,
+  "best_round_why": "Only one synthetic example attempt."
+}

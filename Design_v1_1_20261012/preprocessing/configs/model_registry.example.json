@@ -1,0 +1,46 @@
+{
+  "registry_status": "not_deployed",
+  "automatic_download": false,
+  "tools": {
+    "T1_OCR": {
+      "model_name": "PP-OCRv6_medium_det+rec",
+      "python_executable": null,
+      "components": [],
+      "model_bundle_sha256": null,
+      "source_revision": null,
+      "environment_lock_sha256": null,
+      "ready": false,
+      "warmup_evidence": null
+    },
+    "T2_FACE": {
+      "model_name": "SCRFD_det_10g",
+      "python_executable": null,
+      "components": [],
+      "model_bundle_sha256": null,
+      "source_revision": null,
+      "environment_lock_sha256": null,
+      "ready": false,
+      "warmup_evidence": null
+    },
+    "T3_DEPTH": {
+      "model_name": "Depth-Anything-V2-Small",
+      "python_executable": null,
+      "components": [],
+      "model_bundle_sha256": null,
+      "source_revision": null,
+      "environment_lock_sha256": null,
+      "ready": false,
+      "warmup_evidence": null
+    },
+    "T4_SEGMENTATION": {
+      "model_name": "YOLOE-26n-seg",
+      "python_executable": null,
+      "components": [],
+      "model_bundle_sha256": null,
+      "source_revision": null,
+      "environment_lock_sha256": null,
+      "ready": false,
+      "warmup_evidence": null
+    }
+  }
+}

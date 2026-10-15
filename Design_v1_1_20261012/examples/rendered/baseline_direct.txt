@@ -1,0 +1,1 @@
+Restore the attached photograph according to this request: Restore low-light visibility and preserve the night mood. Preserve its composition, objects, people, readable text, real colours and natural scene lighting. Correct the visible target degradation without inventing missing content, beautifying faces or applying an unrelated style. Return one restored photograph.

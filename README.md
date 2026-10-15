@@ -1,3 +1,5 @@
+> **Local Manual Wizard / Gemini API:** see [START_HERE.md](START_HERE.md) and [README_MANUAL.md](README_MANUAL.md) for the file-based controller, evidence tools, tests, and optional API route. The original project documentation follows below.
+
 <div align="center">
 
 # HarnessIR: Harnessing Multimodal Foundation Models for Universal Real-World Image Restoration

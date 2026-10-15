@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harnessir.example/schemas/v1_1/tool_payload_depth.schema.json",
+  "type": "object",
+  "properties": {
+    "depth_path": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*[:\\\\])[A-Za-z0-9_./-]+$"
+    },
+    "valid_mask_path": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*[:\\\\])[A-Za-z0-9_./-]+$"
+    },
+    "preview_path": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*[:\\\\])[A-Za-z0-9_./-]+$"
+    },
+    "grid_shape": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "dtype": {
+      "const": "float32"
+    },
+    "representation": {
+      "const": "relative_depth"
+    },
+    "larger_is": {
+      "enum": [
+        "near",
+        "far"
+      ]
+    },
+    "view_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "finite_value_range": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "normalization": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "enum": [
+            "minmax",
+            "percentile",
+            "none"
+          ]
+        },
+        "parameters": {
+          "type": "object"
+        },
+        "near_colour": {
+          "type": "string",
+          "minLength": 1
+        },
+        "far_colour": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "method",
+        "parameters",
+        "near_colour",
+        "far_colour"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "depth_path",
+    "valid_mask_path",
+    "preview_path",
+    "grid_shape",
+    "dtype",
+    "representation",
+    "larger_is",
+    "view_id",
+    "finite_value_range",
+    "normalization"
+  ],
+  "additionalProperties": false
+}

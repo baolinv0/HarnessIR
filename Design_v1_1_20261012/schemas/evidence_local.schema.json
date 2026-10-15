@@ -1,0 +1,457 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harnessir.example/schemas/v1_1/evidence_local.schema.json",
+  "type": "object",
+  "properties": {
+    "protocol_version": {
+      "const": "1.1"
+    },
+    "tool_id": {
+      "enum": [
+        "T1_OCR",
+        "T2_FACE",
+        "T3_DEPTH",
+        "T4_SEGMENTATION"
+      ]
+    },
+    "input_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "error"
+      ]
+    },
+    "model_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "checkpoint_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "source_width": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "source_height": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "tool_width": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "tool_height": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "coordinates": {
+      "const": "canonical_norm"
+    },
+    "source_to_tool": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        },
+        "minItems": 3,
+        "maxItems": 3
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "detections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "bbox_norm": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "text": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "confidence": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "ambiguous": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "bbox_norm",
+          "label",
+          "text",
+          "confidence",
+          "ambiguous"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "$ref": "https://harnessir.example/schemas/v1/asset.schema.json"
+      }
+    },
+    "data": {
+      "type": "object"
+    },
+    "error": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "image_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "original_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "evidence_profile_id": {
+      "enum": [
+        "cpu_probe_v1",
+        "gpu_full_v1",
+        "gpu_harness_tools_v1",
+        "hardcase_roi_v1"
+      ]
+    },
+    "model_bundle_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "name",
+          "sha256"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "backend": {
+      "type": "object",
+      "properties": {
+        "implementation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "framework": {
+          "type": "string",
+          "minLength": 1
+        },
+        "framework_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "device": {
+          "type": "string",
+          "minLength": 1
+        },
+        "precision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "environment_lock_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "implementation",
+        "source_revision",
+        "framework",
+        "framework_version",
+        "device",
+        "precision",
+        "environment_lock_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "parameters_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "cache_key": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "views": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "grid_shape": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "view_to_canonical": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "kind": {
+            "enum": [
+              "full_frame",
+              "roi",
+              "tile"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "grid_shape",
+          "view_to_canonical",
+          "kind"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "quality_warnings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "elapsed_ms": {
+      "type": "number",
+      "minimum": 0
+    },
+    "peak_rss_mb": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "formal_eligible": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "protocol_version",
+    "tool_id",
+    "input_sha256",
+    "status",
+    "model_name",
+    "checkpoint_sha256",
+    "source_width",
+    "source_height",
+    "tool_width",
+    "tool_height",
+    "coordinates",
+    "source_to_tool",
+    "detections",
+    "assets",
+    "data",
+    "error",
+    "image_id",
+    "original_sha256",
+    "evidence_profile_id",
+    "model_bundle_sha256",
+    "components",
+    "backend",
+    "parameters_sha256",
+    "cache_key",
+    "views",
+    "quality_warnings",
+    "elapsed_ms",
+    "peak_rss_mb",
+    "formal_eligible"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "tool_id": {
+            "const": "T1_OCR"
+          },
+          "status": {
+            "const": "ok"
+          }
+        },
+        "required": [
+          "tool_id",
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "https://harnessir.example/schemas/v1_1/tool_payload_ocr.schema.json"
+          },
+          "error": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tool_id": {
+            "const": "T2_FACE"
+          },
+          "status": {
+            "const": "ok"
+          }
+        },
+        "required": [
+          "tool_id",
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "https://harnessir.example/schemas/v1_1/tool_payload_face.schema.json"
+          },
+          "error": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tool_id": {
+            "const": "T3_DEPTH"
+          },
+          "status": {
+            "const": "ok"
+          }
+        },
+        "required": [
+          "tool_id",
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "https://harnessir.example/schemas/v1_1/tool_payload_depth.schema.json"
+          },
+          "error": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tool_id": {
+            "const": "T4_SEGMENTATION"
+          },
+          "status": {
+            "const": "ok"
+          }
+        },
+        "required": [
+          "tool_id",
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "https://harnessir.example/schemas/v1_1/tool_payload_segmentation.schema.json"
+          },
+          "error": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "error"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "error": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ]
+}

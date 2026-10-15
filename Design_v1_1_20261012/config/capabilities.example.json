@@ -1,0 +1,12 @@
+{
+  "example_only": true,
+  "tested_on_user_device": false,
+  "local_read_write": "untested",
+  "role_dispatch": "untested",
+  "image_edit": "untested",
+  "image_save": "untested",
+  "observed_model_display_name": null,
+  "backend_version": null,
+  "dispatcher_mechanism": null,
+  "evidence_files": []
+}

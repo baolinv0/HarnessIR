@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harnessir.example/schemas/v1/execution.schema.json",
+  "type": "object",
+  "properties": {
+    "output_asset": {
+      "$ref": "https://harnessir.example/schemas/v1/asset.schema.json"
+    },
+    "input_image_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "instruction_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "provider_sequence_index": {
+      "const": 0
+    },
+    "actual_generations": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "extra_assets": {
+      "type": "array",
+      "items": {
+        "$ref": "https://harnessir.example/schemas/v1/asset.schema.json"
+      }
+    },
+    "save_method": {
+      "enum": [
+        "manual_download",
+        "local_work_save",
+        "supported_bridge_save"
+      ]
+    },
+    "provider_settings": {
+      "type": "object"
+    },
+    "seed_control": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "output_asset",
+    "input_image_sha256",
+    "instruction_sha256",
+    "provider_sequence_index",
+    "actual_generations",
+    "extra_assets",
+    "save_method",
+    "provider_settings",
+    "seed_control"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,49 @@
+{
+  "protocol_version": "1.0",
+  "tool_id": "T1_OCR",
+  "input_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "status": "ok",
+  "model_name": "Synthetic fixture, no OCR was called",
+  "checkpoint_sha256": null,
+  "source_width": 1024,
+  "source_height": 768,
+  "tool_width": 1024,
+  "tool_height": 768,
+  "coordinates": "canonical_norm",
+  "source_to_tool": [
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      1
+    ]
+  ],
+  "detections": [
+    {
+      "bbox_norm": [
+        0.4,
+        0.1,
+        0.7,
+        0.25
+      ],
+      "label": null,
+      "text": null,
+      "confidence": 0.4,
+      "ambiguous": true
+    }
+  ],
+  "assets": [],
+  "data": {
+    "fixture_only": true
+  },
+  "error": null
+}

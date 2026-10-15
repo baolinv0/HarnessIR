@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harnessir.example/schemas/v1/diagnosis.schema.json",
+  "type": "object",
+  "properties": {
+    "content": {
+      "type": "string",
+      "minLength": 1
+    },
+    "degradations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "enum": [
+              "blur",
+              "softness",
+              "motion-blur",
+              "defocus-blur",
+              "noise",
+              "film-grain",
+              "jpeg",
+              "blocking",
+              "ringing",
+              "low-light",
+              "haze",
+              "rain-streaks",
+              "raindrops-on-glass",
+              "rain-veil",
+              "snow-airborne",
+              "snow-veil",
+              "overexposure",
+              "color-cast",
+              "glare",
+              "reflection",
+              "backlight",
+              "hard-shadow",
+              "moire",
+              "scratch",
+              "crease",
+              "dust-spot",
+              "stain",
+              "fade",
+              "other"
+            ]
+          },
+          "severity": {
+            "enum": [
+              "mild",
+              "moderate",
+              "severe"
+            ]
+          },
+          "spatial": {
+            "enum": [
+              "global",
+              "local"
+            ]
+          },
+          "location": {
+            "type": "string",
+            "minLength": 1
+          },
+          "worst_at": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mildest_at": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "type",
+          "severity",
+          "spatial",
+          "location",
+          "worst_at",
+          "mildest_at",
+          "evidence"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "sensitive": {
+      "type": "object",
+      "properties": {
+        "has_text": {
+          "type": "boolean"
+        },
+        "has_faces": {
+          "type": "boolean"
+        },
+        "has_layered_depth": {
+          "type": "boolean"
+        },
+        "has_complex_semantics": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "has_text",
+        "has_faces",
+        "has_layered_depth",
+        "has_complex_semantics",
+        "notes"
+      ],
+      "additionalProperties": false
+    },
+    "tool_plan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tool": {
+            "enum": [
+              "T1_OCR",
+              "T2_FACE",
+              "T3_DEPTH",
+              "T4_SEGMENTATION"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "tool",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 4
+    },
+    "difficulty_hint": {
+      "enum": [
+        "easy",
+        "medium",
+        "hard"
+      ]
+    },
+    "difficulty_reason": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "content",
+    "degradations",
+    "sensitive",
+    "tool_plan",
+    "difficulty_hint",
+    "difficulty_reason"
+  ],
+  "additionalProperties": false
+}

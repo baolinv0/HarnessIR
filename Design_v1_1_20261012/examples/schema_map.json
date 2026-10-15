@@ -1,0 +1,20 @@
+{
+  "diagnosis.json": "diagnosis.schema.json",
+  "composition.json": "composition.schema.json",
+  "verification.json": "verification.schema.json",
+  "request.json": "request.schema.json",
+  "response.json": "response.schema.json",
+  "done.json": "done.schema.json",
+  "evidence.json": "evidence.schema.json",
+  "state.json": "state.schema.json",
+  "execution.json": "execution.schema.json",
+  "verification_accepted.json": "verification.schema.json",
+  "verification_no_further_gain.json": "verification.schema.json",
+  "local_tools/t1_ocr.json": "evidence_local.schema.json",
+  "local_tools/t2_face.json": "evidence_local.schema.json",
+  "local_tools/t3_depth.json": "evidence_local.schema.json",
+  "local_tools/t4_segmentation.json": "evidence_local.schema.json",
+  "local_tools/cache_contract.json": "cache_contract.schema.json",
+  "local_tools/tool_job.json": "tool_job.schema.json",
+  "local_tools/evidence_binding.json": "evidence_binding.schema.json"
+}

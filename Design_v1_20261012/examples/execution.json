@@ -1,0 +1,19 @@
+{
+  "output_asset": {
+    "path": "rounds/round_001/output.png",
+    "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "kind": "photo",
+    "width": 1024,
+    "height": 768
+  },
+  "input_image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "instruction_sha256": "01b3a7bef650bbc419d65512fd715e4476ced0d106ca48da5a26862b13be56ac",
+  "provider_sequence_index": 0,
+  "actual_generations": 1,
+  "extra_assets": [],
+  "save_method": "manual_download",
+  "provider_settings": {
+    "fixture_only": true
+  },
+  "seed_control": false
+}

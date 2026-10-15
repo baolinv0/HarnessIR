@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harnessir.example/schemas/v1/evidence.schema.json",
+  "type": "object",
+  "properties": {
+    "protocol_version": {
+      "const": "1.0"
+    },
+    "tool_id": {
+      "enum": [
+        "T1_OCR",
+        "T2_FACE",
+        "T3_DEPTH",
+        "T4_SEGMENTATION"
+      ]
+    },
+    "input_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "error"
+      ]
+    },
+    "model_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "checkpoint_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "source_width": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "source_height": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "tool_width": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "tool_height": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "coordinates": {
+      "const": "canonical_norm"
+    },
+    "source_to_tool": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        },
+        "minItems": 3,
+        "maxItems": 3
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "detections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "bbox_norm": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "text": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "confidence": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "ambiguous": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "bbox_norm",
+          "label",
+          "text",
+          "confidence",
+          "ambiguous"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "$ref": "https://harnessir.example/schemas/v1/asset.schema.json"
+      }
+    },
+    "data": {
+      "type": "object"
+    },
+    "error": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "protocol_version",
+    "tool_id",
+    "input_sha256",
+    "status",
+    "model_name",
+    "checkpoint_sha256",
+    "source_width",
+    "source_height",
+    "tool_width",
+    "tool_height",
+    "coordinates",
+    "source_to_tool",
+    "detections",
+    "assets",
+    "data",
+    "error"
+  ],
+  "additionalProperties": false
+}

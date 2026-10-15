@@ -1,0 +1,11 @@
+{
+  "prompt_set_id": "portrait_hair_probe_v1",
+  "labels": [
+    "person",
+    "face",
+    "hair"
+  ],
+  "unknown_id": 0,
+  "fixed_order": true,
+  "palette_seed": 0
+}

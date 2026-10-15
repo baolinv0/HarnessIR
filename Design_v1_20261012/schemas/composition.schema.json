@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harnessir.example/schemas/v1/composition.schema.json",
+  "type": "object",
+  "properties": {
+    "task_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "treat": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "preserve": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "region_notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "anchor": {
+            "enum": [
+              "visual",
+              "depth",
+              "semantic",
+              "depth and semantic",
+              "visual and depth",
+              "visual and semantic",
+              "visual and depth and semantic"
+            ]
+          },
+          "issue": {
+            "type": "string",
+            "minLength": 1
+          },
+          "action": {
+            "enum": [
+              "treat",
+              "protect"
+            ]
+          },
+          "directive": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "region",
+          "anchor",
+          "issue",
+          "action",
+          "directive"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "evidence_used": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "instruction": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 10000
+    }
+  },
+  "required": [
+    "task_type",
+    "treat",
+    "preserve",
+    "region_notes",
+    "evidence_used",
+    "instruction"
+  ],
+  "additionalProperties": false
+}

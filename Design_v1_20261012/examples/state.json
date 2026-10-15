@@ -1,0 +1,40 @@
+{
+  "protocol_version": "1.0",
+  "case_id": "fixture_case",
+  "revision": 2,
+  "workflow_status": "WAIT_EVIDENCE",
+  "operation_status": "active",
+  "round": 1,
+  "pending_task_id": null,
+  "input_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "profile_id": "chatgpt_adapted_v1",
+  "config_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "required_tools": [
+    "T1_OCR",
+    "T2_FACE"
+  ],
+  "received_tools": [
+    "T1_OCR"
+  ],
+  "budget": {
+    "max_generations": 3,
+    "reserved": 0,
+    "consumed": 0
+  },
+  "next_action": {
+    "code": "upload_evidence",
+    "message": "请提供人脸检测 evidence.json。",
+    "required_artifacts": [
+      "tools/T2_FACE/evidence.json"
+    ],
+    "target_role": null
+  },
+  "workflow_completed": false,
+  "restoration_success": null,
+  "selected_round": null,
+  "terminal_reason": null,
+  "deviated": false,
+  "block_reason": null,
+  "created_at": "2026-10-12T13:17:16Z",
+  "updated_at": "2026-10-12T13:17:16Z"
+}

@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hir-manual"
+version = "1.1.0"
+description = "File-based HarnessIR controller for ChatGPT desktop image editing"
+requires-python = ">=3.11"
+dependencies = ["streamlit>=1.39,<2", "pydantic>=2.9,<3", "Jinja2>=3.1,<4", "jsonschema>=4.23,<5", "referencing>=0.35,<1", "Pillow>=11,<13", "filelock>=3.16,<4", "rfc3339-validator>=0.1.4,<1", "numpy>=2,<3", "psutil>=7.2,<8"]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<10"]
+
+[project.scripts]
+hir-manual = "hir_manual.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = ["private_assets: requires separately retained real cache, archives and independent source locks"]

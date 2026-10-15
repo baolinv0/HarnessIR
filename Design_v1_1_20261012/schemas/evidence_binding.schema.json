@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harnessir.example/schemas/v1_1/evidence_binding.schema.json",
+  "type": "object",
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tool_id": {
+      "enum": [
+        "T1_OCR",
+        "T2_FACE",
+        "T3_DEPTH",
+        "T4_SEGMENTATION"
+      ]
+    },
+    "cache_key": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "cache_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "case_manifest_path": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*[:\\\\])[A-Za-z0-9_./-]+$"
+    },
+    "case_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "source": {
+      "enum": [
+        "local_compute",
+        "cache_import",
+        "manual_import"
+      ]
+    },
+    "evidence_profile_id": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "case_id",
+    "tool_id",
+    "cache_key",
+    "cache_manifest_sha256",
+    "case_manifest_path",
+    "case_manifest_sha256",
+    "source",
+    "evidence_profile_id"
+  ],
+  "additionalProperties": false
+}

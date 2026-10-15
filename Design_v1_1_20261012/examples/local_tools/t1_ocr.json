@@ -1,0 +1,137 @@
+{
+  "protocol_version": "1.1",
+  "tool_id": "T1_OCR",
+  "input_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "status": "ok",
+  "model_name": "Synthetic fixture, no OCR was called",
+  "checkpoint_sha256": null,
+  "source_width": 1024,
+  "source_height": 768,
+  "tool_width": 1024,
+  "tool_height": 768,
+  "coordinates": "canonical_norm",
+  "source_to_tool": [
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      1
+    ]
+  ],
+  "detections": [
+    {
+      "bbox_norm": [
+        0.4,
+        0.1,
+        0.7,
+        0.25
+      ],
+      "label": null,
+      "text": null,
+      "confidence": 0.4,
+      "ambiguous": true
+    }
+  ],
+  "assets": [],
+  "data": {
+    "items": [
+      {
+        "id": "text_1",
+        "polygon_norm": [
+          [
+            0.1,
+            0.1
+          ],
+          [
+            0.3,
+            0.1
+          ],
+          [
+            0.3,
+            0.2
+          ],
+          [
+            0.1,
+            0.2
+          ]
+        ],
+        "bbox_norm": [
+          0.1,
+          0.1,
+          0.3,
+          0.2
+        ],
+        "text": null,
+        "detection_confidence": 0.8,
+        "recognition_confidence": 0.3,
+        "ambiguous": true,
+        "view_id": "full"
+      }
+    ],
+    "native_result_path": "raw/ocr.json"
+  },
+  "error": null,
+  "image_id": "synthetic_fixture",
+  "original_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "evidence_profile_id": "cpu_probe_v1",
+  "model_bundle_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "components": [
+    {
+      "name": "synthetic_weight_not_real",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  ],
+  "backend": {
+    "implementation": "synthetic_fixture_no_model_called",
+    "source_revision": "fixture-v1",
+    "framework": "fixture",
+    "framework_version": "0",
+    "device": "cpu",
+    "precision": "fp32",
+    "environment_lock_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "parameters_sha256": "a21cc1000eff583aa534c9fb377700fd106e0ff1d516330ae26373f704cbd4bf",
+  "cache_key": "77a7b76a31ab2e2128d36d22a3f8d5759c50fec42f1fc75acae1a86a85fa8c59",
+  "views": [
+    {
+      "id": "full",
+      "grid_shape": [
+        768,
+        1024
+      ],
+      "view_to_canonical": [
+        [
+          0.0009765625,
+          0,
+          0
+        ],
+        [
+          0,
+          0.0013020833333333333,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "kind": "full_frame"
+    }
+  ],
+  "quality_warnings": [
+    "synthetic_fixture_no_model_called"
+  ],
+  "elapsed_ms": 0,
+  "peak_rss_mb": null,
+  "formal_eligible": false
+}

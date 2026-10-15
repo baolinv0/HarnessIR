@@ -1,0 +1,412 @@
+{
+  "automatic_download": false,
+  "tools": {
+    "T2_FACE": {
+      "model_name": "SCRFD_det_10g",
+      "python_executable": "/root/autodl-tmp/harnessir_20261013/project/preprocessing/environments/venv_t2_gpu/bin/python",
+      "components": [
+        {
+          "name": "checkpoint",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/scrfd/det_10g.onnx",
+          "sha256": "5838f7fe053675b1c7a08b633df49e7af5495cee0493c7dcf6697200b85b5b91"
+        },
+        {
+          "name": "scrfd_source",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/scrfd/scrfd.py",
+          "sha256": "64b0b787e4c235ff80c1141614a77f2b2c24c90ba5b920f1bc91fde80cbef9f9"
+        }
+      ],
+      "model_bundle_sha256": "5a38f00c793111a53d78070b7b2904ae241a7c6b49bf12b981d6596f2d6dd8b2",
+      "source_revision": "3e6486942a1be2da0e5b475fac375ea73264bd21",
+      "environment_lock_sha256": "c84ca90b7b0bcbda054b0841170e648fa6ec4a87f11e8f2167c628828b1d6f1d",
+      "ready": true,
+      "warmup_evidence": {
+        "job_id": "tool_93c0edab8090421f98880908499b6e16",
+        "cache_key": "f7827deebd2e466724db29106ed472eabef9b68894696b4b0da871022f5dc8ac",
+        "manifest_sha256": "0e48ef97ff32cfc30456f1dc79ce40b5db81ecacee8f70a06fdd47b1c370a29d",
+        "validated_at": "2026-10-12T23:58:29.886611Z",
+        "result": {
+          "status": "completed",
+          "error_code": null,
+          "message": null,
+          "returncode": 0,
+          "elapsed_ms": 5070.081293582916,
+          "peak_rss_mb": 995.828125,
+          "log_dir": "/root/autodl-tmp/harnessir_20261013/project/runtime/tool_jobs/tool_93c0edab8090421f98880908499b6e16/logs",
+          "output_dir": "/root/autodl-tmp/harnessir_20261013/project/runtime/tool_jobs/tool_93c0edab8090421f98880908499b6e16/result",
+          "pid": 3943,
+          "process_released": true,
+          "job_id": "tool_93c0edab8090421f98880908499b6e16"
+        }
+      },
+      "artifact_paths": {
+        "checkpoint": "/root/autodl-tmp/harnessir_20261013/project/models/scrfd/det_10g.onnx",
+        "scrfd_source": "/root/autodl-tmp/harnessir_20261013/project/models/scrfd/scrfd.py"
+      },
+      "backend": {
+        "implementation": "insightface_scrfd_detector_only",
+        "source_revision": "3e6486942a1be2da0e5b475fac375ea73264bd21",
+        "framework": "onnxruntime",
+        "framework_version": "1.23.2",
+        "device": "cuda:0",
+        "precision": "fp32",
+        "environment_lock_sha256": "c84ca90b7b0bcbda054b0841170e648fa6ec4a87f11e8f2167c628828b1d6f1d"
+      },
+      "environment_lock_file": "/root/autodl-tmp/harnessir_20261013/project/preprocessing/environments/t2_gpu.freeze.txt"
+    },
+    "T1_OCR": {
+      "model_name": "PP-OCRv6_medium_det+rec",
+      "python_executable": "/root/autodl-tmp/harnessir_20261013/project/preprocessing/environments/venv_t1_gpu/bin/python",
+      "components": [
+        {
+          "name": "detection_model_dir/inference.json",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/ppocrv6_medium/det/PP-OCRv6_medium_det_infer/inference.json",
+          "sha256": "0f1a7ec35da36173529c7a60238b7f7919e3831929c3f700ad90ad4896adecd5"
+        },
+        {
+          "name": "detection_model_dir/inference.pdiparams",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/ppocrv6_medium/det/PP-OCRv6_medium_det_infer/inference.pdiparams",
+          "sha256": "85218d2e3d98f5a21c58b4220627be923a97aee5db3cc71f39536ab31ac53960"
+        },
+        {
+          "name": "detection_model_dir/inference.yml",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/ppocrv6_medium/det/PP-OCRv6_medium_det_infer/inference.yml",
+          "sha256": "7298d5ead546584af2504d03355f881ac7a7bc0eb1e282d3e159277c1d0af871"
+        },
+        {
+          "name": "recognition_model_dir/inference.json",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/ppocrv6_medium/rec/PP-OCRv6_medium_rec_infer/inference.json",
+          "sha256": "0b2e25e990bd072f1bf77d59d67d508bce6c4bd44af6624e0fb27d6da2cd00e8"
+        },
+        {
+          "name": "recognition_model_dir/inference.pdiparams",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/ppocrv6_medium/rec/PP-OCRv6_medium_rec_infer/inference.pdiparams",
+          "sha256": "1b01c79a914587933f615569e75de54f2e638ebb5d3f3b3c1b38c24ede8c7319"
+        },
+        {
+          "name": "recognition_model_dir/inference.yml",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/ppocrv6_medium/rec/PP-OCRv6_medium_rec_infer/inference.yml",
+          "sha256": "991b700facf5b50a7de193468207d5f4255b538dde0d312ae3b7c7a9b6873129"
+        }
+      ],
+      "model_bundle_sha256": "4591f10c616fa3b46a8e1552120c3d5a860087c7b1821e7c40d6c7c61403c46d",
+      "source_revision": "paddleocr-3.7.0_paddlepaddle-gpu-3.3.1-cu126",
+      "environment_lock_sha256": "3f0f63c9cf91c6fda5f73f0d0415c847ac6874ff24fc5c70d9c2e6e7012f28d1",
+      "ready": true,
+      "warmup_evidence": {
+        "job_id": "tool_6616b3fdeb0c41e6a7baf4aefde61809",
+        "cache_key": "d318e835087b9e2f12797fada18520159fa119db41589e613e4006829d2976ee",
+        "manifest_sha256": "79549fc0074f5a540edbed06db5980ee539ef90213909131b1107f91b1ff4dc4",
+        "validated_at": "2026-10-13T00:04:39.658121Z",
+        "result": {
+          "status": "completed",
+          "error_code": null,
+          "message": null,
+          "returncode": 0,
+          "elapsed_ms": 8911.263272166252,
+          "peak_rss_mb": 1775.01953125,
+          "log_dir": "/root/autodl-tmp/harnessir_20261013/project/runtime/tool_jobs/tool_6616b3fdeb0c41e6a7baf4aefde61809/logs",
+          "output_dir": "/root/autodl-tmp/harnessir_20261013/project/runtime/tool_jobs/tool_6616b3fdeb0c41e6a7baf4aefde61809/result",
+          "pid": 9401,
+          "process_released": true,
+          "job_id": "tool_6616b3fdeb0c41e6a7baf4aefde61809"
+        }
+      },
+      "artifact_paths": {
+        "detection_model_dir": "/root/autodl-tmp/harnessir_20261013/project/models/ppocrv6_medium/det/PP-OCRv6_medium_det_infer",
+        "recognition_model_dir": "/root/autodl-tmp/harnessir_20261013/project/models/ppocrv6_medium/rec/PP-OCRv6_medium_rec_infer"
+      },
+      "backend": {
+        "implementation": "paddleocr_pipeline",
+        "source_revision": "paddleocr-3.7.0_paddlepaddle-gpu-3.3.1-cu126",
+        "framework": "paddlepaddle",
+        "framework_version": "3.3.1",
+        "device": "cuda:0",
+        "precision": "fp32",
+        "environment_lock_sha256": "3f0f63c9cf91c6fda5f73f0d0415c847ac6874ff24fc5c70d9c2e6e7012f28d1"
+      },
+      "environment_lock_file": "/root/autodl-tmp/harnessir_20261013/project/preprocessing/environments/t1_gpu.freeze.txt"
+    },
+    "T3_DEPTH": {
+      "model_name": "Depth-Anything-V2-Base",
+      "python_executable": "/root/autodl-tmp/harnessir_20261013/project/preprocessing/environments/venv_t3_gpu/bin/python",
+      "components": [
+        {
+          "name": "checkpoint",
+          "path": "/root/autodl-tmp/harnessir_20261013/depth_anything_v2_vitb.pth",
+          "sha256": "0d2b7002e62d39d655571c371333340bd88f67ab95050c03591555aa05645328"
+        },
+        {
+          "name": "source/app.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/app.py",
+          "sha256": "52fe296af84ccb9a784e5e7c8a204b817fe150eefbdea81e07010c3415acf4f4"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/depth_anything_v2/dinov2.py",
+          "sha256": "d22df8d0da44c8525ebed898fd9c33b3acfcda919a84d577cc2a08bfd3d50ac1"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2_layers/__init__.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/depth_anything_v2/dinov2_layers/__init__.py",
+          "sha256": "e3c28c7b775165b6844000eb69f44d104d6c3803ac7da5d59f6ac3ecfb46d9d8"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2_layers/attention.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/depth_anything_v2/dinov2_layers/attention.py",
+          "sha256": "0d2410ce8b8b4499a6b0cdab939ae2bceab8971efd8660d999b0f3088f28cbf7"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2_layers/block.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/depth_anything_v2/dinov2_layers/block.py",
+          "sha256": "093266ea08084c7cce7b8ddd779ecfaaa13055735faa8a7d68b5924f385b395b"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2_layers/drop_path.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/depth_anything_v2/dinov2_layers/drop_path.py",
+          "sha256": "949100aac4d9c19c9d65319dbd362886c5d46a72d7586ba4fd500e9f1d51570c"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2_layers/layer_scale.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/depth_anything_v2/dinov2_layers/layer_scale.py",
+          "sha256": "356817b5d1390737128cbcc03a5333fd3060b73beae478772282ccb851d0ef85"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2_layers/mlp.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/depth_anything_v2/dinov2_layers/mlp.py",
+          "sha256": "c18c5b3f021408597a473bb710070ec3fb3b39f5a2e42e88ae83ced425a608b5"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2_layers/patch_embed.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/depth_anything_v2/dinov2_layers/patch_embed.py",
+          "sha256": "b3f82e19926c9cfb63f10136aca5e8a723bde1ad62dae1d04f90d405f9439baf"
+        },
+        {
+          "name": "source/depth_anything_v2/dinov2_layers/swiglu_ffn.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/depth_anything_v2/dinov2_layers/swiglu_ffn.py",
+          "sha256": "df81d9901240214edc1831ce1b77558dcd6227b29a2f000fc5f546df55d2d09a"
+        },
+        {
+          "name": "source/depth_anything_v2/dpt.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/depth_anything_v2/dpt.py",
+          "sha256": "7cc9a29b41d31e1628e5c8b8705e25ae95bc6490f779dbb695297ce2341566f5"
+        },
+        {
+          "name": "source/depth_anything_v2/util/blocks.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/depth_anything_v2/util/blocks.py",
+          "sha256": "351aa24b8af4bef923ebe3bed5e5e8503b08e39bf06ee045d6444a485a2036a8"
+        },
+        {
+          "name": "source/depth_anything_v2/util/transform.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/depth_anything_v2/util/transform.py",
+          "sha256": "a97df1dbb687457a40c387fdc3482edee7ddc5c142c7d2735ca6235a8ae2885f"
+        },
+        {
+          "name": "source/metric_depth/dataset/hypersim.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/dataset/hypersim.py",
+          "sha256": "4b0d8a02bf824c44333db2ffc5325040d9225431d0c277765fd67b6ca7447617"
+        },
+        {
+          "name": "source/metric_depth/dataset/kitti.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/dataset/kitti.py",
+          "sha256": "30794974e677419313d6f0e29f9e8467e059a03e6d68eb1a17123b1c5476bc11"
+        },
+        {
+          "name": "source/metric_depth/dataset/transform.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/dataset/transform.py",
+          "sha256": "684a884faf897d0be24b18fb215140d0226dd62b8b27cb8aab740f9066715965"
+        },
+        {
+          "name": "source/metric_depth/dataset/vkitti2.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/dataset/vkitti2.py",
+          "sha256": "e6951506752e4bbedc683c25f3197aeafe02fda191fb63a496f3d5a027ddfc40"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/depth_anything_v2/dinov2.py",
+          "sha256": "0ceeaecd4e8026f8218694014642515fb7a0943c1833b75edc91ae7a79ac9690"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2_layers/__init__.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/depth_anything_v2/dinov2_layers/__init__.py",
+          "sha256": "e3c28c7b775165b6844000eb69f44d104d6c3803ac7da5d59f6ac3ecfb46d9d8"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2_layers/attention.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/depth_anything_v2/dinov2_layers/attention.py",
+          "sha256": "0d2410ce8b8b4499a6b0cdab939ae2bceab8971efd8660d999b0f3088f28cbf7"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2_layers/block.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/depth_anything_v2/dinov2_layers/block.py",
+          "sha256": "093266ea08084c7cce7b8ddd779ecfaaa13055735faa8a7d68b5924f385b395b"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2_layers/drop_path.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/depth_anything_v2/dinov2_layers/drop_path.py",
+          "sha256": "949100aac4d9c19c9d65319dbd362886c5d46a72d7586ba4fd500e9f1d51570c"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2_layers/layer_scale.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/depth_anything_v2/dinov2_layers/layer_scale.py",
+          "sha256": "356817b5d1390737128cbcc03a5333fd3060b73beae478772282ccb851d0ef85"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2_layers/mlp.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/depth_anything_v2/dinov2_layers/mlp.py",
+          "sha256": "c18c5b3f021408597a473bb710070ec3fb3b39f5a2e42e88ae83ced425a608b5"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2_layers/patch_embed.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/depth_anything_v2/dinov2_layers/patch_embed.py",
+          "sha256": "b3f82e19926c9cfb63f10136aca5e8a723bde1ad62dae1d04f90d405f9439baf"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dinov2_layers/swiglu_ffn.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/depth_anything_v2/dinov2_layers/swiglu_ffn.py",
+          "sha256": "df81d9901240214edc1831ce1b77558dcd6227b29a2f000fc5f546df55d2d09a"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/dpt.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/depth_anything_v2/dpt.py",
+          "sha256": "120698fd0ad9a4d169b4b9ef26035ad0cb11eed4089af53e07e38f5717024b1d"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/util/blocks.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/depth_anything_v2/util/blocks.py",
+          "sha256": "351aa24b8af4bef923ebe3bed5e5e8503b08e39bf06ee045d6444a485a2036a8"
+        },
+        {
+          "name": "source/metric_depth/depth_anything_v2/util/transform.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/depth_anything_v2/util/transform.py",
+          "sha256": "a97df1dbb687457a40c387fdc3482edee7ddc5c142c7d2735ca6235a8ae2885f"
+        },
+        {
+          "name": "source/metric_depth/depth_to_pointcloud.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/depth_to_pointcloud.py",
+          "sha256": "d4d30d0ce76c2fdbf539cd97bed01948d7506acd8fe75481ab4b32c4170310d7"
+        },
+        {
+          "name": "source/metric_depth/run.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/run.py",
+          "sha256": "ce2ecbb342933ff442f6fefab14ef5f5b7aea42c7987325f6f3166c9c73f84cb"
+        },
+        {
+          "name": "source/metric_depth/train.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/train.py",
+          "sha256": "1461b9a4ffc880085b3a1d193d052da5ce416a999421c65b792267e65fccfb10"
+        },
+        {
+          "name": "source/metric_depth/util/dist_helper.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/util/dist_helper.py",
+          "sha256": "97eb1d0eaa639c2599813c3b5578cb39d9d415efe99aea1ff7cf6eab1ea8e9c8"
+        },
+        {
+          "name": "source/metric_depth/util/loss.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/util/loss.py",
+          "sha256": "4acc0c1c805bc16dba34e7bd0ee9ffb9ba50d374868412cf96dffff087023a2b"
+        },
+        {
+          "name": "source/metric_depth/util/metric.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/util/metric.py",
+          "sha256": "595ae2f0c8bda88f6588d35b199b5ec9d4ba7ad531f58bd593d5ef4d28263794"
+        },
+        {
+          "name": "source/metric_depth/util/utils.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/metric_depth/util/utils.py",
+          "sha256": "e69aa66e267e9b251826dbb0386b6f47fdd5fc4a4e2bfd1c98405f4bb1be526b"
+        },
+        {
+          "name": "source/run.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/run.py",
+          "sha256": "b8beab6341314bc864cfc0283e0e303f55571af4e2e456c3d3afbc4aae67249a"
+        },
+        {
+          "name": "source/run_video.py",
+          "path": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf/run_video.py",
+          "sha256": "208c173e383c0515a3a23d35b2a4cde816560f1c01af19913fc4dedc4b1cf32c"
+        }
+      ],
+      "model_bundle_sha256": "8f1330525c861b288e16810bea730e9f827dcf5617da5ecb9b38994f1987d4bd",
+      "source_revision": "a561b849ebae10a6f5ef49e26c83cbbcd36c71bf",
+      "environment_lock_sha256": "84150f19ef799c822daa9b75c5c00a2809448d32adfc81d1efadd963d4d26416",
+      "ready": true,
+      "warmup_evidence": {
+        "job_id": "tool_a777218325294ac3bf79813e375e81f8",
+        "cache_key": "0373347c5b7dd84b95870795ad8222bcbded43c524ebd551e372bf4ca309d08c",
+        "manifest_sha256": "6770c9c0b2461e7995f8096dddd102afc22826915a98e7695870fcde496eb724",
+        "validated_at": "2026-10-13T00:11:48.679375Z",
+        "result": {
+          "status": "completed",
+          "error_code": null,
+          "message": null,
+          "returncode": 0,
+          "elapsed_ms": 8698.834393173456,
+          "peak_rss_mb": 1367.90234375,
+          "log_dir": "/root/autodl-tmp/harnessir_20261013/project/runtime/tool_jobs/tool_a777218325294ac3bf79813e375e81f8/logs",
+          "output_dir": "/root/autodl-tmp/harnessir_20261013/project/runtime/tool_jobs/tool_a777218325294ac3bf79813e375e81f8/result",
+          "pid": 11267,
+          "process_released": true,
+          "job_id": "tool_a777218325294ac3bf79813e375e81f8"
+        }
+      },
+      "artifact_paths": {
+        "checkpoint": "/root/autodl-tmp/harnessir_20261013/depth_anything_v2_vitb.pth",
+        "source_dir": "/root/autodl-tmp/harnessir_20261013/project/models/depth_anything_v2_small/source/Depth-Anything-V2-a561b849ebae10a6f5ef49e26c83cbbcd36c71bf"
+      },
+      "backend": {
+        "implementation": "depth_anything_author_api",
+        "source_revision": "a561b849ebae10a6f5ef49e26c83cbbcd36c71bf",
+        "framework": "torch",
+        "framework_version": "2.10.0+cu128",
+        "device": "cuda:0",
+        "precision": "fp32",
+        "environment_lock_sha256": "84150f19ef799c822daa9b75c5c00a2809448d32adfc81d1efadd963d4d26416"
+      },
+      "environment_lock_file": "/root/autodl-tmp/harnessir_20261013/project/preprocessing/environments/t3_gpu.freeze.txt"
+    },
+    "T4_SEGMENTATION": {
+      "model_name": "SAM3.1",
+      "python_executable": null,
+      "components": [
+        {
+          "name": "checkpoint",
+          "path": "models/sam3/sam3.1_multiplex.pt",
+          "sha256": "0567debeec80ba4ac6369540c6c248025283cb3ff2b92827509e57e2b3541cb6"
+        },
+        {
+          "name": "source_tree",
+          "path": "remote_frozen_source",
+          "sha256": "5dc53fa6360f8066d436cbc1c8cc34c2385bc0f6b87cab84a73e2cc29fce48e0"
+        },
+        {
+          "name": "tokenizer",
+          "path": "remote_frozen_tokenizer",
+          "sha256": "924691ac288e54409236115652ad4aa250f48203de50a9e4722a6ecd48d6804a"
+        }
+      ],
+      "model_bundle_sha256": "33c273e8baebd2847aaf87ab5e3b378ce04d8bfa5fe97381f5c41569c2c226dd",
+      "source_revision": "0570b3a5be9c4e694f23d85232fb55f4a6f1f7fc",
+      "environment_lock_sha256": "5125d33d53767c552330c8aa90e3d28aefe3abaa78b668f8b98af1b7da253760",
+      "environment_lock_file": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual\\runtime\\alternatives\\sam31\\tool_environment.freeze.txt",
+      "ready": true,
+      "execution_mode": "cache_only",
+      "backend": {
+        "implementation": "official_sam31_tri_image_fp32_cpu_masks",
+        "source_revision": "0570b3a5be9c4e694f23d85232fb55f4a6f1f7fc",
+        "framework": "torch",
+        "framework_version": "2.10.0+cu128",
+        "device": "cuda:0",
+        "precision": "fp32",
+        "environment_lock_sha256": "5125d33d53767c552330c8aa90e3d28aefe3abaa78b668f8b98af1b7da253760"
+      },
+      "provenance": {
+        "raw_contract_sha256": "489d609effd25eb58204fb7b614756b072c60850785d56586b70c18c5f06df23",
+        "weight_repository": "facebook/sam3.1",
+        "weight_revision": "daa63191845a41281374e725f4c9e51c7a824460",
+        "formal_eligible": false
+      }
+    }
+  },
+  "registry_status": "SAM3.1 alternative import-only; T1-T3 preserved GPU contracts"
+}

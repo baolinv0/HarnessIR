@@ -1,0 +1,76 @@
+{
+  "evidence_profile_id": "gpu_full_v1",
+  "configuration_status": "design_example_not_deployed",
+  "formal_eligible": true,
+  "offline": true,
+  "auto_download": false,
+  "auto_install": false,
+  "max_active_workers": 1,
+  "batch_size": 1,
+  "cpu_threads": 2,
+  "keep_worker_alive": true,
+  "worker_lifetime": "single_tool_bounded_batch",
+  "min_available_memory_mb": 4096,
+  "abort_available_memory_mb": 1024,
+  "max_worker_rss_mb": 24576,
+  "memory_sample_interval_ms": 200,
+  "evidence_failure_policy": "all_planned_tools_required",
+  "tools": {
+    "T1_OCR": {
+      "model": "PP-OCRv6_medium_det+PP-OCRv6_medium_rec",
+      "implementation": "paddleocr_pipeline",
+      "device": "cuda:0",
+      "precision": "fp32",
+      "det_limit_side_len": 1280,
+      "det_limit_type": "max",
+      "doc_orientation": false,
+      "doc_unwarp": false,
+      "textline_orientation": false,
+      "timeout_seconds": 600,
+      "roi_policy_id": "full_frame_v1"
+    },
+    "T2_FACE": {
+      "model": "SCRFD_det_10g.onnx",
+      "implementation": "insightface_scrfd_detector_only",
+      "provider": "CUDAExecutionProvider",
+      "device": "cuda:0",
+      "precision": "fp32",
+      "input_size": [
+        640,
+        640
+      ],
+      "det_threshold": 0.5,
+      "nms_threshold": 0.4,
+      "load_recognition": false,
+      "timeout_seconds": 120,
+      "roi_policy_id": "full_frame_v1"
+    },
+    "T3_DEPTH": {
+      "model": "Depth-Anything-V2-Base",
+      "encoder": "vitb",
+      "implementation": "depth_anything_author_api",
+      "device": "cuda:0",
+      "precision": "fp32",
+      "sdk_input_size": 518,
+      "source_view_long_edge": null,
+      "output_dtype": "float32",
+      "larger_is": "near",
+      "timeout_seconds": 600,
+      "roi_policy_id": "full_frame_v1"
+    },
+    "T4_SEGMENTATION": {
+      "model": "SAM3",
+      "checkpoint_generation": "SAM3-not-SAM3.1",
+      "implementation": "meta_sam3_image_api",
+      "device": "cuda:0",
+      "precision": "fp32",
+      "input_size": 1024,
+      "source_view_long_edge": null,
+      "prompt_set_id": "harness_scene_v1",
+      "mask_threshold": 0.5,
+      "score_threshold": 0.15,
+      "timeout_seconds": 900,
+      "roi_policy_id": "full_frame_v1"
+    }
+  }
+}

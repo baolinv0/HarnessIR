@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "checks": {
+    "json_files_parsed": 28,
+    "schemas_checked": 10,
+    "valid_fixture_checks": 11,
+    "invalid_fixture_rejections": 10,
+    "prompt_templates_rendered": 7,
+    "official_source_files_verified": 20,
+    "authored_relative_links_verified": 9
+  },
+  "not_tested": [
+    "Windows installation",
+    "user local filesystem",
+    "ChatGPT image editing",
+    "Controller runtime",
+    "real photograph experiment"
+  ]
+}

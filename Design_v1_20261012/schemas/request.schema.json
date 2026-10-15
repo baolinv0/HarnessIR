@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harnessir.example/schemas/v1/request.schema.json",
+  "type": "object",
+  "properties": {
+    "protocol_version": {
+      "const": "1.0"
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "role": {
+      "enum": [
+        "diagnose",
+        "compose",
+        "execute",
+        "verify",
+        "refine"
+      ]
+    },
+    "round": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "attempt_index": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "expected_state_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "input_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "profile_id": {
+      "const": "chatgpt_adapted_v1"
+    },
+    "template_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "prompt_file": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*[:\\\\])[A-Za-z0-9_./-]+$"
+    },
+    "payload_schema": {
+      "enum": [
+        "diagnosis.schema.json",
+        "composition.schema.json",
+        "execution.schema.json",
+        "verification.schema.json"
+      ]
+    },
+    "allowed_assets": {
+      "type": "array",
+      "items": {
+        "$ref": "https://harnessir.example/schemas/v1/asset.schema.json"
+      },
+      "minItems": 1
+    },
+    "context": {
+      "type": "object"
+    },
+    "response_file": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*[:\\\\])[A-Za-z0-9_./-]+$"
+    },
+    "ready_marker": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*[:\\\\])[A-Za-z0-9_./-]+$"
+    }
+  },
+  "required": [
+    "protocol_version",
+    "task_id",
+    "case_id",
+    "role",
+    "round",
+    "attempt_index",
+    "expected_state_revision",
+    "input_sha256",
+    "profile_id",
+    "template_sha256",
+    "prompt_file",
+    "payload_schema",
+    "allowed_assets",
+    "context",
+    "response_file",
+    "ready_marker"
+  ],
+  "additionalProperties": false
+}

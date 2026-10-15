@@ -1,0 +1,60 @@
+{
+  "protocol_version": "1.0",
+  "profile_id": "chatgpt_adapted_v1",
+  "root_dir": "C:\\Users\\Lenovo\\Desktop\\HarnessIR_Manual",
+  "executor": "chatgpt_desktop_image",
+  "external_api_calls": false,
+  "read_chat_history": false,
+  "automatic_login": false,
+  "max_generations": 3,
+  "max_format_repairs": 2,
+  "poll_interval_seconds": 1,
+  "max_input_bytes": 52428800,
+  "max_input_pixels": 40000000,
+  "aspect_ratio_relative_tolerance": 0.02,
+  "postprocess_colour_alignment": false,
+  "single_writer": true,
+  "max_dispatched_tasks": 1,
+  "selection_rule": "first_accepted_else_latest_verifier_best",
+  "template_profile": "chatgpt_adapted_v1",
+  "roles": {
+    "diagnose": {
+      "model_display_name": null,
+      "session_id": null
+    },
+    "compose": {
+      "model_display_name": null,
+      "session_id": null
+    },
+    "execute": {
+      "model_display_name": null,
+      "session_id": null
+    },
+    "verify": {
+      "model_display_name": null,
+      "session_id": null
+    },
+    "refine": {
+      "model_display_name": null,
+      "session_id": null
+    }
+  },
+  "tool_ids": [
+    "T1_OCR",
+    "T2_FACE",
+    "T3_DEPTH",
+    "T4_SEGMENTATION"
+  ],
+  "evidence_policy": "profile_specific",
+  "output_candidate_rule": "first_complete_provider_output",
+  "executor_new_session_each_round": true,
+  "verifier_independent_session": true,
+  "package_version": "1.1",
+  "tool_integration": "local_or_cache",
+  "evidence_protocol_version": "1.1",
+  "evidence_profile_id": "cpu_probe_v1",
+  "evidence_failure_policy": "continue_with_unavailable",
+  "cache_dir": "Data/annotations/cache",
+  "tool_job_dir": "runtime/tool_jobs",
+  "model_registry": "preprocessing/configs/model_registry.local.json"
+}

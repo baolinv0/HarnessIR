@@ -1,0 +1,33 @@
+{
+  "content": "Synthetic fixture: a dark street containing a sign and a small face. This is not a real image experiment.",
+  "degradations": [
+    {
+      "type": "low-light",
+      "severity": "moderate",
+      "spatial": "global",
+      "location": "whole image",
+      "worst_at": "left doorway",
+      "mildest_at": "upper sign",
+      "evidence": "Synthetic protocol example only"
+    }
+  ],
+  "sensitive": {
+    "has_text": true,
+    "has_faces": true,
+    "has_layered_depth": false,
+    "has_complex_semantics": false,
+    "notes": "Fixture only; do not use as a real diagnosis."
+  },
+  "tool_plan": [
+    {
+      "tool": "T1_OCR",
+      "reason": "Protect the visible sign characters."
+    },
+    {
+      "tool": "T2_FACE",
+      "reason": "Protect the small face at the doorway."
+    }
+  ],
+  "difficulty_hint": "medium",
+  "difficulty_reason": "Synthetic protocol fixture."
+}

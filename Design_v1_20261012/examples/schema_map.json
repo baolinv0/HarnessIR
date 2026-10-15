@@ -1,0 +1,13 @@
+{
+  "diagnosis.json": "diagnosis.schema.json",
+  "composition.json": "composition.schema.json",
+  "verification.json": "verification.schema.json",
+  "request.json": "request.schema.json",
+  "response.json": "response.schema.json",
+  "done.json": "done.schema.json",
+  "evidence.json": "evidence.schema.json",
+  "state.json": "state.schema.json",
+  "execution.json": "execution.schema.json",
+  "verification_accepted.json": "verification.schema.json",
+  "verification_no_further_gain.json": "verification.schema.json"
+}

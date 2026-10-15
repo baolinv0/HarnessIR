@@ -19,3 +19,46 @@ checkpoints/
 # Local configuration
 .env
 *.local.json
+
+# Manual Wizard: local/private runtime assets
+/runtime/
+/cases/
+/logs/
+/models/
+/preprocessing/environments/
+/engine/validation/
+.pytest_cache/
+.test-runs/
+*.tmp
+*.lock
+!.gitignore
+.env.*
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+*password*.txt
+*token*.txt
+*credentials*.json
+*oauth*.json
+key.txt
+*key*.txt
+*secret*.txt
+token.json
+tokens.json
+client_secret*.json
+service-account*.json
+
+# Local image datasets and generated annotations; publish only code/docs
+/Data/*
+!/Data/README.md
+!/Data/scripts/
+/Data/scripts/*
+!/Data/scripts/*.py
+!/Data/scripts/README.md
+!/Data/filelists/
+/Data/filelists/*
+!/Data/filelists/README.md
+!/Data/HardCases/
+/Data/HardCases/*
+!/Data/HardCases/README.md

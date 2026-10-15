@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harnessir.example/schemas/v1_1/tool_payload_segmentation.schema.json",
+  "type": "object",
+  "properties": {
+    "prompt_set_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "prompt_set_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "label_names": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "native_masks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "prompt_index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "score": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "bbox_norm": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "mask_path": {
+            "type": "string",
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*[:\\\\])[A-Za-z0-9_./-]+$"
+          },
+          "grid_shape": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "view_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "prompt_index",
+          "score",
+          "bbox_norm",
+          "mask_path",
+          "grid_shape",
+          "view_id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "unknown_id": {
+      "const": 0
+    },
+    "native_masks_may_overlap": {
+      "const": true
+    },
+    "display_label_path": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*[:\\\\])[A-Za-z0-9_./-]+$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "preview_path": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*[:\\\\])[A-Za-z0-9_./-]+$"
+    },
+    "palette_path": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*[:\\\\])[A-Za-z0-9_./-]+$"
+    },
+    "display_overlap_rule": {
+      "const": "score_desc_then_prompt_index_then_instance_id"
+    },
+    "unassigned_ratio": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "native_result_path": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*[:\\\\])[A-Za-z0-9_./-]+$"
+    }
+  },
+  "required": [
+    "prompt_set_id",
+    "prompt_set_sha256",
+    "label_names",
+    "native_masks",
+    "unknown_id",
+    "native_masks_may_overlap",
+    "display_label_path",
+    "preview_path",
+    "palette_path",
+    "display_overlap_rule",
+    "unassigned_ratio",
+    "native_result_path"
+  ],
+  "additionalProperties": false
+}

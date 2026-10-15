@@ -1,0 +1,10 @@
+{
+  "case_id": "fixture_case",
+  "tool_id": "T1_OCR",
+  "cache_key": "77a7b76a31ab2e2128d36d22a3f8d5759c50fec42f1fc75acae1a86a85fa8c59",
+  "cache_manifest_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "case_manifest_path": "tools/T1_OCR/evidence.json",
+  "case_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "source": "local_compute",
+  "evidence_profile_id": "cpu_probe_v1"
+}

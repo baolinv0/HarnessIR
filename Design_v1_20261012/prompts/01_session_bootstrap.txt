@@ -1,0 +1,6 @@
+请在已经启用本地文件权限的 ChatGPT Work / Codex 会话中执行以下一次任务：
+根目录：C:\Users\Lenovo\Desktop\HarnessIR_Manual
+由向导提供本次 case_id、task_id 和 request.json 的完整路径。读取它及 prompt_file 指定的文字；只读 allowed_assets。执行 request.role 的任务，把返回 payload 按 schemas/response.schema.json 组装为响应。
+不要写 case state。response 先写同目录 .tmp，flush/fsync/关闭后原子 rename；若没有 shell 或真实文件读写能力，不要声称原子写入，直接返回 payload 供 UI 导入。生成图回写是否可用需要另测，不能以 JSON 写盘成功推定。
+完成标记由已实现并验证的适配桥写：包括实际 response bytes 哈希、图像 bytes 哈希与提交时间。如果本机桥尚未实现，请明确返回 payload / 图像并等待向导导入，不伪造 done.json。
+完成一项后结束。下一项会由 Controller 列为当前任务；没有受支持派发能力时用户点击继续。不读取或修改其他角色的会话、Prompt 或私有状态。

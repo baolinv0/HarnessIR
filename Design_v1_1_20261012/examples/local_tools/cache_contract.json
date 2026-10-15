@@ -1,0 +1,22 @@
+{
+  "contract_version": "1.1",
+  "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "canonicalizer_version": "canonical-v1",
+  "tool_id": "T1_OCR",
+  "model_bundle_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "backend": {
+    "implementation": "synthetic_fixture_no_model_called",
+    "source_revision": "fixture-v1",
+    "framework": "fixture",
+    "framework_version": "0",
+    "device": "cpu",
+    "precision": "fp32",
+    "environment_lock_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "parameters": {
+    "input_size": 640
+  },
+  "prompt_set_sha256": null,
+  "adapter_version": "adapter-v1",
+  "roi_policy_id": "full_frame_v1"
+}

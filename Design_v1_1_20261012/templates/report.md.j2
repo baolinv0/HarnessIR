@@ -1,0 +1,26 @@
+# {{ case_id }} · HarnessIR-ChatGPT-Executor
+
+- profile：{{ profile_id }}；输入 SHA-256：{{ input_sha256 }}
+- 流程结束：{{ workflow_completed }}；恢复成功：{{ restoration_success }}
+- 终止原因：{{ terminal_reason }}；选中轮次：{{ selected_round }}
+- 实际生成数：{{ generations_consumed }}；人工操作数：{{ manual_actions }}
+- 模型与能力：{{ provenance_summary }}
+- 与官方偏离：{{ deviations }}
+
+## 输入与任务
+{{ input_summary }}
+
+## 诊断与工具
+{{ diagnosis_and_evidence }}
+
+## 逐轮结果
+{{ rounds_summary }}
+
+## 人工介入与异常
+{{ intervention_summary }}
+
+## 可支持的结论
+{{ evidence_boundaries }}
+
+## 文件与事件索引
+{{ artifact_index }}

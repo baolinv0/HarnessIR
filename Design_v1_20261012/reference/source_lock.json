@@ -1,0 +1,167 @@
+{
+  "repository": "PolyU-VCLab/HarnessIR",
+  "commit": "3c48c206bb15027366dd9326e8e1fa552c6e6542",
+  "retrieved_at": "2026-10-12",
+  "files": [
+    {
+      "path": "prompts/diagnosis.txt",
+      "git_blob_sha": "e8d9bb9c7bad5464d1ceca17f51ea71134b6e752",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/prompts/diagnosis.txt",
+      "local_path": "reference/official/prompts/diagnosis.txt",
+      "sha256": "f49c45f3a84cec770017aa50f3783860112d22021cb24ca6d190e4d9f328b246",
+      "size_bytes": 8091
+    },
+    {
+      "path": "prompts/compose.txt",
+      "git_blob_sha": "87407c6a5ec636dea4f648480195431dd24b29a6",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/prompts/compose.txt",
+      "local_path": "reference/official/prompts/compose.txt",
+      "sha256": "2b6fa95814543e8f780dbb052ede9879c48566a254607eeb51e240bfb0611c30",
+      "size_bytes": 15420
+    },
+    {
+      "path": "prompts/compose_blocks.txt",
+      "git_blob_sha": "1d86b15f250fa97e48e90c26936f777e8f1b4203",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/prompts/compose_blocks.txt",
+      "local_path": "reference/official/prompts/compose_blocks.txt",
+      "sha256": "d116303f35d7f36be4784b981008aca5e5d251a52d0f3bc4208fbbda3707a3b5",
+      "size_bytes": 9393
+    },
+    {
+      "path": "prompts/verify.txt",
+      "git_blob_sha": "afdf73f54c5c45b2f218a8c9ef7add6646b4f7e7",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/prompts/verify.txt",
+      "local_path": "reference/official/prompts/verify.txt",
+      "sha256": "4dea6e739f29ec1ec6481ab5f60aa70e37ef18b5bbc8fda02f730af18dbd595f",
+      "size_bytes": 14884
+    },
+    {
+      "path": "prompts/verify_blocks.txt",
+      "git_blob_sha": "590531039bb8ccc8616d62cb82ff75b997d9a637",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/prompts/verify_blocks.txt",
+      "local_path": "reference/official/prompts/verify_blocks.txt",
+      "sha256": "1db5f1e473b08324af0fc4e5622a3453f81152a5b60a86ad2bf4f53c05439c1a",
+      "size_bytes": 7756
+    },
+    {
+      "path": "prompts/refine.txt",
+      "git_blob_sha": "153819528bb294cc563a7d85b08c1118e55e51f7",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/prompts/refine.txt",
+      "local_path": "reference/official/prompts/refine.txt",
+      "sha256": "280bb6c34ed5ee8e70ec84fbde287ac1680bced7293482986b95b06ef65f13e8",
+      "size_bytes": 16802
+    },
+    {
+      "path": "harness/types.py",
+      "git_blob_sha": "5d86b8c32593ece5ded8b8eb8e9586355151890d",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/harness/types.py",
+      "local_path": "reference/official/harness/types.py",
+      "sha256": "281343515b6cd9a461c5397a1be82df24945bb093c5ae3ecaf551d11a30269f7",
+      "size_bytes": 11985
+    },
+    {
+      "path": "harness/pipeline.py",
+      "git_blob_sha": "5d844da47a05b9c1ff7590385ea7272e0ccdd1df",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/harness/pipeline.py",
+      "local_path": "reference/official/harness/pipeline.py",
+      "sha256": "a531e9df6a06a0328cd82edcf09b6747d15c4d8c4ded2b47eb0f2e523e3c1b0a",
+      "size_bytes": 15164
+    },
+    {
+      "path": "harness/selection.py",
+      "git_blob_sha": "8bee269ba75610fb42ea5d46724a3aa5b5614802",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/harness/selection.py",
+      "local_path": "reference/official/harness/selection.py",
+      "sha256": "d44963a577b54096b93dc7a5c9e359013f0451cf8f080c45922f21cf4b99860c",
+      "size_bytes": 9422
+    },
+    {
+      "path": "harness/stages/compose.py",
+      "git_blob_sha": "9d6b96208f0720c7d05905e188c7874d8a3d4c9a",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/harness/stages/compose.py",
+      "local_path": "reference/official/harness/stages/compose.py",
+      "sha256": "df7b7fb0c24f4bf8ebc99d9d52d9e7c0285bdf90cb5491eb878b6f1bfa212ae5",
+      "size_bytes": 10833
+    },
+    {
+      "path": "harness/stages/verify.py",
+      "git_blob_sha": "4b481d3c87a2a780c012cf942b0e1694677013b0",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/harness/stages/verify.py",
+      "local_path": "reference/official/harness/stages/verify.py",
+      "sha256": "f1a9be0f703e6575a1fd3a32bae7fdea272ee6daee3cb46db77238a4dde622a8",
+      "size_bytes": 22220
+    },
+    {
+      "path": "LICENSE",
+      "git_blob_sha": "9114171b49c699416949d39ac1b8bc4fcf78cdf1",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/LICENSE",
+      "local_path": "reference/official/LICENSE",
+      "sha256": "7c7a03f68769c21996c6f2d4a8aba699e870d2dc9a6093738ecb999c01dc8e94",
+      "size_bytes": 1093
+    },
+    {
+      "path": "configs/default.json",
+      "git_blob_sha": "5588a77f26af16af61d1da371e51213ed036f9b0",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/configs/default.json",
+      "local_path": "reference/official/configs/default.json",
+      "sha256": "0c30de4f2f847ce56e84233aea4155f11ceab2a9eb3629d965b3032f2e4ce3af",
+      "size_bytes": 604
+    },
+    {
+      "path": "harness/stages/diagnosis.py",
+      "git_blob_sha": "b851fd8cc3712796d4cd3ef019370866d9fe70cd",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/harness/stages/diagnosis.py",
+      "local_path": "reference/official/harness/stages/diagnosis.py",
+      "sha256": "8de037d987e3dfb95822dee9912f8802426e86ba9c59dcf7ee2facfc7a267114",
+      "size_bytes": 6128
+    },
+    {
+      "path": "harness/stages/tools.py",
+      "git_blob_sha": "501650df91ff9939cd78b8bf8482da1d7f2eef9e",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/harness/stages/tools.py",
+      "local_path": "reference/official/harness/stages/tools.py",
+      "sha256": "ebfc68f2aa42b7c295602d1848d0fc802c990393c2faf78db7201c9fc32e1a6d",
+      "size_bytes": 7219
+    },
+    {
+      "path": "harness/stages/visuals.py",
+      "git_blob_sha": "30b9ace7e7d15b35ef81a25d908f0c4f80d609a4",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/harness/stages/visuals.py",
+      "local_path": "reference/official/harness/stages/visuals.py",
+      "sha256": "afbf449bcbb0466b27285ae6fbe444f17989d52387b413beec272d300f33d153",
+      "size_bytes": 13256
+    },
+    {
+      "path": "harness/stages/refine.py",
+      "git_blob_sha": "2b3c354744827957f2275d863db90cd194c187c5",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/harness/stages/refine.py",
+      "local_path": "reference/official/harness/stages/refine.py",
+      "sha256": "7af39c59c54d7d42bf1fd71472174634be2935dbf0fa08ba2533ade978d6d9b7",
+      "size_bytes": 8835
+    },
+    {
+      "path": "prompts/df/df_core.txt",
+      "git_blob_sha": "b3894a7bc4bb729d98b32fd206791b3b647fd8dd",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/prompts/df/df_core.txt",
+      "local_path": "reference/official/prompts/df/df_core.txt",
+      "sha256": "bf59e2702366fa6e800de6d23dc98e3bfeef1a49d41ddacab385ff3a3d48cc78",
+      "size_bytes": 14955
+    },
+    {
+      "path": "prompts/df/df_intent.txt",
+      "git_blob_sha": "6210b022bc2b87b6876b07b143d0c4376e5e10d8",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/prompts/df/df_intent.txt",
+      "local_path": "reference/official/prompts/df/df_intent.txt",
+      "sha256": "9478c0c20b0c525bc98c55349603bee41b80e0e595f417e2ba3a9ac2a47416f1",
+      "size_bytes": 879
+    },
+    {
+      "path": "prompts/df/df_types.txt",
+      "git_blob_sha": "7a6b694de19d0cd318ad9a7f8754bfe694c13cc1",
+      "source_url": "https://github.com/PolyU-VCLab/HarnessIR/blob/3c48c206bb15027366dd9326e8e1fa552c6e6542/prompts/df/df_types.txt",
+      "local_path": "reference/official/prompts/df/df_types.txt",
+      "sha256": "a74d58bc1508fcba9f903d3b77ddd4a5d5f4dae82039db9a0ba8bde15a6cf7a6",
+      "size_bytes": 7498
+    }
+  ]
+}

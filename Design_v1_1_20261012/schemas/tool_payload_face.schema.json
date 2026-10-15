@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harnessir.example/schemas/v1_1/tool_payload_face.schema.json",
+  "type": "object",
+  "properties": {
+    "faces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "bbox_norm": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "confidence": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "landmarks5_norm": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "minItems": 5,
+                "maxItems": 5
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "landmark_order": {
+            "const": "eye_0,eye_1,nose,mouth_0,mouth_1 (native SCRFD order)"
+          },
+          "source_face_pixels": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "view_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "bbox_norm",
+          "confidence",
+          "landmarks5_norm",
+          "landmark_order",
+          "source_face_pixels",
+          "view_id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "native_result_path": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*[:\\\\])[A-Za-z0-9_./-]+$"
+    }
+  },
+  "required": [
+    "faces",
+    "native_result_path"
+  ],
+  "additionalProperties": false
+}

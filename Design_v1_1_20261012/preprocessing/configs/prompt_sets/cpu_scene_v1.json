@@ -1,0 +1,20 @@
+{
+  "prompt_set_id": "cpu_scene_v1",
+  "labels": [
+    "person",
+    "face",
+    "text",
+    "sign",
+    "sky",
+    "building",
+    "car",
+    "tree",
+    "road",
+    "vegetation",
+    "water",
+    "ground"
+  ],
+  "unknown_id": 0,
+  "fixed_order": true,
+  "palette_seed": 0
+}
