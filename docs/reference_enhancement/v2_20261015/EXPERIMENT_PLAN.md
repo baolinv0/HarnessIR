@@ -1,3 +1,5 @@
+> 本文件保留 PR #3 的设计/预注册基线。实际实现、命令和验证边界见 [RUNBOOK.md](RUNBOOK.md) 与 [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)；真实 R1/R2 尚未运行。
+
 # HarnessRefEnhance v2 — 实验计划与可证伪决策协议
 
 **版本**：v2_20261015；**状态**：预注册方案草案，未运行模型、不报告虚构结果。**目的**：用最小生成预算验证生成式参考引导亮度/颜色/影调增强，以及语义文本和 Mask 的真实净增益，而非为发表论文补齐完整消融。
@@ -110,7 +112,7 @@ R2 通过后才开始。使用冻结代码/模型/Prompt/ROI/Mask/评价版本�
 
 主比较 H1：G1 vs G0 同 scene-group 的最终 joint_success 与独立人类成对 win/tie/loss；属性 delta 用于解释，不单独反过来决定成功。
 H2：只在 mask eligible 且能力真实支持的配对子集比较 G2 vs G1，报告 n_eligible 与 skipped/missing；不拿 12 对总数和局部子集的未经配对均值做对照。
-H3：ROI 方向与盲评在 case/attribute 层一致性与冲突案例，不能拿高相关自动替代人工。
+H3：按 case/roi_pair_id/dimension 比较指标方向与独立人评。整图属性标签不广播给各 ROI；没有对应 ROI 标签或该粒度分歧未裁决时保持 unknown。不能拿高相关自动替代人工。
 
 ### 5.3 评审盲化
 
@@ -133,7 +135,8 @@ H3：ROI 方向与盲评在 case/attribute 层一致性与冲突案例，不能�
 ## 7. R1 / R2 的建议闸门（工程启发式，非显著性检验）
 
 ### R1 → R2
-GO：真实 A/B/C 角色、源 SHA、Prompt/MASK 证明、候选保存和预算均无错，G0/G1 至少完成一对有真实审核的样本；如要跑 G2，mask adapter 的实际能力 probe 需 pass；属性 evaluator 已在人工设计的非对齐 ROI 与负例上校验。
+FIRST_PAIR_PASSED：一对真实 G0/G1 执行完整且独立内容审核、ROI 有效性通过，至少一臂联合成功；仅允许继续 R1，不能当作 R2 准入。
+GO_TO_R2：预登记的全部 3–5 对 G0/G1 均执行完成、独立内容审核和 ROI 有效性明确通过，至少一对联合成功；缺失、失败和未裁决人评均保留在 ITT 并阻止放行。真实 A/B/C 角色、来源、Prompt、候选保存和预算须无错；如要跑 G2，还需真实能力 probe 和预冻结的 Mask/ROI 空间政策通过。此条替换原先把“至少完成一对”写成 GO 的歧义表述。
 PROBE：模型画质弱、指令偏保守、ROI 可比性不足，但合同正确；只对定位的一项变量修复后再做一小批 dev。
 STOP：A/B 颠倒、预算失真、候选来源/颜色无法追踪、mask 被误当原生约束、生成内容泄漏到评估协议等。
 

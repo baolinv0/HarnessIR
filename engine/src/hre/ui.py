@@ -113,6 +113,9 @@ def render_app():
     pending=state.get('pending_task') or {}
     status_slot.markdown(f"**{workflow}** · round {pending.get('round',state.get('round',0))} · attempt {pending.get('attempt',0)} · generations {state['budget']['consumed']}/{state['budget']['max_generations']} · reserved {state['budget']['reserved']}")
     if state.get('pause_reason'):st.warning(state['pause_reason'])
+    with tabs[1]:
+        from hre.reference_ui import render_reference_panel
+        render_reference_panel(st,root)
     def action(label, callback, key=None):
         if st.button(label,key=key):
             try:

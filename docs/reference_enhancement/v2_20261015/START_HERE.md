@@ -1,3 +1,7 @@
+> **当前下一步（v0.2.1）**：从完整 3–5 对真实 A/B 样本的预冻结开始，依次进行首对 G0/G1 → 完整 R1 → 独立盲评与 GO/PROBE/STOP 决策。详细可执行清单见 [NEXT_STEPS_R1.md](NEXT_STEPS_R1.md)。该计划尚未执行，真实 G0/G1 效果未验收；G2 暂不推进。
+
+> 本文件保留 PR #3 的设计/预注册基线。实际实现、命令和验证边界见 [RUNBOOK.md](RUNBOOK.md) 与 [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)；真实 R1/R2 尚未运行。
+
 # HarnessRefEnhance v2 — 生成式参考引导增强方案
 
 **日期：2026-10-15** | **状态：工程设计与预注册实验草案；未运行真实 v2 实验** | **变更类型：文档增量，不修改运行代码**

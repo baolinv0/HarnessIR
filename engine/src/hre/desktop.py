@@ -54,6 +54,13 @@ def export_task_bundle(task: dict, destination: Path, *, case_root: Path) -> Pat
         for attachment in attachments:
             shutil.copyfile(bundle / attachment['path'], editor / f"{attachment['label']}.png")
         atomic_write(editor / 'edit_prompt.txt', json.loads(rendered)['edit_prompt'].encode('utf-8'))
+        from .reference_runtime import mask_transport
+        transport=mask_transport(case_root,task)
+        if transport is not None:
+            target=editor/'M.png' if transport['mask_mode']=='separate_mask_image' else bundle/'transport/M.png'
+            target.parent.mkdir(parents=True,exist_ok=True)
+            shutil.copyfile(safe_path(case_root,transport['mask_path'],must_exist=True),target)
+            write_json(bundle/'mask_transport_v2.json',{**transport,'exported_mask_path':target.relative_to(bundle).as_posix()})
     manifest = {'schema_version': task['schema_version'], 'task_id': task['task_id'],
                 'case_id': task['case_id'], 'case_revision': task['case_revision'],
                 'stage': task['stage'], 'attempt': task['attempt'],
@@ -62,6 +69,10 @@ def export_task_bundle(task: dict, destination: Path, *, case_root: Path) -> Pat
                 'files': [{'path': path.relative_to(bundle).as_posix(), 'sha256': file_sha256(path)}
                           for path in sorted(bundle.rglob('*')) if path.is_file()],
                 'handoff': 'manual; attaching files and observing results requires an operator'}
+    if (bundle/'mask_transport_v2.json').exists():
+        manifest['schema_version']='ref_enhance_v2'
+        manifest['internal_request_schema_version']=task['schema_version']
+        manifest['mask_transport']='mask_transport_v2.json'
     write_json(bundle / 'manifest.json', manifest)
     return bundle
 
@@ -143,8 +154,12 @@ def import_candidate(case_root: Path, task_id: str, image_path: Path, metadata: 
     if 'assume_srgb' in metadata and metadata['assume_srgb'] != policy['assume_srgb']:
         raise HREError('color_policy_mismatch', 'Candidate color policy differs from frozen config')
     color_policy = {'assume_srgb': policy['assume_srgb'], 'canonicalizer_version': policy['canonicalizer_version']}
+    from .reference_runtime import validate_mask_delivery
+    delivery_files=validate_mask_delivery(case_root,request,metadata,image_path)
+    from .reference_execution import observation_files
+    delivery_files+=observation_files(case_root,request,metadata)
     asset = AssetRegistry(case_root).import_asset(Path(image_path), 'candidate', make_id('candidate'), color_policy, candidate_binding=binding)
-    extras, audit_files = [], []
+    extras, audit_files = [], list(delivery_files)
     outputs = [{'provider_order': order, 'complete': True, 'path': asset['source_file']['path'], 'sha256': asset['source_file']['sha256'], 'formal': True}]
     for item in extra_sources:
         if item['complete']:

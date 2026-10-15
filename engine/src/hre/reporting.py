@@ -103,6 +103,9 @@ def write_report(case_root: Path) -> Path:
                "accepted_responses": accepted_responses, "events": events, "costs": cost_summary(state, events),
                "model_metadata": metadata, "deviations": state.get("deviations", []),
                "limitations": ["0.7 confidence is an engineering heuristic, not a calibrated probability.", "Pixel geometry gate does not establish content preservation.", "Workflow verifier is not independent final evaluation.", "Unknown model versions, seeds and costs remain unknown; no inferred billing."]}
+    if 'reference_v2' in config:
+        from .reference_runtime import evaluate_reference_case,v2_status
+        summary['reference_v2']={'status':v2_status(root),'attributes':evaluate_reference_case(root)}
     final = root / "final"
     final.mkdir(parents=True, exist_ok=True)
     write_json(final / "summary.json", summary)

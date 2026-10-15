@@ -1,3 +1,5 @@
+> 本文件保留 PR #3 的设计/预注册基线。实际实现、命令和验证边界见 [RUNBOOK.md](RUNBOOK.md) 与 [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)；真实 R1/R2 尚未运行。
+
 # HarnessRefEnhance v2 — 工程修改规格（生成式专用）
 
 **基线**：feat/reference-enhancement-v1 @ 1490c574；**状态**：design_only / code_not_modified；**负责人目标**：使 Modular Neural ISP 的 A 在内容不变前提下，向同场景数秒后 iPhone 17 的 B 的亮度、颜色、影调靠近。
@@ -66,6 +68,7 @@ B iPhone ref ───┘                                                 │
 - A/B 两图尺寸可以不同，绝不将 A 的坐标直接作为 B 坐标。对 B 只能使用独立预标注 ROI / segmentation。
 - 避免 Edit Mask 覆盖小字、关键身份特征；当目标刚好为脸，内容身份保护优先于漂白/局部增强目标。
 - G2 仅用于局部编辑问题；整图 WB/整体 Tone 直接沿用 G0/G1，不强制套全图 mask。
+- G2 的 Mask 不能仅凭 target_roi_ids 相同入组。G1 生成前冻结任务专属的各 ROI 覆盖下限与目标外面积占比上限；EDIT_MASK/EVAL_MASK 均按 canonical A 像素核验并报告覆盖与扩张。不能对所有材料/边缘套一个统一 IoU 阈值。
 - 输出 C 必须保留 raw bytes，strict geometry 与尺寸校验延续 v1。尺寸一致不表示内容不变；存在内容变化还须独立检查。
 
 ## 3. Prompt contract：少量目标，不重复禁止变化
@@ -99,6 +102,8 @@ G2：直接**复用被冻结的 G1 完整编辑文本**，唯一变量是受支�
 ~~~
 
 此 target 是 Composer 的可验证诊断中间件，不是要求生成模型接受数值 θ。若 Schema 变更必须升级 version；不应在 v1 strict Schema 中塞 additionalProperties。
+
+实现记录还保留 roi_pair_ids 全部来源和 comparability_sources；冻结 ROI 或 Diagnosis 中的 partly_comparable 不得被升级成 comparable。
 
 ## 4. ROI A/B/C 闭环定义
 

@@ -240,11 +240,16 @@ def build_parser() -> argparse.ArgumentParser:
         p=ev.add_parser(name);p.add_argument('--run',type=Path,required=True)
         if name=='export':p.add_argument('--out',type=Path,required=True)
         else:p.add_argument('--ratings',type=Path,required=True)
+    from .reference_cli import add_v2_parser
+    add_v2_parser(groups)
     return parser
 
 
 def dispatch(args):
     from hre.storage import read_json
+    if args.command=='v2':
+        from .reference_cli import dispatch_v2
+        return dispatch_v2(args)
     if hasattr(args,'case_root'):args.case_root=Path(os.path.abspath(args.case_root))
     if args.command=='case' and args.action=='list':return list_cases(args.data_root)
     if args.command=='case' and args.action=='create':

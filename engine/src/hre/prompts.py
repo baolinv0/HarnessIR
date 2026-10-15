@@ -67,11 +67,12 @@ def normalize_protected_content(value):
     return deepcopy(value)
 
 
-def freeze_templates(case_root: Path) -> dict:
+def freeze_templates(case_root: Path, *, reference_v2: bool=False) -> dict:
     """Snapshot actual installed bytes once; their identities enter config_sha256."""
     sources = {}
     for stage in sorted(STAGES):
-        data = (files('hre') / 'resources' / 'prompts' / (stage + '.j2')).read_bytes()
+        source_root = files('hre') / 'resources' / ('v2/prompts' if reference_v2 else 'prompts')
+        data = (source_root / (stage + '.j2')).read_bytes()
         relative = 'prompts/' + stage + '.j2'
         atomic_write(safe_path(case_root, relative), data)
         sources[stage] = {'stage': stage, 'path': relative, 'sha256': sha256_bytes(data)}
@@ -308,6 +309,14 @@ def _validate_prompt_source(case_root: Path, request: dict) -> None:
     source_id = payload['prompt_source_task_id']
     directory = safe_path(case_root, f'tasks/{source_id}', must_exist=True)
     artifact = directory / 'manifest.json'
+    if source_id.startswith('paired_g1_'):
+        from .reference_contracts import paired_prompt
+        config=read_json(case_root/'config.json')
+        expected=f'paired_g1_{request["case_id"]}_rev_{request["case_revision"]}'
+        source=read_json(artifact)
+        if source_id!=expected or config.get('reference_v2',{}).get('arm_id')!='G2' or source.get('config_sha256')!=request['config_sha256'] or source.get('paired_g1')!=config['reference_v2']['paired_g1'] or paired_prompt(case_root,config)!=payload['edit_prompt']:
+            raise HREError('paired_g1_mismatch','Execute must reuse its frozen G1 source')
+        return
     if source_id.startswith('direct_prompt_'):
         state = CaseStore(case_root).load()
         expected = f'direct_prompt_{request["case_id"]}_rev_{request["case_revision"]}'
@@ -379,6 +388,13 @@ def build_context(case_root: Path, request: dict) -> dict:
         validate_edit_contract('execute', payload)
         _validate_prompt_source(case_root, request)
         result['edit_prompt'] = payload['edit_prompt']
+        if 'reference_v2' in config:
+            result['reference_v2_contract']={'schema_version':'ref_enhance_v2','minimum_engine_version':'0.2.1'}
+        if config.get('reference_v2',{}).get('arm_id')=='G2':
+            paired=config['reference_v2']['paired_g1']
+            rendered=json.loads(render_stage('execute',result,case_root=case_root))['edit_prompt']
+            if rendered!=paired['rendered_prompt'] or sha256_bytes(rendered.encode())!=paired['prompt_sha256']:
+                raise HREError('paired_g1_mismatch','Final rendered G1/G2 editor text differs')
         return result
     adapter = read_json(safe_path(case_root, f'tasks/{request["task_id"]}/attempts/{request["attempt"]:03d}/adapter_context.json', must_exist=True))
     validate_schema('response', adapter['model_observed'], '/properties/model_observed')
@@ -436,4 +452,14 @@ def build_context(case_root: Path, request: dict) -> dict:
         if not source_requests or any(actual['payload']['edit_prompt'] != payload['previous_edit_prompt'] or actual['round'] != payload['source_round'] for actual in source_requests):
             raise HREError('context_identity_mismatch', 'Previous editing text differs from the bound source execution')
         result.update(previous_edit_prompt=payload['previous_edit_prompt'], verification=response['payload'], source_round=payload['source_round'])
+    if 'reference_v2' in config and stage in {'diagnose','compose'}:
+        from .reference_evaluator import region_mask,display_attributes,_rgb8
+        spec=config['reference_v2'];result['reference_regions']=spec['roi_pairs'];statistics=[]
+        aa,bb=_rgb8(by_role['prediction'],case_root),_rgb8(by_role['reference'],case_root)
+        for pair in spec['roi_pairs']:
+            ma=region_mask(aa.shape,pair['prediction'],case_root);mb=region_mask(bb.shape,pair['reference'],case_root)
+            valid=pair['comparability']=='comparable' and ma.any() and mb.any()
+            statistics.append(dict(roi_pair_id=pair['roi_pair_id'],status='measured' if valid else 'not_assessable',
+                                   A=display_attributes(aa[ma]) if valid else None,B=display_attributes(bb[mb]) if valid else None))
+        result['reference_statistics']=statistics
     return result

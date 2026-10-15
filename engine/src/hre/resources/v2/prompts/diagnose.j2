@@ -1,0 +1,20 @@
+{% set instructions -%}
+Inspect both attached images before assessing them. A is the frozen Neural ISP prediction and sole content source. B is an unaligned same-scene iPhone 17 rendering reference. Compare observable brightness, color, tonal separation and local rendering; do not treat viewpoint, lighting, occlusion, time or different region composition as rendering gaps. Mark unsupported comparisons unknown. Report at most three supported gaps in total, ranked by priority; identify local targets in A and their comparable ROI pairs. Plan only necessary tools from available_tools. Tool metadata or filenames do not prove that an image was seen. Do not invent measurements, objects, text or evidence. A's composition, geometry, identities and text must remain; its brightness and colors may change. If either image was not actually seen, return error code image_not_observed with payload null. If seen but B is unusable, report unusable; if evidence cannot establish usability, report unknown.
+{%- endset %}
+{
+  "stage": "diagnose",
+  "instructions": {{ instructions | tojson }},
+  "image_bindings": {{ image_bindings | tojson }},
+  "input_context": {
+    "reference_regions": {{ reference_regions | tojson }},
+    "reference_statistics": {{ reference_statistics | tojson }},
+    "manual_roi_pairs": {{ manual_roi_pairs | tojson }},
+    "available_tools": {{ available_tools | tojson }},
+    "evidence_summary": {{ evidence_summary | tojson }}
+  },
+  "response_identity": {{ response_identity | tojson }},
+  "model_observed": {{ model_observed | tojson }},
+  "session_id": {{ session_id | tojson }},
+  "result_schema": {{ result_schema | tojson }},
+  "response_rules": "Return one JSON response envelope. Echo response_identity exactly; use the supplied model_observed and session_id without inventing metadata. status=ok requires a bare result_schema payload and error=null. status=error requires payload=null and error={code,message,retryable}. No markdown or extra keys."
+}

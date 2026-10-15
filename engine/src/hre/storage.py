@@ -165,6 +165,9 @@ class CaseStore:
             if config_hash(config)!=state['config_sha256']:raise HREError('protocol_integrity_error','Configuration hash mismatch')
             write_json(self._path('initial_state.json'),state)
             names=['config.json','manifest.json','initial_state.json']
+            if 'reference_v2' in config:
+                from .reference_contracts import validate_artifacts
+                names.extend(validate_artifacts(self.case_root,config['reference_v2']))
             if self._path('input/roi_manifest.json').exists():names.append('input/roi_manifest.json')
             if 'prompt_template_sha256' in config:
                 names.append('prompts/manifest.json')
@@ -189,6 +192,9 @@ class CaseStore:
             if not pending or pending['request_path']!=nxt['request_path'] or pending['request_sha256']!=nxt['request_sha256']:raise HREError('protocol_integrity_error','Committed task differs from pending task')
         accepted=tx['accepted_submission']
         if accepted:
+            if 'reference_v2' in read_json(self._path('config.json',True)) and 'done_sha256' not in accepted:
+                raise HREError('protocol_integrity_error','v2 acceptance requires the original done manifest digest')
+            if 'done_sha256' in accepted:self._check_file(accepted['done_path'],accepted['done_sha256'])
             self._check_file(accepted['response_path'],accepted['response_sha256'])
             response=read_json(self._path(accepted['response_path'],True));validate_schema('response',response)
             done=read_json(self._path(accepted['done_path'],True));validate_schema('response',done,'#/$defs/done_manifest')

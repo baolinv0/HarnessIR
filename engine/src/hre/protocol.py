@@ -43,7 +43,10 @@ def validate_request(case_root:Path,request:dict,state:dict)->None:
             if file_sha256(f)!=p[hash_key]:raise HREError('artifact_hash_mismatch',path_key)
     if request['stage']=='execute':
         source=p['prompt_source_task_id']
-        if state['profile_id'] in ('direct_ref','direct_best_of_3'):
+        if cfg.get('reference_v2',{}).get('arm_id')=='G2':
+            from .prompts import _validate_prompt_source
+            _validate_prompt_source(case_root,request)
+        elif state['profile_id'] in ('direct_ref','direct_best_of_3'):
             expected=f"direct_prompt_{state['case_id']}_rev_{state['case_revision']}"
             record=read_json(safe_path(case_root,f'tasks/{source}/manifest.json',must_exist=True))
             if source!=expected or record.get('task_id')!=expected or record.get('edit_prompt')!=p['edit_prompt'] or record.get('prompt_sha256')!=sha256_bytes(p['edit_prompt'].encode()) or record.get('config_sha256')!=request['config_sha256'] or record.get('prompt_version')!='direct_ref_v1':
@@ -84,6 +87,12 @@ def _validate_semantics(response:dict,request:dict,state:dict,case_root:Path)->N
             raise HREError('candidate_binding_mismatch','Candidate belongs to different source/generation')
         validate_asset(asset,case_root)
         cfg=read_json(safe_path(case_root,'config.json',must_exist=True))
+        if 'reference_v2' in cfg:
+            expected_executor=cfg['reference_v2']['executor'];observed=response['model_observed']
+            if (observed['ui_model_name']!=expected_executor['model_display_name'] or observed['transport']!=expected_executor['transport']
+                or (expected_executor['model_exact_version'] is not None and observed['exact_model_version']!=expected_executor['model_exact_version'])
+                or ('seed' in expected_executor['settings'] and observed['seed']!=expected_executor['settings']['seed'])):
+                raise HREError('executor_mismatch','Observed image executor differs from the frozen same-model comparison')
         policy={k:cfg[k] for k in ('assume_srgb','canonicalizer_version')}
         if asset['canonicalization']['conversion_policy_sha256']!=sha256_bytes(canonical_json(policy)) or asset['canonicalization']['canonicalizer_version']!=cfg['canonicalizer_version']:
             raise HREError('color_policy_mismatch','Candidate normalization differs from frozen input policy')
@@ -176,6 +185,8 @@ def validate_submission(case_root:Path,done_path:Path,request:dict,state:dict)->
                 raise HREError('missing_artifact','Every execution image must be explicitly committed')
         if p['actual_generation_count']<1+len(p['extras']):raise HREError('invalid_generation_count','Extras must be charged')
         _validate_output_order(root,artifacts,p,request)
+        from .reference_execution import validate_committed_execution
+        validate_committed_execution(root,request,response,artifacts)
     if _time(response['model_observed']['observed_at'])>_time(done['completed_at']):
         raise HREError('invalid_time','Observation occurs after done')
     if response['status']=='ok' and request['stage']=='execute' and _time(response['payload']['submitted_at'])>_time(done['completed_at']):
@@ -230,6 +241,9 @@ class TaskWriter:
                 if row['sha256']!=actual_sha:raise HREError('output_order_artifact','Provider raw hash differs before path materialization')
                 row['sha256']=actual_sha
             write_json(dest,order);item['sha256']=file_sha256(dest)
+        if request['stage']=='execute' and payload is not None:
+            from .reference_execution import remap_submission_proofs
+            remap_submission_proofs(self.root,artifacts,mapping)
         if request['stage']=='execute' and payload is not None:
             a=payload['candidate_asset'];a['path']=mapping[a['path']];a['source_file']['path']=mapping[a['source_file']['path']]
             for e in payload['extras']:e['path']=mapping[e['path']]

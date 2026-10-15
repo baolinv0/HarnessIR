@@ -1,6 +1,6 @@
 ## v2 生成式参考增强设计（2026-10-15）
 
-基于已实现的 v1 hre 工程，新增 **G0 DirectRef / G1 AgentText / G2 条件性 AgentMask** 实验设计，以及非对齐 ROI 的 A/B/C 属性评价。只保留生成式编辑，不引入确定性 Renderer；Mask 仅在相同 Executor 真实验证后启用。当前文档已提交，**运行代码尚未按 v2 修改，未完成真实 G0/G1/G2 实验**。
+基于已实现的 v1 hre 工程，新增 **G0 DirectRef / G1 AgentText / G2 条件性 AgentMask** 实验设计，以及非对齐 ROI 的 A/B/C 属性评价。只保留生成式编辑，不引入确定性 Renderer；Mask 仅在相同 Executor 真实验证后启用。v2 运行代码已实现；**真实 G0/G1/G2 增强收益与实际 Executor Mask 能力尚未验证**。运行入口见 [v2 手册](docs/reference_enhancement/v2_20261015/RUNBOOK.md) 和 [实现验证记录](docs/reference_enhancement/v2_20261015/IMPLEMENTATION_STATUS.md)。
 
 - [v2 总入口](docs/reference_enhancement/v2_20261015/START_HERE.md)
 - [工程设计](docs/reference_enhancement/v2_20261015/DESIGN.md)

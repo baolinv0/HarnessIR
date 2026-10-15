@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "harness-ref-enhance"
-version = "0.1.0"
+version = "0.2.1"
 description = "Audited offline reference enhancement controller"
 requires-python = ">=3.10"
 dependencies = ["Pillow>=10", "pydantic>=2", "jsonschema>=4.18", "referencing>=0.30", "numpy>=1.24", "Jinja2>=3.1", "streamlit>=1.30"]
@@ -19,4 +19,4 @@ hre = "hre.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-hre = ["resources/schemas/*.json", "resources/config/*.json", "resources/prompts/*.j2"]
+hre = ["resources/schemas/*.json", "resources/config/*.json", "resources/prompts/*.j2", "resources/v2/*.json", "resources/v2/prompts/*.j2"]

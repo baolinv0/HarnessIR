@@ -1,3 +1,5 @@
+> 本文件保留 PR #3 的设计/预注册基线。实际实现、命令和验证边界见 [RUNBOOK.md](RUNBOOK.md) 与 [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)；真实 R1/R2 尚未运行。
+
 # HarnessRefEnhance v2 — 工程实施清单与验收合同
 
 **基线**：PR #2 的 feat/reference-enhancement-v1；**交付意图**：仅增量支持生成式 G0/G1/G2，保留 v1 和原恢复入口。**此文档是后续工程任务，不代表代码已改。**
