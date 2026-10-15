@@ -1,0 +1,33 @@
+{
+  "schema_version": "reference_run_manifest_v2",
+  "stage": "R1",
+  "seed": 20261015,
+  "code_commit_sha": "REPLACE_WITH_IMPLEMENTATION_COMMIT_40_HEX",
+  "excluded_rater_ids": [
+    "REPLACE_WITH_OPERATOR_ID",
+    "REPLACE_WITH_COMPOSER_ID"
+  ],
+  "cases": [
+    {
+      "case_id": "case01",
+      "scene_group_id": "scene01",
+      "split": "dev",
+      "source_case_root": "case01/G1_inputs",
+      "g2": null
+    },
+    {
+      "case_id": "case02",
+      "scene_group_id": "scene02",
+      "split": "dev",
+      "source_case_root": "case02/G1_inputs",
+      "g2": null
+    },
+    {
+      "case_id": "case03",
+      "scene_group_id": "scene03",
+      "split": "dev",
+      "source_case_root": "case03/G1_inputs",
+      "g2": null
+    }
+  ]
+}

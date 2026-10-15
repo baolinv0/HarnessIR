@@ -338,7 +338,7 @@ class EvidenceService:
         config=self._config();profile=config.get('tool_profile',{}).get(item['tool_id'],{})
         builtin=item['tool_id'] in ('STATS','ROI_COMPARE')
         preprocess=profile.get('preprocess',config.get('stats_metric',{'metric_version':'display_stats_v1'}) if builtin else {'status':'unconfigured'})
-        roi=config.get('roi_manifest')
+        roi=config.get('reference_v2',{}).get('roi_pairs',config.get('roi_manifest'))
         contract=dict(schema_version=SCHEMA_VERSION,tool_id=item['tool_id'],tool_version=profile.get('tool_version','display_stats_v1' if builtin else 'unconfigured'),
             inputs=[_contract_input(a) for a in inputs],canonicalizer_version=inputs[0].get('canonicalization',{}).get('canonicalizer_version','hre_rgb8_v1'),
             model=profile.get('model',dict(name='none' if builtin else 'unavailable',revision='display_stats_v1' if builtin else 'unconfigured',weights_sha256=None,components=[])),

@@ -1,3 +1,5 @@
+> 本文件保留 PR #3 的设计/预注册基线。实际实现、命令和验证边界见 [RUNBOOK.md](RUNBOOK.md) 与 [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)；真实 R1/R2 尚未运行。
+
 # HarnessRefEnhance v2 — 工程修改规格（生成式专用）
 
 **基线**：feat/reference-enhancement-v1 @ 1490c574；**状态**：design_only / code_not_modified；**负责人目标**：使 Modular Neural ISP 的 A 在内容不变前提下，向同场景数秒后 iPhone 17 的 B 的亮度、颜色、影调靠近。

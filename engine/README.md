@@ -1,3 +1,15 @@
+## 生成式参考增强 v2（显式 opt-in）
+
+新增 `hre v2`：G0/G1 单次生成、同字节 G1→G2 Mask 适配、独立 A/B/C 区域指标和盲评 ITT。原 v1 CLI 默认和 Controller/CaseStore 文件协议继续使用。完整步骤见 [v2 运行手册](../docs/reference_enhancement/v2_20261015/RUNBOOK.md)；[实现状态](../docs/reference_enhancement/v2_20261015/IMPLEMENTATION_STATUS.md) 和 [审查验证](../docs/reference_enhancement/v2_20261015/REVIEW_AND_VALIDATION.md) 记录交付边界。真实模型效果和生产 Mask 能力未验证。
+
+```bash
+python -m pip install -e './engine[test]'
+python -m hre v2 --help
+python engine/examples/reference_v2_demo.py --out /new/empty/directory
+```
+
+演示只生成明确标注的合成测试材料，不调用模型，不是 R1/R2。
+
 # HarnessRefEnhance local engine
 
 This isolated engine freezes editing base A and appearance reference B, validates manual task handoffs, and keeps generation budgets, evidence, candidate checks and selection on disk. B is nonaligned appearance guidance, never pixel ground truth. It does not call a model API or automate the ChatGPT desktop application.

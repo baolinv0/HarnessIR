@@ -1,0 +1,388 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Opt-in generative reference enhancement v2",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "ref_enhance_v2"
+    },
+    "arm_id": {
+      "enum": [
+        "G0",
+        "G1",
+        "G2"
+      ]
+    },
+    "executor": {
+      "type": "object",
+      "properties": {
+        "executor_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_display_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_exact_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "transport": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pipeline_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "settings": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "executor_id",
+        "model_display_name",
+        "model_exact_version",
+        "transport",
+        "pipeline_version",
+        "adapter_version",
+        "settings"
+      ],
+      "additionalProperties": false
+    },
+    "task_scope": {
+      "enum": [
+        "global",
+        "local"
+      ]
+    },
+    "local_mask_eligible": {
+      "type": "boolean"
+    },
+    "roi_pairs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "roi_pair_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "prediction": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "const": "box"
+                  },
+                  "box": {
+                    "type": "array",
+                    "items": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "minItems": 4,
+                    "maxItems": 4
+                  }
+                },
+                "required": [
+                  "kind",
+                  "box"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "const": "polygon"
+                  },
+                  "points": {
+                    "type": "array",
+                    "minItems": 3,
+                    "items": {
+                      "type": "array",
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "items": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "kind",
+                  "points"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "kind": {
+                    "const": "mask"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "path",
+                  "sha256"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "reference": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "const": "box"
+                  },
+                  "box": {
+                    "type": "array",
+                    "items": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "minItems": 4,
+                    "maxItems": 4
+                  }
+                },
+                "required": [
+                  "kind",
+                  "box"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "const": "polygon"
+                  },
+                  "points": {
+                    "type": "array",
+                    "minItems": 3,
+                    "items": {
+                      "type": "array",
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "items": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "kind",
+                  "points"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "kind": {
+                    "const": "mask"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "path",
+                  "sha256"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "comparability": {
+            "enum": [
+              "comparable",
+              "partly_comparable",
+              "not_comparable",
+              "unknown",
+              "absent",
+              "unreliable"
+            ]
+          },
+          "reasons": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "semantic_label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "dimensions": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "brightness",
+                "color",
+                "tone",
+                "saturation"
+              ]
+            }
+          }
+        },
+        "required": [
+          "roi_pair_id",
+          "prediction",
+          "reference",
+          "comparability",
+          "reasons",
+          "semantic_label",
+          "dimensions"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "path",
+          "sha256"
+        ],
+        "additionalProperties": false
+      },
+      "uniqueItems": true
+    },
+    "simulation_only": {
+      "type": "boolean"
+    },
+    "eval_mask": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "edit_mask": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "mask_probe": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "required": [
+            "path",
+            "sha256"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "paired_g1": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "source_assets": {
+      "type": "object",
+      "properties": {
+        "prediction": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "reference": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "prediction",
+        "reference"
+      ],
+      "additionalProperties": false
+    },
+    "assume_srgb": {
+      "type": "boolean"
+    },
+    "tool_profile": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "arm_id",
+    "executor",
+    "task_scope",
+    "local_mask_eligible",
+    "roi_pairs",
+    "files",
+    "simulation_only",
+    "eval_mask",
+    "edit_mask",
+    "mask_probe",
+    "paired_g1",
+    "assume_srgb",
+    "tool_profile"
+  ],
+  "additionalProperties": false
+}

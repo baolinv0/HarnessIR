@@ -1,3 +1,5 @@
+> 本文件保留 PR #3 的设计/预注册基线。实际实现、命令和验证边界见 [RUNBOOK.md](RUNBOOK.md) 与 [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)；真实 R1/R2 尚未运行。
+
 # HarnessRefEnhance v2 — 实验计划与可证伪决策协议
 
 **版本**：v2_20261015；**状态**：预注册方案草案，未运行模型、不报告虚构结果。**目的**：用最小生成预算验证生成式参考引导亮度/颜色/影调增强，以及语义文本和 Mask 的真实净增益，而非为发表论文补齐完整消融。

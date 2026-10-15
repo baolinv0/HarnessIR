@@ -1,0 +1,137 @@
+{
+  "schema_version": "mask_probe_v2",
+  "executor": {
+    "executor_id": "chatgpt-desktop-manual",
+    "model_display_name": "REPLACE_WITH_OBSERVED_MODEL_NAME",
+    "model_exact_version": null,
+    "transport": "desktop_manual",
+    "pipeline_version": "manual-v2",
+    "adapter_version": "manual-files-v2",
+    "settings": {}
+  },
+  "status": "untested",
+  "probe_env": "real",
+  "mask_mode": "separate_mask_image",
+  "mask_encoder": "white_allow",
+  "accepts_A_and_B": false,
+  "accepts_mask": false,
+  "mask_applies_to": "A",
+  "allow_edit_semantics": "0_preserve_1_allow_edit",
+  "mask_size_rule": "exact_A",
+  "observations": [
+    {
+      "kind": "simple_region",
+      "observer": "REPLACE_WITH_REAL_OBSERVER",
+      "observed_at": "REPLACE_WITH_OBSERVED_ZONED_ISO_TIME",
+      "steps": [
+        "REPLACE_WITH_REAL_COMMAND_OR_UI_STEPS"
+      ],
+      "input_A": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "input_B": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "mask": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "output": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "request": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "delivery": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "response": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "passed": false,
+      "notes": "Untested template; replace only with real observations"
+    },
+    {
+      "kind": "fine_boundary",
+      "observer": "REPLACE_WITH_REAL_OBSERVER",
+      "observed_at": "REPLACE_WITH_OBSERVED_ZONED_ISO_TIME",
+      "steps": [
+        "REPLACE_WITH_REAL_COMMAND_OR_UI_STEPS"
+      ],
+      "input_A": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "input_B": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "mask": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "output": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "request": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "delivery": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "response": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "passed": false,
+      "notes": "Untested template; replace only with real observations"
+    },
+    {
+      "kind": "preserve_negative",
+      "observer": "REPLACE_WITH_REAL_OBSERVER",
+      "observed_at": "REPLACE_WITH_OBSERVED_ZONED_ISO_TIME",
+      "steps": [
+        "REPLACE_WITH_REAL_COMMAND_OR_UI_STEPS"
+      ],
+      "input_A": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "input_B": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "mask": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "output": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "request": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "delivery": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "response": {
+        "path": "REPLACE_WITH_CASE_RELATIVE_ACTUAL_ARTIFACT_PATH",
+        "sha256": "REPLACE_WITH_ACTUAL_SHA256"
+      },
+      "passed": false,
+      "notes": "Untested template; replace only with real observations"
+    }
+  ]
+}

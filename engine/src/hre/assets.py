@@ -209,7 +209,10 @@ def create_case(prediction:Path,reference:Path,manifest:dict,config:dict,case_ro
         # Validate exact geometry policy using the authoritative nested schema.
         validate_schema('state',cfg['geometry_policy'],'#/properties/candidates/items/properties/geometry/properties/policy')
         cfg['schema_version']=SCHEMA_VERSION;cfg['canonicalizer_version']=CANONICALIZER_VERSION
-        cfg['prompt_template_sha256']=freeze_templates(root)
+        if 'reference_v2' in cfg:
+            from .reference_contracts import prepare_reference_config
+            prepare_reference_config(root,cfg,inputs)
+        cfg['prompt_template_sha256']=freeze_templates(root,reference_v2='reference_v2' in cfg)
         cfg['config_sha256']=config_hash(cfg)
         frozen_manifest=deepcopy(manifest)
         case_id=frozen_manifest.get('case_id',make_id('case'));case_revision=frozen_manifest.get('case_revision',0)

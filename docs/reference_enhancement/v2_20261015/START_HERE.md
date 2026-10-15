@@ -1,3 +1,5 @@
+> 本文件保留 PR #3 的设计/预注册基线。实际实现、命令和验证边界见 [RUNBOOK.md](RUNBOOK.md) 与 [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)；真实 R1/R2 尚未运行。
+
 # HarnessRefEnhance v2 — 生成式参考引导增强方案
 
 **日期：2026-10-15** | **状态：工程设计与预注册实验草案；未运行真实 v2 实验** | **变更类型：文档增量，不修改运行代码**

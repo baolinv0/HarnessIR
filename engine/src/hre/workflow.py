@@ -118,7 +118,14 @@ class Controller:
             a=self._latest('diagnose',extra);ref=s['evidence_snapshot']
             payload=dict(diagnosis_task_id=a['task_id'],diagnosis_response_sha256=a['response_sha256'],evidence_snapshot_path=ref['path'],evidence_snapshot_sha256=ref['sha256'])
         elif stage=='execute':
-            if s['profile_id'] in ('direct_ref','direct_best_of_3'):
+            if config.get('reference_v2',{}).get('arm_id')=='G2':
+                from .reference_contracts import paired_prompt
+                prompt=paired_prompt(self.root,config)
+                source=f"paired_g1_{s['case_id']}_rev_{s['case_revision']}"
+                from .evidence import _immutable
+                _immutable(safe_path(self.root,f'tasks/{source}/manifest.json'),dict(schema_version='paired_g1_source_v2',
+                           task_id=source,config_sha256=s['config_sha256'],paired_g1=config['reference_v2']['paired_g1']))
+            elif s['profile_id'] in ('direct_ref','direct_best_of_3'):
                 source=f"direct_prompt_{s['case_id']}_rev_{s['case_revision']}"
                 from .prompts import render_stage,template_source
                 bindings=[dict(label=label,asset_id=a['asset_id'],canonical_sha256=a['sha256']) for label,a in zip(['A','B'],inputs)]
@@ -136,6 +143,11 @@ class Controller:
                 choices=[a for a in entries if a['response']['stage'] in ('compose','refine') and a['response']['status']=='ok']
                 if not choices:raise HREError('missing_stage_result','No accepted editing prompt')
                 a=choices[-1];source=a['task_id'];prompt=a['response']['payload']['edit_prompt']
+                if 'reference_v2' in config:
+                    from .reference_contracts import reference_targets
+                    from .evidence import _immutable
+                    target=reference_targets(self.root,self._latest('diagnose')['response']['payload'],a['response']['payload'],inputs)
+                    _immutable(safe_path(self.root,f'tasks/{source}/reference_targets_v2.json'),target)
             gid=reserve(s['budget'],task_id,round_)
             policy=deepcopy(config.get('geometry_policy',{}))
             if isinstance(policy,str):policy=dict(mode=policy)
@@ -208,7 +220,7 @@ class Controller:
         statuses={(o['scope'],o['roi_pair_id']):o['status'] for o in diagnosis['comparability']}
         good={'comparable','partly_comparable'}
         config=read_json(safe_path(self.root,'config.json',must_exist=True))
-        pairs=config['roi_manifest']
+        pairs=config.get('reference_v2',{}).get('roi_pairs',config['roi_manifest'])
         if isinstance(pairs,dict):pairs=pairs.get('roi_pairs',[])
         manual={p['roi_pair_id']:p.get('comparability',p.get('status','unknown')) for p in pairs}
         supported=set()
@@ -221,6 +233,8 @@ class Controller:
     def _diagnosis_semantics(self,p:dict,request:dict)->None:
         roi=read_json(safe_path(self.root,'input/roi_manifest.json',must_exist=True)) if request['payload']['roi_manifest_path'] else []
         if isinstance(roi,dict):roi=roi.get('roi_pairs',roi.get('pairs',[]))
+        config=read_json(self.root/'config.json')
+        if 'reference_v2' in config:roi=config['reference_v2']['roi_pairs']
         ids={r['roi_pair_id'] for r in roi}
         self._priorities(p['style_targets'])
         scopes=[(o['scope'],o['roi_pair_id']) for o in p['comparability']]
@@ -240,6 +254,11 @@ class Controller:
             if not set(plan['roi_pair_ids'])<=ids:raise HREError('unknown_roi','Tool plan references unknown ROI')
 
     def _composition_semantics(self,p:dict,request:dict,s:dict)->None:
+        if 'reference_v2' in self._config(s):
+            if not 1<=len(p['edit_targets'])<=3 or len(p['edit_prompt'].split())>160:
+                raise HREError('v2_prompt_contract','Require 1–3 supported priorities and at most 160 English words')
+            if self._config(s)['reference_v2']['task_scope']=='local' and any(t['scope']!='region' for t in p['edit_targets']):
+                raise HREError('v2_prompt_contract','A local mask comparison must use only supported local priorities')
         d=self._latest('diagnose')['response']['payload'];gaps=self._supported_gaps(d)
         requested={gid for t in d['style_targets'] for gid in t['support_gap_ids']}
         self._priorities(p['edit_targets'])
@@ -364,6 +383,7 @@ class Controller:
                         if request['stage']=='compose':self._composition_semantics(result['response']['payload'],request,old)
                         else:self._refinement_semantics(result['response']['payload'],request,old)
                 accepted=dict(task_id=request['task_id'],attempt=request['attempt'],request_sha256=request['request_sha256'],response_sha256=result['response_sha256'],response_path=done['response_file'],done_path=dpath.relative_to(self.root).as_posix())
+                if 'reference_v2' in self._config(old):accepted['done_sha256']=file_sha256(dpath)
                 ephemeral=dict(accepted,response=result['response'])
                 s=deepcopy(old);next_task=self._apply(s,request,result,ephemeral)
                 self._commit(old,s,'response_accepted',dict(task_id=request['task_id'],stage=request['stage'],response_sha256=result['response_sha256']),accepted,next_task)

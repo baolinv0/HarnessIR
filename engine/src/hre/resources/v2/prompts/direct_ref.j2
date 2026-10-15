@@ -1,0 +1,4 @@
+{% set direct_prompt -%}
+Edit image A, the Neural ISP prediction, toward image B's brightness, color balance and tonal separation. B is an unaligned rendering reference of the same scene taken within seconds under stable illumination. Make visible natural appearance changes. Preserve A's composition, geometry, identities, text and scene contents. B supplies appearance reference only; do not import its objects or textures.
+{%- endset %}
+{"image_bindings": {{ image_bindings | tojson }}, "edit_prompt": {{ direct_prompt | tojson }}}

@@ -1,0 +1,57 @@
+{
+  "schema_version": "ref_enhance_v2",
+  "arm_id": "G1",
+  "executor": {
+    "executor_id": "chatgpt-desktop-manual",
+    "model_display_name": "REPLACE_WITH_OBSERVED_MODEL_NAME",
+    "model_exact_version": null,
+    "transport": "desktop_manual",
+    "pipeline_version": "manual-v2",
+    "adapter_version": "manual-files-v2",
+    "settings": {}
+  },
+  "task_scope": "global",
+  "local_mask_eligible": false,
+  "roi_pairs": [
+    {
+      "roi_pair_id": "wall",
+      "prediction": {
+        "kind": "box",
+        "box": [
+          0.1,
+          0.1,
+          0.4,
+          0.4
+        ]
+      },
+      "reference": {
+        "kind": "box",
+        "box": [
+          0.2,
+          0.2,
+          0.5,
+          0.5
+        ]
+      },
+      "comparability": "comparable",
+      "reasons": [
+        "REPLACE: observed same material and stable illumination"
+      ],
+      "semantic_label": "wall",
+      "dimensions": [
+        "brightness",
+        "color",
+        "tone",
+        "saturation"
+      ]
+    }
+  ],
+  "eval_mask": null,
+  "edit_mask": null,
+  "mask_probe": null,
+  "paired_g1": null,
+  "files": [],
+  "simulation_only": false,
+  "assume_srgb": true,
+  "tool_profile": {}
+}

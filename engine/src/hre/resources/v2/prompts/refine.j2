@@ -1,0 +1,18 @@
+{% set instructions -%}
+Inspect attached A, B and C. A remains the only edit source; C is the previous candidate for analysis only. B is an unaligned same-scene iPhone 17 rendering reference. Use verification and previous_edit_prompt to rewrite one complete, concise English prompt, preferably 80-160 words, with at most three concrete priorities. Address supported residual rendering gaps or observed content defects. If a supported change was too weak, strengthen its qualitative instruction; if it overshot or harmed content, revise that specific instruction. Do not add blanket constraints freezing A's original colors, exposure or contrast. Preserve A's composition, geometry, identity and text while allowing rendering changes. Never copy B's scene content, textures, viewpoint or lighting. Record precisely what wording changed and why. Do not invent measurements or turn uncertain comparison into a new gap. The next execution starts again from original A with B; it never edits C. If required images were not seen, return image_not_observed. If feedback supports no actionable change, return no_supported_refinement with payload null.
+{%- endset %}
+{
+  "stage": "refine",
+  "instructions": {{ instructions | tojson }},
+  "image_bindings": {{ image_bindings | tojson }},
+  "input_context": {
+    "previous_edit_prompt": {{ previous_edit_prompt | tojson }},
+    "verification": {{ verification | tojson }},
+    "source_round": {{ source_round | tojson }}
+  },
+  "response_identity": {{ response_identity | tojson }},
+  "model_observed": {{ model_observed | tojson }},
+  "session_id": {{ session_id | tojson }},
+  "result_schema": {{ result_schema | tojson }},
+  "response_rules": "Return one JSON response envelope. Echo response_identity exactly; preserve supplied model_observed and session_id. status=ok requires a bare result_schema payload and error=null; source_round must equal the supplied source_round. status=error requires payload=null and error={code,message,retryable}. No markdown or extra keys."
+}
