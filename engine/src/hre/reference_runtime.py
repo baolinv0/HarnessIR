@@ -97,6 +97,8 @@ def v2_status(root):
             proof=validate_mask_probe(root,spec['mask_probe'],spec['executor'],allow_fixture=spec['simulation_only'])
             capability='fixture_only' if proof['probe_env']=='fixture' else 'observed_supported';mode=proof['mask_mode']
         except Exception as exc:capability='invalid';reason=str(exc)
+    from .reference_contracts import mask_roi_binding
     return dict(schema_version='reference_status_v2',arm_id=spec['arm_id'],executor=spec['executor'],task_scope=spec['task_scope'],
+                mask_roi_binding=mask_roi_binding(root,spec,state['inputs'][0]),
                 capability=capability,mask_mode=mode,capability_reason=reason,guidance='soft; no hard pixel guarantee',
                 local_mask_eligible=spec['local_mask_eligible'],budget=state['budget'],simulation_only=spec['simulation_only'])

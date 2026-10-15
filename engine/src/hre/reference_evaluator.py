@@ -6,7 +6,7 @@ from .models import HREError
 from .roi import _box_mask
 from .masks import checked_file, validate_mask, require
 
-EVALUATOR_VERSION='reference_attributes_v2_20261015_r1'
+EVALUATOR_VERSION='reference_attributes_v2_20261015_r2'
 NEAR_ZERO=1e-4
 DIMENSIONS={'brightness','color','tone','saturation'}
 
@@ -70,18 +70,20 @@ def display_attributes(rgb):
     pixels=np.asarray(rgb)
     require(pixels.ndim>=2 and pixels.shape[-1]==3 and pixels.size>0,'empty_roi','Nonempty RGB ROI required')
     pixels=pixels.reshape(-1,3);n=len(pixels);lightness=np.empty(n,dtype=np.float32);luma=np.empty(n,dtype=np.float32)
-    total_L=0.;total_ab=np.zeros(2);total_sat=0.;shadow=highlight=0
+    total_L=0.;total_ab=np.zeros(2);total_sat=0.;channel_low=channel_high=luma_low=luma_high=0
     for start in range(0,n,65536):
         stop=min(n,start+65536);p=_unit(pixels[start:stop]);lab=_lab(p)
-        lightness[start:stop]=lab[:,0];luma[start:stop]=p @ np.array([.2126,.7152,.0722])
+        yp=p @ np.array([.2126,.7152,.0722]);lightness[start:stop]=lab[:,0];luma[start:stop]=yp
         total_L+=float(lab[:,0].sum());total_ab+=lab[:,1:].sum(axis=0)
         hi,lo=p.max(axis=1),p.min(axis=1)
         total_sat+=float(np.divide(hi-lo,hi,out=np.zeros_like(hi),where=hi!=0).sum())
-        shadow+=int((lo<=1/255).sum());highlight+=int((hi>=254/255).sum())
+        channel_low+=int((lo<=1/255).sum());channel_high+=int((hi>=254/255).sum())
+        luma_low+=int((yp<=1/255).sum());luma_high+=int((yp>=254/255).sum())
     quantiles=np.quantile(lightness,[.1,.5,.9]).tolist()
     return dict(L_mean=total_L/n,L_median=quantiles[1],L_quantiles=quantiles,ab_mean=(total_ab/n).tolist(),
                 Yprime_quantiles=np.quantile(luma,[.1,.5,.9]).tolist(),saturation_mean=total_sat/n,
-                shadow_clip_fraction=shadow/n,highlight_clip_fraction=highlight/n)
+                channel_any_low_endpoint_fraction=channel_low/n,channel_any_high_endpoint_fraction=channel_high/n,
+                display_luma_low_endpoint_fraction=luma_low/n,display_luma_high_endpoint_fraction=luma_high/n)
 
 
 def _distance(x,y,dimension):

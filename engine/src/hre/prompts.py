@@ -389,7 +389,7 @@ def build_context(case_root: Path, request: dict) -> dict:
         _validate_prompt_source(case_root, request)
         result['edit_prompt'] = payload['edit_prompt']
         if 'reference_v2' in config:
-            result['reference_v2_contract']={'schema_version':'ref_enhance_v2','minimum_engine_version':'0.2.0'}
+            result['reference_v2_contract']={'schema_version':'ref_enhance_v2','minimum_engine_version':'0.2.1'}
         if config.get('reference_v2',{}).get('arm_id')=='G2':
             paired=config['reference_v2']['paired_g1']
             rendered=json.loads(render_stage('execute',result,case_root=case_root))['edit_prompt']

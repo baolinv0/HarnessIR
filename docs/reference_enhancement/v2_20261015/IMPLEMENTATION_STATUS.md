@@ -1,12 +1,12 @@
 # v2 实现状态 — 2026-10-15
 
-本工程增量基于 PR #3 `c94a4001e5250fd257e8954b56b72ca9c4725409`，版本为 0.2.0。生成与人工模型会话继续走既有手动交接；Controller/CaseStore 是唯一工作流状态。安装、真实首例、Mask 与实验命令见 [RUNBOOK.md](RUNBOOK.md)，审查和验证证据见 [REVIEW_AND_VALIDATION.md](REVIEW_AND_VALIDATION.md)。
+本工程增量基于 PR #3 `c94a4001e5250fd257e8954b56b72ca9c4725409`，当前修订为 0.2.1。生成与人工模型会话继续走既有手动交接；Controller/CaseStore 是唯一工作流状态。安装、真实首例、Mask 与实验命令见 [RUNBOOK.md](RUNBOOK.md)，审查和验证证据见 [REVIEW_AND_VALIDATION.md](REVIEW_AND_VALIDATION.md)。
 
 | 方案能力 | 实际实现与验收范围 |
 | --- | --- |
 | G0 DirectRef | 冻结 A/B 和固定文本；一次生成；editor 仅 A、B、文本 |
 | G1 AgentText | 真实诊断/离线证据进入 Composer；1–3 个受支持目标，动态文本最多 160 词；一次生成 |
-| G2 条件性 Mask | 同 Executor/settings、同 A/B、同 ROI/EVAL_MASK、同字节 G1 最终文本；三类实际能力 probe 与本次完整交接证明均必需 |
+| G2 条件性 Mask | 同 Executor/settings、同 A/B、同 ROI/EVAL_MASK、同字节 G1 最终文本；另需预冻结的逐 ROI 覆盖/扩张容许范围、三类实际能力 probe 与本次完整交接证明 |
 | Mask | uint8 {0,1}、canonical A 坐标、0 保留/1 允许编辑；EDIT_MASK/EVAL_MASK 分用途；独立图片与原生参数明确区分；手工或 T4 来源严格核验 |
 | ROI 评价 | A/B 各自的 box/polygon/binary mask；C 沿冻结 A 坐标；亮度、色度、影调、饱和度逐属性 before/after/delta，无总体质量分数 |
 | 内容与几何 | 几何或独立内容审查失败/未解决，最终属性与 H3 不可评价；流程 Verifier 仅保留为审计数据 |

@@ -244,6 +244,8 @@ def local_g1_and_g2(tmp_path):
     evaluation=make_mask_contract(tmp_path,arr,desc,purpose='EVAL_MASK',roi_ids=['wall'],provenance={'kind':'manual','annotator':'fixture'},relative='annotations/eval.npy')
     edit=make_mask_contract(tmp_path,arr,desc,purpose='EDIT_MASK',roi_ids=['wall'],provenance={'kind':'manual','annotator':'fixture'},relative='annotations/edit.npy')
     s=spec('G1');s.update(task_scope='local',local_mask_eligible=True,eval_mask=evaluation,files=[{k:evaluation[k] for k in ['path','sha256']}])
+    s['mask_roi_policy']=dict(schema_version='mask_roi_policy_v2',roi_constraints=[dict(roi_pair_id='wall',min_edit_coverage=1,min_eval_coverage=1)],
+                             max_edit_outside_fraction=0,max_eval_outside_fraction=0,rationale='Synthetic exact left-wall fixture')
     g1=tmp_path/'g1';create_reference_case(a,b,s,g1,spec_root=tmp_path);Controller(g1).start()
     d=diagnosis();gap=d['global_gaps'].pop();gap.update(roi_pair_id='wall',region_in_a='left wall');d['local_gaps']=[gap]
     d['comparability'].append(dict(scope='roi_pair',roi_pair_id='wall',status='comparable',reasons=['same wall'],confidence=.9))

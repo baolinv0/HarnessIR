@@ -10,7 +10,7 @@ from .models import HREError,canonical_json,file_sha256,sha256_bytes
 from .storage import CaseStore,atomic_write,read_json,write_json
 from .paths import safe_path
 from .masks import require,checked_file,validate_mask,validate_mask_probe
-from .reference_contracts import create_reference_case,capture_g1_prompt,validate_reference_spec,_refs
+from .reference_contracts import create_reference_case,capture_g1_prompt,validate_reference_spec,mask_roi_binding,_refs
 
 ARMS=('G0','G1','G2')
 DEFECT_CATEGORIES={'identity','text','geometry','scene_content','content_transfer','seam','color_artifact','clipping','other'}
@@ -73,6 +73,7 @@ def freeze_reference_run(manifest,destination):
                     validate_mask(source,g2['edit_mask'],state['inputs'][0]);require(g2['edit_mask']['purpose']=='EDIT_MASK','mask_binding','G2 needs EDIT_MASK')
                     validate_mask_probe(source,g2['mask_probe'],spec['executor'],allow_fixture=spec['simulation_only'])
                     require(spec['eval_mask'] is not None,'mask_binding','G1/G2 require same pre-frozen EVAL_MASK')
+                    mask_roi_binding(source,{**spec,'edit_mask':g2['edit_mask']},state['inputs'][0])
                     status='planned';reason=None;g2spec=deepcopy(g2)
                 except HREError as exc:
                     if exc.code!='skipped_capability':raise
@@ -139,7 +140,7 @@ def reference_run_status(root):
         frozen=root/'frozen'/row['case_id'];original=read_json(frozen/'spec.json');inputs=read_json(frozen/'inputs.json')['assets']
         row.update(executor=original['executor'],source_assets=original['source_assets'],input_assets=inputs,
                    roi_manifest_sha256=sha256_bytes(canonical_json(original['roi_pairs'])),eval_mask_sha256=original['eval_mask']['sha256'] if original['eval_mask'] else None,
-                   config_sha256=None,prompt_sha256=None,executor_observation=None,mask_mode=None,edit_mask_sha256=None,
+                   config_sha256=None,prompt_sha256=None,executor_observation=None,mask_mode=None,edit_mask_sha256=None,mask_roi_binding=None,
                    intended_submissions=1 if planned['status']=='planned' else 0,editor_mask_consumed=False)
         if row['arm_id']=='G2':
             g2=read_json(frozen/'g2.json')['definition']
@@ -149,7 +150,9 @@ def reference_run_status(root):
         if planned['status']!='planned' or not (case/'state.json').exists():rows.append(row);continue
         state=CaseStore(case).load();cfg=read_json(case/'config.json');spec=cfg['reference_v2'];row['config_sha256']=state['config_sha256']
         require(spec['arm_id']==row['arm_id'] and spec['source_assets']==original['source_assets'] and spec['executor']==original['executor']
-                and spec['roi_pairs']==original['roi_pairs'] and spec['eval_mask']==original['eval_mask'],'run_identity_mismatch','Case no longer matches frozen inputs/ROI/executor')
+                and spec['roi_pairs']==original['roi_pairs'] and spec['eval_mask']==original['eval_mask']
+                and spec.get('mask_roi_policy')==original.get('mask_roi_policy'),'run_identity_mismatch','Case no longer matches frozen inputs/ROI/executor/spatial policy')
+        row['mask_roi_binding']=mask_roi_binding(case,spec,state['inputs'][0])
         require(state['budget']['max_generations']==1,'run_identity_mismatch','Single-shot budget changed')
         if row['arm_id']=='G2':
             require(spec['paired_g1']==capture_g1_prompt(root/'cases'/row['case_id']/'G1'),'paired_g1_mismatch','G2 is not paired with this run actual G1 prompt')
@@ -186,8 +189,14 @@ def export_reference_blind(root,destination):
     root=Path(root).absolute();destination=Path(destination).absolute();run,plan=_load(root)
     require(not destination.is_relative_to(root) and not root.is_relative_to(destination),'blind_path','Reviewer package must be outside the run and its private mapping')
     require(not destination.exists() or not any(destination.iterdir()),'export_exists','Use a fresh reviewer package')
-    require(not (root/'private/blind_mapping_v2.json').exists(),'evaluation_frozen','An evaluation snapshot is already frozen')
     status=reference_run_status(root);rows=[r for r in status['rows'] if not r['status'].startswith('skipped_')]
+    if (root/'private/blind_mapping_v2.json').exists():
+        previous=read_json(root/'private/blind_mapping_v2.json');freeze=read_json(root/'private/evaluation_freeze_v2.json')
+        require(file_sha256(root/'private/blind_mapping_v2.json')==freeze['mapping_sha256'],'artifact_hash_mismatch','Previous blind mapping changed')
+        require(previous.get('snapshot_kind')=='r1_progress','evaluation_frozen','The final evaluation is already frozen')
+        _unchanged_completed_rows(previous,status)
+        require(previous['status_sha256']!=sha256_bytes(canonical_json(status)),'evaluation_frozen','No cohort progress since the previous snapshot')
+    progress=run['stage']=='R1' and any(r['arm_id'] in {'G0','G1'} and r['status'] not in {'candidate_ready','failed'} for r in rows)
     rng=random.Random(run['seed']);rng.shuffle(rows);items=[];mapping=[];lookup={};destination.mkdir(parents=True,exist_ok=True)
     for row in rows:
         code=secrets.token_hex(12);frozen=root/'frozen'/row['case_id'];inputs=read_json(frozen/'inputs.json')['assets'];spec=read_json(frozen/'spec.json')
@@ -196,9 +205,10 @@ def export_reference_blind(root,destination):
             path='images/'+code+'_'+role+'.png'
             atomic_write(destination/path,checked_file(source,{k:a[k] for k in ('path','sha256')}).read_bytes());image_paths[role]=path
         dimensions=sorted({d for p in spec['roi_pairs'] for d in p['dimensions']})
-        review_regions=[]
+        review_regions=[];roi_aliases={}
         for index,pair in enumerate(spec['roi_pairs']):
-            entry={'dimensions':pair['dimensions'],'comparability':pair['comparability']}
+            alias=f'r{index+1:03d}';roi_aliases[alias]=pair['roi_pair_id']
+            entry={'roi_pair_id':alias,'dimensions':pair['dimensions'],'comparability':pair['comparability']}
             for role,label in [('prediction','A'),('reference','B')]:
                 region=deepcopy(pair[role])
                 if region['kind']=='mask':
@@ -213,7 +223,7 @@ def export_reference_blind(root,destination):
             review_regions.append(entry)
         items.append(dict(code=code,images=image_paths,target_dimensions=dimensions,
                           roi_regions=review_regions))
-        mapping.append(dict(code=code,row=row));lookup[(row['case_id'],row['arm_id'])]=code
+        mapping.append(dict(code=code,row=row,roi_aliases=roi_aliases));lookup[(row['case_id'],row['arm_id'])]=code
     comparisons=[];private_comparisons=[]
     for cid in sorted({r['case_id'] for r in rows}):
         for left_arm,right_arm,hyp in [('G1','G0','H1'),('G2','G1','H2')]:
@@ -224,14 +234,32 @@ def export_reference_blind(root,destination):
     neutral=dict(schema_version='reference_blind_v2',items=items,comparisons=comparisons,
                  rubric=dict(style_anchor='B appearance; judge improvement relative to A',content_anchor='A',
                              joint_success='Improved style, preserved content, no critical defects; review each requested attribute',
+                             attributes_scope='attributes labels describe the whole image; H3 requires separate roi_attributes labels',
+                             roi_attribute_contract={'fields':['roi_pair_id','dimension','label'],'roi_pair_id':'Use the neutral ID in roi_regions',
+                                                     'label_values':['improved','unchanged','worse','uncertain']},
                              critical_defect_contract={'categories':sorted(DEFECT_CATEGORIES),'severity':'critical','observation':'Nonempty description; categories must not be free-form text'}))
     write_json(destination/'manifest.json',neutral)
     private=dict(schema_version='reference_blind_mapping_v2',blind_manifest_sha256=file_sha256(destination/'manifest.json'),
+                 snapshot_kind='r1_progress' if progress else 'final',
                  rows=mapping,comparisons=private_comparisons,status_sha256=sha256_bytes(canonical_json(status)),
                  reviewer_files={p.relative_to(destination).as_posix():file_sha256(p) for p in destination.rglob('*') if p.is_file()})
+    from .evidence import _immutable
+    snapshot=root/'private/review_snapshots'/private['blind_manifest_sha256']
+    _immutable(snapshot/'blind_mapping_v2.json',private)
+    freeze={'mapping_sha256':file_sha256(snapshot/'blind_mapping_v2.json')}
+    _immutable(snapshot/'evaluation_freeze_v2.json',freeze)
+    # These two files are the latest-snapshot projection; historical snapshots stay immutable.
     write_json(root/'private/blind_mapping_v2.json',private)
-    write_json(root/'private/evaluation_freeze_v2.json',{'mapping_sha256':file_sha256(root/'private/blind_mapping_v2.json')})
+    write_json(root/'private/evaluation_freeze_v2.json',freeze)
     return destination/'manifest.json'
+
+
+def _unchanged_completed_rows(mapping,current):
+    current_rows={(r['case_id'],r['arm_id']):r for r in current['rows']}
+    for item in mapping['rows']:
+        row=item['row']
+        if row['status'] in {'candidate_ready','failed'}:
+            require(current_rows.get((row['case_id'],row['arm_id']))==row,'evaluation_changed','A previously completed reviewed arm changed')
 
 
 def _resolved(entries,key,raters,excluded,validate,signature):
@@ -301,15 +329,37 @@ def _h2_decision(rows,preferences,*,n_eligible,n_capable):
                 spill_minimum_absolute_change=.1,minimum_qualified_pairs=6,minimum_local_benefit_pairs=2)
 
 
+def _r1_readiness(rows,plan):
+    ids=sorted({r['case_id'] for r in plan if r['arm_id'] in {'G0','G1'}});by={(r['case_id'],r['arm_id']):r for r in rows}
+    cases=[]
+    for cid in ids:
+        pair=[by.get((cid,arm)) for arm in ('G0','G1')]
+        executed=all(r and r['status'] in {'candidate_ready','failed'} for r in pair)
+        valid=all(r and r['status']=='candidate_ready' and not r['review_unknown'] and r['review']
+                  and r['review']['content']=='pass' and r['attributes']['n_evaluable']>0 for r in pair)
+        cases.append(dict(case_id=cid,execution_complete=executed,independent_review_valid=bool(valid),
+                          joint_success=bool(valid and any(r['joint_success'] for r in pair)),
+                          arms={arm:by[(cid,arm)]['status'] if (cid,arm) in by else 'missing' for arm in ('G0','G1')}))
+    return dict(planned_pairs=len(ids),execution_complete_pairs=sum(c['execution_complete'] for c in cases),
+                independently_valid_pairs=sum(c['independent_review_valid'] for c in cases),
+                successful_pairs=sum(c['joint_success'] for c in cases),cases=cases)
+
+
 def summarize_reference_run(root,ratings):
-    root=Path(root);run,plan=_load(root);mapping=read_json(root/'private/blind_mapping_v2.json');freeze=read_json(root/'private/evaluation_freeze_v2.json')
-    require(file_sha256(root/'private/blind_mapping_v2.json')==freeze['mapping_sha256'],'artifact_hash_mismatch','Blind mapping changed')
-    current=reference_run_status(root)
-    require(sha256_bytes(canonical_json(current))==mapping['status_sha256'],'evaluation_changed','Case outputs changed after blind export; create a new run revision')
-    data=read_json(ratings)
+    root=Path(root);run,plan=_load(root);data=read_json(ratings)
     require(set(data)=={'schema_version','blind_manifest_sha256','raters','ratings','comparisons'}
-            and data['schema_version']=='reference_ratings_v2' and data['blind_manifest_sha256']==mapping['blind_manifest_sha256'],
+            and data['schema_version']=='reference_ratings_v2' and isinstance(data['blind_manifest_sha256'],str)
+            and re.fullmatch('[a-f0-9]{64}',data['blind_manifest_sha256']),
+            'ratings_invalid','Ratings must identify an exported neutral manifest')
+    snapshot=root/'private/review_snapshots'/data['blind_manifest_sha256']
+    require(snapshot.is_dir(),'ratings_invalid','Unknown review snapshot')
+    mapping=read_json(snapshot/'blind_mapping_v2.json');freeze=read_json(snapshot/'evaluation_freeze_v2.json')
+    require(file_sha256(snapshot/'blind_mapping_v2.json')==freeze['mapping_sha256'],'artifact_hash_mismatch','Blind mapping changed')
+    require(data['blind_manifest_sha256']==mapping['blind_manifest_sha256'],
             'ratings_invalid','Ratings must bind this frozen neutral manifest')
+    current=reference_run_status(root)
+    if mapping['snapshot_kind']=='r1_progress':_unchanged_completed_rows(mapping,current)
+    else:require(sha256_bytes(canonical_json(current))==mapping['status_sha256'],'evaluation_changed','Case outputs changed after final blind export; create a new run revision')
     require(len({r['rater_id'] for r in data['raters']})==len(data['raters']),'ratings_invalid','Duplicate rater')
     raters={r['rater_id']:r['independent'] for r in data['raters']};excluded=set(run['excluded_rater_ids'])
     allowed_codes={m['code'] for m in mapping['rows']};comparison_codes={c['code'] for c in mapping['comparisons']}
@@ -317,21 +367,33 @@ def summarize_reference_run(root,ratings):
             'ratings_invalid','Unknown blinded item or comparison')
     styles={'improved','unchanged','worse','uncertain'};content={'pass','fail','uncertain'}
     def valid_review(r):
-        require(set(r)=={'code','rater_id','kind','style','content','critical_defects','attributes','notes'}
+        base={'code','rater_id','kind','style','content','critical_defects','attributes','notes'}
+        require(set(r) in (base,base|{'roi_attributes'})
                 and r['kind'] in {'review','adjudication'} and r['style'] in styles and r['content'] in content
                 and isinstance(r['critical_defects'],list) and all(isinstance(x,dict) and set(x)=={'category','severity','observation'}
                     and x['category'] in DEFECT_CATEGORIES and x['severity']=='critical' and isinstance(x['observation'],str) and x['observation'].strip() for x in r['critical_defects'])
                 and isinstance(r['attributes'],dict) and all(v in styles for v in r['attributes'].values()) and r['notes'],
                 'ratings_invalid','Incomplete independent attribute/content review')
         require(not (r['content']=='pass' and r['critical_defects']),'ratings_invalid','Content pass contradicts critical defects')
+        local=r.get('roi_attributes',[])
+        require(isinstance(local,list) and all(isinstance(v,dict) and set(v)=={'roi_pair_id','dimension','label'}
+                and isinstance(v['roi_pair_id'],str) and isinstance(v['dimension'],str) and v['label'] in styles for v in local),
+                'ratings_invalid','ROI labels require explicit neutral ROI ID, dimension and label')
+        require(len({(v['roi_pair_id'],v['dimension']) for v in local})==len(local),'ratings_invalid','Duplicate ROI/attribute label')
     arms={a:dict(n_itt=sum(r['arm_id']==a and r['status']=='planned' for r in plan),joint_success=0,n_unknown=0,n_failed=0,n_critical=0,n_content_failed=0) for a in ARMS}
     output=[];h3=[]
     for item in mapping['rows']:
-        row=deepcopy(item['row']);verdict=_resolved(data['ratings'],item['code'],raters,excluded,valid_review,
+        row=deepcopy(item['row']);frozen_spec=read_json(root/'frozen'/row['case_id']/'spec.json');aliases=item['roi_aliases']
+        dimensions={p['roi_pair_id']:set(p['dimensions']) for p in frozen_spec['roi_pairs']};dims=set().union(*dimensions.values())
+        def scoped_review(r):
+            valid_review(r)
+            require(set(r['attributes'])==dims,'ratings_invalid','Review all frozen whole-image target attributes')
+            require(all(v['roi_pair_id'] in aliases and v['dimension'] in dimensions[aliases[v['roi_pair_id']]]
+                        for v in r.get('roi_attributes',[])),'ratings_invalid','ROI label is outside this blinded item and frozen attribute set')
+        verdict=_resolved(data['ratings'],item['code'],raters,excluded,scoped_review,
                               lambda r:(r['style'],r['content'],canonical_json(sorted(r['critical_defects'],key=lambda x:(x['category'],x['observation']))),canonical_json(r['attributes'])))
         if verdict:
-            spec=read_json(root/'frozen'/row['case_id']/'spec.json');dims={d for p in spec['roi_pairs'] for d in p['dimensions']}
-            require(set(verdict['attributes'])==dims,'ratings_invalid','Review all frozen target attributes')
+            verdict={k:deepcopy(v) for k,v in verdict.items() if k!='roi_attributes'}  # ROI consensus is resolved separately below.
         row['workflow_attributes']=deepcopy(row.get('attributes'));row['attributes']=_independent_attributes(root,row,verdict)
         success=bool(verdict and row['status']=='candidate_ready' and verdict['style']=='improved' and verdict['content']=='pass'
                      and not verdict['critical_defects'] and row['attributes']['n_evaluable']>0)
@@ -341,15 +403,19 @@ def summarize_reference_run(root,ratings):
         summary['n_failed']+=int(row['status']=='failed');summary['n_critical']+=int(bool(verdict and verdict['critical_defects']))
         summary['n_content_failed']+=int(bool(verdict and verdict['content']=='fail'))
         row.update(blind_code=item['code'],joint_success=success,review_unknown=unknown,review=verdict);output.append(row)
-        frozen_spec=read_json(root/'frozen'/row['case_id']/'spec.json');evaluated={r['roi_pair_id']:r for r in row['attributes']['per_roi']}
+        evaluated={r['roi_pair_id']:r for r in row['attributes']['per_roi']};reverse_alias={rid:alias for alias,rid in aliases.items()}
         for roi in frozen_spec['roi_pairs']:
             for dim in roi['dimensions']:
                 metric=(evaluated.get(roi['roi_pair_id'],{}).get('attributes') or {}).get(dim)
-                label=verdict['attributes'].get(dim) if verdict else None
+                alias=reverse_alias[roi['roi_pair_id']]
+                def roi_label(r):return next((v['label'] for v in r.get('roi_attributes',[]) if v['roi_pair_id']==alias and v['dimension']==dim),None)
+                local=_resolved(data['ratings'],item['code'],raters,excluded,scoped_review,roi_label)
+                label=roi_label(local) if local else None
                 direction=('improved' if metric['delta']>1e-4 else 'worse' if metric['delta']< -1e-4 else 'unchanged') if metric else None
                 h3.append(dict(case_id=row['case_id'],arm_id=row['arm_id'],roi_pair_id=roi['roi_pair_id'],attribute=dim,metric_direction=direction,
                                review_direction=label,status='unknown' if direction is None or label in {None,'uncertain'} else 'agree' if direction==label else 'conflict',
-                               reason='Independent content/ROI validity unresolved or failed' if direction is None else None))
+                               reason='Independent content/ROI validity unresolved or failed' if direction is None else
+                                      'Missing or unresolved ROI/attribute label; whole-image labels are not broadcast' if label in {None,'uncertain'} else None))
     outcomes={(r['case_id'],r['arm_id']):r for r in output};comparisons={h:dict(wins=0,ties=0,losses=0,unknown=0) for h in ('H1','H2')}
     def valid_pair(r):require(set(r)=={'code','rater_id','kind','preference','notes'} and r['kind'] in {'review','adjudication'} and r['preference'] in {'left','right','tie','uncertain'} and r['notes'], 'ratings_invalid','Invalid paired preference')
     h2_preferences=[]
@@ -364,16 +430,17 @@ def summarize_reference_run(root,ratings):
         if comp['hypothesis']=='H2':h2_preferences.append(dict(case_id=comp['case_id'],result={'wins':'win','losses':'loss','ties':'tie','unknown':'unknown'}[key]))
     serious=any(r['arm_id'] in {'G0','G1'} and r['review'] and r['review']['critical_defects'] for r in output)
     h1=comparisons['H1'];delta=arms['G1']['joint_success']-arms['G0']['joint_success']
+    r1=_r1_readiness(output,plan) if run['stage']=='R1' else None
     decision='PROBE';reason='Insufficient independent evidence or net benefit; do not scale automatically'
     if serious:decision='STOP';reason='Serious identity/text/content transfer defect in independent review'
     elif run['simulation_only']:reason='Fixture-only engineering validation; real R1/R2 have not run'
-    elif run['stage']=='R1' and any(all((cid,arm) in outcomes and outcomes[(cid,arm)]['status']=='candidate_ready'
-            and not outcomes[(cid,arm)]['review_unknown'] and outcomes[(cid,arm)]['review']['content']=='pass'
-            and outcomes[(cid,arm)]['attributes']['n_evaluable']>0 for arm in ('G0','G1'))
-            and any(outcomes[(cid,arm)]['joint_success'] for arm in ('G0','G1')) for cid in {r['case_id'] for r in output}) and not any(r['status']=='failed' for r in output if r['arm_id'] in {'G0','G1'}):
-        decision='GO_TO_R2';reason='Real small-sample chain has an independently reviewed successful result; no population claim'
+    elif r1 and r1['independently_valid_pairs']==r1['planned_pairs'] and r1['successful_pairs']>0:
+        decision='GO_TO_R2';reason='Every pre-enrolled R1 G0/G1 pair completed and independently valid; at least one joint success; no population claim'
+    elif r1 and r1['execution_complete_pairs']<r1['planned_pairs'] and r1['successful_pairs']>0 and not any(r['status']=='failed' for r in output if r['arm_id'] in {'G0','G1'}):
+        decision='FIRST_PAIR_PASSED';reason='A reviewed pair passed; complete the remaining R1 cohort before considering R2'
     elif run['stage'] in {'R2','R3'} and current['n_groups']>=12 and h1['unknown']==0 and arms['G0']['n_unknown']==arms['G1']['n_unknown']==0 and h1['wins']-h1['losses']>=3 and delta>0 and arms['G1']['n_critical']<=arms['G0']['n_critical']:
         decision='GO';reason='Predeclared engineering net-benefit gate met; not statistical significance'
+    require(mapping['snapshot_kind']=='final' or decision not in {'GO','GO_TO_R2'},'ratings_invalid','Progress reviews cannot authorize a later stage')
     h2_decision=_h2_decision(output,h2_preferences,n_eligible=current['n_mask_eligible'],n_capable=current['n_mask_capable'])
     result=dict(schema_version='reference_summary_v2',arms=arms,H1=h1,H2=comparisons['H2'],H3=h3,
                 n_pairs=current['n_pairs'],n_groups=current['n_groups'],n_mask_eligible=current['n_mask_eligible'],n_mask_capable=current['n_mask_capable'],
@@ -381,8 +448,9 @@ def summarize_reference_run(root,ratings):
                 n_evaluable=sum(r['attributes']['n_evaluable']>0 for r in output),n_failed=sum(r['status']=='failed' or bool(r['review'] and r['review']['content']=='fail') for r in output),
                 n_unknown=sum(r['review_unknown'] for r in output),
                 joint_success_difference_G1_minus_G0=delta,decision=decision,decision_reason=reason,
+                R1_readiness=r1,
                 H1_decision={'decision':decision,'reason':reason},H2_decision=h2_decision,decision_scope='G1_vs_G0',
-                simulation_only=run['simulation_only'],real_effect_validated=not run['simulation_only'] and run['stage'] in {'R2','R3'} and decision=='GO',
+                review_snapshot_kind=mapping['snapshot_kind'],simulation_only=run['simulation_only'],real_effect_validated=not run['simulation_only'] and run['stage'] in {'R2','R3'} and decision=='GO',
                 limitations=['Unknown/missing/failed items remain in eligible ITT denominators. No NR-IQA or cross-attribute quality aggregate.',
                              'Mask comparisons require frozen same executor, inputs, prompt and eligible local cohort. Costs may be unknown.'])
     output_path=root/'analysis'/('summary_'+file_sha256(Path(ratings))[:16]+'.json')

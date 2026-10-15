@@ -3,6 +3,8 @@ from copy import deepcopy
 from importlib.resources import files
 from pathlib import Path
 import json
+import math
+import numpy as np
 from .models import HREError, canonical_json, file_sha256, sha256_bytes
 from .storage import CaseStore, atomic_write, read_json
 from .paths import safe_path
@@ -29,7 +31,7 @@ def validate_reference_spec(spec):
     schema=json.loads((files('hre')/'resources/v2/reference_spec.schema.json').read_text())
     error=next(iter(Draft202012Validator(schema).iter_errors(spec)),None)
     if error:raise HREError('v2_schema',str(error.message))
-    require(isinstance(spec,dict) and set(spec) in (SPEC_KEYS,SPEC_KEYS|{'source_assets'}),'v2_schema','Unknown or missing v2 fields')
+    require(isinstance(spec,dict) and SPEC_KEYS<=set(spec) and not set(spec)-SPEC_KEYS-{'source_assets','mask_roi_policy'},'v2_schema','Unknown or missing v2 fields')
     require(spec['schema_version']==VERSION and spec['arm_id'] in PROFILE_MAP,'v2_schema','Unknown v2 arm/version')
     validate_executor(spec['executor'])
     require(spec['task_scope'] in {'local','global'} and type(spec['local_mask_eligible']) is bool
@@ -95,6 +97,7 @@ def prepare_reference_config(root,config,inputs):
         if spec[field] is not None:
             validate_mask(root,spec[field],a)
             require(spec[field]['purpose']==purpose and set(spec[field]['target_roi_ids'])<=roi_ids,'mask_binding','Mask purpose or frozen ROI membership differs')
+    mask_roi_binding(root,spec,a)
     if spec['arm_id']=='G2':
         require(spec['task_scope']=='local' and spec['local_mask_eligible'] and spec['edit_mask'] is not None
                 and spec['eval_mask'] is not None and spec['mask_probe'] is not None and spec['paired_g1'] is not None,
@@ -104,6 +107,7 @@ def prepare_reference_config(root,config,inputs):
         require(paired.get('schema_version')=='paired_g1_prompt_v2' and paired.get('source_assets')==sources
                 and paired.get('executor')==spec['executor'] and paired.get('task_scope')=='local'
                 and paired.get('roi_pairs')==spec['roi_pairs'] and paired.get('eval_mask')==spec['eval_mask']
+                and paired.get('mask_roi_policy')==spec.get('mask_roi_policy')
                 and paired.get('simulation_only')==spec['simulation_only'], 'paired_g1_mismatch','G1 inputs, executor, ROI/eval mask and scope must be identical')
         require(paired.get('prompt_sha256')==sha256_bytes(paired['rendered_prompt'].encode())
                 and paired.get('edit_prompt_sha256')==sha256_bytes(paired['edit_prompt'].encode()),'paired_g1_mismatch','Paired G1 text hashes differ')
@@ -114,6 +118,48 @@ def prepare_reference_config(root,config,inputs):
             require(not mask.all(),'mask_binding','A local mask comparison needs protected non-target pixels')
     else:
         require(spec['edit_mask'] is None and spec['paired_g1'] is None,'v2_schema','G0/G1 cannot consume an EDIT_MASK or G1 executor snapshot')
+
+
+def mask_roi_binding(root,spec,prediction):
+    """Measure actual A-coordinate overlap against task-specific frozen bounds."""
+    masks={name:validate_mask(root,spec[field],prediction).astype(bool) for name,field in
+           [('EDIT_MASK','edit_mask'),('EVAL_MASK','eval_mask')] if spec[field] is not None}
+    policy=spec.get('mask_roi_policy')
+    if policy is None and spec['arm_id']!='G2' and 'EDIT_MASK' not in masks:return None
+    keys={'schema_version','roi_constraints','max_edit_outside_fraction','max_eval_outside_fraction','rationale'}
+    require(isinstance(policy,dict) and set(policy)==keys and policy['schema_version']=='mask_roi_policy_v2'
+            and isinstance(policy['rationale'],str) and policy['rationale'].strip(),'mask_roi_policy','Freeze explicit task-specific Mask/ROI tolerances before any output')
+    require('EVAL_MASK' in masks,'mask_roi_policy','A local Mask cohort requires its pre-frozen EVAL_MASK')
+    constraints=policy['roi_constraints'];ids=spec['eval_mask']['target_roi_ids']
+    require(isinstance(constraints,list) and len(constraints)==len(ids) and all(isinstance(c,dict)
+            and set(c)=={'roi_pair_id','min_edit_coverage','min_eval_coverage'} for c in constraints)
+            and {c['roi_pair_id'] for c in constraints}==set(ids),'mask_roi_policy','One spatial constraint per frozen target ROI required')
+    def fraction(value,*,coverage=False):
+        return type(value) in (int,float) and math.isfinite(value) and (0<value<=1 if coverage else 0<=value<1)
+    require(all(fraction(c[k],coverage=True) for c in constraints for k in ('min_edit_coverage','min_eval_coverage'))
+            and all(fraction(policy[k]) for k in ('max_edit_outside_fraction','max_eval_outside_fraction')),
+            'mask_roi_policy','Coverage must be in (0,1]; outside fraction in [0,1)')
+    rois={p['roi_pair_id']:p for p in spec['roi_pairs']}
+    require(set(ids)<=set(rois) and ('EDIT_MASK' not in masks or set(spec['edit_mask']['target_roi_ids'])==set(ids)),
+            'mask_spatial_binding','Masks and spatial policy must name the same frozen targets')
+    union=np.zeros((prediction['height'],prediction['width']),dtype=bool);rows=[]
+    for constraint in constraints:
+        rid=constraint['roi_pair_id'];target=region_mask((*union.shape,3),rois[rid]['prediction'],root);area=int(target.sum())
+        require(area>0,'mask_spatial_binding','Target ROI has no canonical A pixels: '+rid);union|=target
+        row=dict(roi_pair_id=rid,target_area=area)
+        for name,prefix in [('EDIT_MASK','edit'),('EVAL_MASK','eval')]:
+            if name not in masks:row[prefix+'_coverage']=None;continue
+            coverage=int(np.count_nonzero(masks[name]&target))/area;row[prefix+'_coverage']=coverage
+            require(coverage>=constraint['min_'+prefix+'_coverage'],'mask_spatial_binding',f'{name} undercovers ROI {rid}: {coverage:.6f}')
+        rows.append(row)
+    summaries={};union_area=int(union.sum())
+    for name,mask in masks.items():
+        area=int(mask.sum());outside=int(np.count_nonzero(mask&~union));ratio=outside/area
+        prefix='edit' if name=='EDIT_MASK' else 'eval'
+        require(ratio<=policy['max_'+prefix+'_outside_fraction'],'mask_spatial_binding',f'{name} exceeds frozen target-outside allowance: {ratio:.6f}')
+        summaries[name]=dict(mask_area=area,target_union_area=union_area,outside_area=outside,
+                             outside_mask_fraction=ratio,outside_to_roi_area_ratio=outside/union_area)
+    return dict(schema_version='mask_roi_binding_v2',policy=deepcopy(policy),per_roi=rows,masks=summaries)
 
 
 def create_reference_case(prediction,reference,spec,case_root,*,spec_root,manifest=None):
@@ -159,11 +205,12 @@ def capture_g1_prompt(root):
     target=read_json(safe_path(root,f'tasks/{request["payload"]["prompt_source_task_id"]}/reference_targets_v2.json',must_exist=True))
     return dict(schema_version='paired_g1_prompt_v2',executor=deepcopy(spec['executor']),source_assets=deepcopy(spec['source_assets']),
                 task_scope=spec['task_scope'],roi_pairs=deepcopy(spec['roi_pairs']),eval_mask=deepcopy(spec['eval_mask']),simulation_only=spec['simulation_only'],
+                mask_roi_policy=deepcopy(spec.get('mask_roi_policy')),
                 source_config_sha256=state['config_sha256'],source_request_sha256=request['request_sha256'],
                 edit_prompt=request['payload']['edit_prompt'],edit_prompt_sha256=sha256_bytes(request['payload']['edit_prompt'].encode()),
                 rendered_prompt=rendered,prompt_sha256=sha256_bytes(rendered.encode()),
                 all_targets_local=all(t['scope']=='local' for t in target['targets']),
-                target_roi_ids=sorted({t['roi_pair_id'] for t in target['targets'] if t['roi_pair_id'] is not None}))
+                target_roi_ids=sorted({rid for t in target['targets'] for rid in t['roi_pair_ids']}))
 
 
 def paired_prompt(root,config):
@@ -174,13 +221,21 @@ def paired_prompt(root,config):
 
 def reference_targets(root,diagnosis,composition,inputs):
     gaps={g['gap_id']:g for kind in ('global_gaps','local_gaps') for g in diagnosis[kind]}
+    frozen={p['roi_pair_id']:p for p in read_json(Path(root)/'config.json')['reference_v2']['roi_pairs']}
+    observations={(o['scope'],o['roi_pair_id']):o for o in diagnosis['comparability']}
     require(1<=len(composition['edit_targets'])<=3,'unsupported_target','v2 requires 1 to 3 supported priorities')
     targets=[]
     for target in composition['edit_targets']:
         refs=target['source_gap_ids'];require(refs and all(g in gaps for g in refs),'unsupported_target','Missing diagnosed target support')
-        gap=gaps[refs[0]]
+        gap=gaps[refs[0]];ids=sorted({gaps[g]['roi_pair_id'] for g in refs if gaps[g].get('roi_pair_id') is not None})
+        scopes={('roi_pair',gaps[g]['roi_pair_id']) if gaps[g].get('roi_pair_id') is not None else ('global',None) for g in refs}
+        observed=[deepcopy(observations[k]) for k in sorted(scopes) if k in observations]
+        annotated=[{k:deepcopy(frozen[rid][k]) for k in ('roi_pair_id','comparability','reasons')} for rid in ids if rid in frozen]
+        statuses=[observations.get(k,{}).get('status','unknown') for k in scopes]+[frozen.get(rid,{}).get('comparability','unknown') for rid in ids]
+        effective=next((status for status in ('not_comparable','absent','unreliable','unknown','partly_comparable') if status in statuses),'comparable')
         targets.append(dict(target_id='t'+str(target['priority']),scope='local' if target['scope']=='region' else 'global',
-                            dimension=gap['dimension'],roi_pair_id=gap.get('roi_pair_id'),direction=target['operation'],
-                            confidence_kind='observational',comparability='comparable',observed_support=gap['observation'],source_gap_ids=refs))
+                            dimension=gap['dimension'],roi_pair_id=gap.get('roi_pair_id'),roi_pair_ids=ids,direction=target['operation'],
+                            confidence_kind='observational',comparability=effective,
+                            comparability_sources={'diagnosis':observed,'frozen_roi':annotated},observed_support=gap['observation'],source_gap_ids=refs))
     return dict(version='reference_targets_v2',source_assets={a['role']:a['pixel_sha256'] for a in inputs},
                 targets=targets,preservation_anchor='A',unsupported_targets=[])

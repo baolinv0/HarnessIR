@@ -196,7 +196,7 @@ def test_v2_execute_template_requires_versioned_context(tmp_path):
     root=tmp_path/'case';create_reference_case(a,b,spec('G0'),root,spec_root=tmp_path)
     Controller(root).start();context=build_context(root,current_request(root))
     assert json.loads(render_stage('execute',context,case_root=root))['reference_v2_contract']=={
-        'schema_version':'ref_enhance_v2','minimum_engine_version':'0.2.0'}
+        'schema_version':'ref_enhance_v2','minimum_engine_version':'0.2.1'}
     context.pop('reference_v2_contract')
     with pytest.raises(UndefinedError):render_stage('execute',context,case_root=root)
 

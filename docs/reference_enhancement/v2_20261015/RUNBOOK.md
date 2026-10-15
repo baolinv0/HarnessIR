@@ -38,6 +38,8 @@ python -m hre task export --case-root /data/case01/G1 --out /data/handoff
 
 G1 Composer 选择 1–3 项有诊断证据的目标，动态英文文本最多 160 个词；local 任务只能包含局部目标。`reference_targets_v2.json` 记录来源，不能将测量转换成任意执行代码。G0 将 spec.arm_id 改为 G0，另建新目录后 start，直接进入 Execute。
 
+target 的 comparability 继承冻结 ROI 和 Diagnosis 的状态、理由与置信信息；任一来源为 partly_comparable，不会被改写成 comparable。一个优先项引用多个局部 ROI 时，配对目标 ID 包含全部来源区域。
+
 G0/G1 的 **editor/** 目录恰好包含 `A.png`、`B.png`、`edit_prompt.txt`。只把这三个文件交给编辑器。analysis 包里的统计、彩色预览、ROI/T4、实验方法名不应额外传给编辑器。输出只接受第一个完整结果；不要点重生成来挑图。
 
 候选 metadata 的 `model_observed.ui_model_name/transport/exact_model_version` 必须与冻结 Executor 的可观察身份一致；例如 `examples/candidate_metadata.json`。文件中实际生成次数和 provider_order 必须来自真实观察，不能照抄未知值。
@@ -59,6 +61,8 @@ python -m hre report --case-root /data/case01/G1
 `evaluation/reference_attributes_v2_revN.json` 是绑定状态 revision 的只读评价；索引文件可更新，历史结果不可覆盖。报告分区域给出 before、after、delta=before−after，正值表示参考属性距离缩小。色度是区域平均 a*/b* 距离，不是逐像素 ΔE00。近零 baseline 不输出相对收益；不可比/空区域、C 几何失败或内容未通过均为 not_assessable/null。跨属性不合成一个伪质量分数。
 
 local spill 使用预先冻结的 EVAL_MASK，同时评价 G1/G2，包括区域外 L*/色度变化和边界变化代理量。它只说明变化发生在哪里，不自动判断幻觉或否决合法的全局色彩调整。
+
+端点风险分别报告 `channel_any_low_endpoint_fraction` / `channel_any_high_endpoint_fraction`（任一 RGB 通道接近端点）和 `display_luma_low_endpoint_fraction` / `display_luma_high_endpoint_fraction`（编码 sRGB 的 Y-prime 接近端点），低/高阈值为 1/255、254/255。饱和红色可触发通道端点但不触发显示亮度端点；这些数值均不证明传感器裁剪、欠/过曝或 HDR 信息恢复。旧的 shadow/highlight_clip_fraction 名称在 evaluator r2 中移除。
 
 评价保留规范化 RGB8 图像，颜色转换按块/行执行；均值用 float64 累加，精确的全样本分位数使用一维 float32 L*/Y-prime 数组。不会为控制内存缩图或抽样。独立评审未通过或未解决时，最终 attributes/H3 清空为不可评价；流程 Verifier 的原结果另存为 workflow_attributes，仅作审计。
 
@@ -92,6 +96,22 @@ python -m hre v2 capture-g1 --case-root /data/case01/G1 --out /data/paired_g1.js
 
 G2 spec 必须冻结该 `paired_g1` 快照、相同 Executor/settings、同一 A/B/ROI/EVAL_MASK、局部 target ROI 与 EDIT_MASK，以及真实 probe 文件与全部依赖。G1/G2 的最终编辑文本必须逐字节相同；不能给 G2 另加更强指令。
 
+G2 还要求在 **G1 生成前**冻结 `mask_roi_policy`。分别为各目标 ROI 指定 EDIT_MASK/EVAL_MASK 的最低覆盖率，以及各 Mask 在目标 ROI 并集以外的最大面积占比，附任务理由；不套用统一 IoU 阈值。以下仅是格式示意，数值需按实际局部编辑任务确定：
+
+```json
+{
+  "mask_roi_policy": {
+    "schema_version": "mask_roi_policy_v2",
+    "roi_constraints": [{"roi_pair_id":"wall", "min_edit_coverage":0.8, "min_eval_coverage":0.95}],
+    "max_edit_outside_fraction": 0.1,
+    "max_eval_outside_fraction": 0.05,
+    "rationale": "REPLACE_WITH_TASK_SPECIFIC_MATERIAL_AND_BOUNDARY_TOLERANCES"
+  }
+}
+```
+
+coverage=|M∩R|/|R| 按每个 canonical A ROI 单独核验；outside_mask_fraction=|M∖union(R)|/|M|，另记录 outside_to_roi_area_ratio=|M∖union(R)|/|union(R)|。空目标、漏掉某个 ROI、覆盖错误区域或超出冻结容许范围均拒绝。`v2 status` 和 run-status 行保留实际面积、覆盖率、扩张比例与政策。G0/G1 单独运行不要求该 G2 政策；未预冻结政策的 G1 不能在看到结果后补填并作为 G2 配对源，须另建实验 revision。
+
 - `separate_mask_image`：editor 增加独立 M.png；它是图片形式的软引导，不能称作原生 mask 参数。
 - `native_mask_parameter`：A/B/text 仍在 editor，M.png 放在 transport；`mask_transport_v2.json` 明确指向独立参数。没有该接口的实际执行能力就不能运行。
 
@@ -119,10 +139,14 @@ python -m hre v2 analyze --run /data/runs/r1_revision1 --ratings /data/review/ac
 
 严重缺陷必须是结构化记录，例如 `{"category":"identity","severity":"critical","observation":"实际观察到的身份变化"}`。category 仅可为 identity、text、geometry、scene_content、content_transfer、seam、color_artifact、clipping、other；具体说明写在 observation，不能把任意短语当 category。无严重缺陷填空列表；存在严重缺陷不能同时声明 content=pass。
 
-输出包括每个计划行、eligible/capable/skipped 数量、joint_success、成对 win/tie/loss/unknown、H3 属性方向冲突、失败原因和可观察成本。R1 至少需要同一 case 的 G0/G1 都完成、内容独立通过、ROI 可评价且至少一臂成功，才能建议 GO_TO_R2；单个未配对成功不能升级，R1 也不会设置 real_effect_validated。
+整图 `attributes` 标签不再传播给每块 ROI。需要 H3 时，在每条 review/adjudication 中另填可选的 `roi_attributes`，使用评审包 roi_regions 中的中性 ID，例如 `[{"roi_pair_id":"r001","dimension":"brightness","label":"improved"}]`。系统私下映射回原 ROI ID，分别解决两位评审的 ROI/属性分歧。缺失、粒度不匹配或分歧未裁决时 H3=unknown；错误 ID、重复标签或未冻结属性拒绝。逐 ROI 分歧不会改写已达成一致的整图 style/content 结论。
+
+输出包括每个计划行、eligible/capable/skipped 数量、joint_success、成对 win/tie/loss/unknown、H3 属性方向冲突、失败原因和可观察成本。R1 区分 `FIRST_PAIR_PASSED` 与 `GO_TO_R2`：前者仅表示一个完整 G0/G1 配对已独立通过、至少一臂成功，不能放行 R2；后者要求预登记的 **全部 3–5 对** G0/G1 完成、独立内容与 ROI 有效性均明确通过，且至少一对存在联合成功。缺失、执行失败、缺人评、评价不可用仍留在 ITT 并阻止 GO_TO_R2；`R1_readiness` 逐 case 列出执行/评审状态。R1 不设置 real_effect_validated。
+
+未完成的 R1 导出为 `r1_progress` 中间评审快照，保存在 `private/review_snapshots/<blind_manifest_sha256>/`，原图、映射和评分绑定不被覆盖。完成剩余预登记样本后，可以用新目录重新 blind-export，获得新的匿名代码和最终队列 manifest；最终包需要完整的独立评分。analyze 按 ratings 的 manifest 摘要选择对应快照，旧首对评分始终只解释旧快照，不能被用于 R2 放行。已完成并被评审的 arm 改变会拒绝；最终快照一旦冻结不可重导。预算和 Controller 状态不增加新存储层。
 
 `decision/H1_decision` 只针对 G1 vs G0；`H2_decision` 单独针对 G2 vs G1。H2 需要至少 6 个完成并有明确独立结论的能力合格局部配对、至少 2 个盲评偏好 G2 且属性更接近或区域外变化减少的样例，并且 G2 无严重缺陷。区域外减少使用 0.1 L*/a*b* 单位的工程阈值，完整条件记录在结果中。无能力时 H2=SKIPPED，不阻断 G0/G1；G2 严重缺陷会单独 STOP。R2 GO 是预声明的工程净收益启发式，不能称统计显著性。workflow.success 和 ROI 指标不代替独立评审。
 
 ## 6. 本分支的验收边界
 
-代码、离线协议和合成数值测试可以在本地 CPU 运行。v2 最低引擎版本为 0.2.0；执行模板带显式版本合同，不能把 v2 case 交给旧引擎当成普通 direct_ref 执行。真实 R1/R2 仍需要用户真实 A/B、实际编辑器首个完整 C、可观察的模型/交接事实和独立评审。本仓库未包含这些数据，交付中不声称已取得真实增强收益或生产 Mask 能力。主分支与 PR #2 的已有分叉仍需单独集成，不覆盖其 engine/Data。
+代码、离线协议和合成数值测试可以在本地 CPU 运行。当前 v2 最低引擎版本为 0.2.1，evaluator 为 reference_attributes_v2_20261015_r2；执行模板带显式版本合同，不能把 v2 case 交给旧引擎当成普通 direct_ref 执行。代码、政策、评价粒度变化后须创建新 run revision，不覆盖旧实验记录。真实 R1/R2 仍需要用户真实 A/B、实际编辑器首个完整 C、可观察的模型/交接事实和独立评审。本仓库未包含这些数据，交付中不声称已取得真实增强收益或生产 Mask 能力。主分支与 PR #2 的已有分叉仍需单独集成，不覆盖其 engine/Data。
