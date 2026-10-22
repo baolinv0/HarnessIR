@@ -1,0 +1,31 @@
+{
+  "schema_version": "model_strategy_profile_v1",
+  "profile_id": "flux3_klein",
+  "display_name": "FLUX 3 Image Klein (distilled)",
+  "model_id": "black-forest-labs/flux-3-image-klein",
+  "model_revision": null,
+  "capability_status": "declared_not_measured",
+  "validated_capabilities": [],
+  "execution_mode": "full_frame_A_B",
+  "allowed_compilers": ["native"],
+  "condition_kind": "full_scene_caption",
+  "native_compiler": {
+    "compiler_id": "black-forest-labs/flux-3-image-klein-pup",
+    "compiler_revision": null,
+    "task": "Run the actual FLUX 3 PUP i2i path with A/B in this order, or an explicitly recorded VLM using the official i2i system prompt. Store the full scene caption as edit_prompt. A short brief is not the final native caption. Do not run a second upsampler during image execution."
+  },
+  "model_aware_guidance": "Describe the completed appearance of A's whole scene, incorporating the frozen tonal and regional relations, while retaining A's composition and contents. Describe B's transferable palette and tonal attributes without transferring its objects. Let the actual PUP compile this appearance brief into its native full-scene caption.",
+  "capabilities": {
+    "maximum_reference_images_declared": 10,
+    "bbox_is_hard_mask": false,
+    "reference_locks_structure": false,
+    "api_pixel_restoration_is_assumed_for_local_weights": false,
+    "active_spatial_controls": []
+  },
+  "sources": [
+    "https://huggingface.co/black-forest-labs/flux-3-image-klein",
+    "https://huggingface.co/black-forest-labs/flux-3-image-klein-pup",
+    "https://github.com/black-forest-labs/flux-3-image-klein"
+  ],
+  "reviewed_on": "2026-10-22"
+}

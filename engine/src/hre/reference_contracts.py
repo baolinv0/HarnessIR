@@ -31,9 +31,16 @@ def validate_reference_spec(spec):
     schema=json.loads((files('hre')/'resources/v2/reference_spec.schema.json').read_text())
     error=next(iter(Draft202012Validator(schema).iter_errors(spec)),None)
     if error:raise HREError('v2_schema',str(error.message))
-    require(isinstance(spec,dict) and SPEC_KEYS<=set(spec) and not set(spec)-SPEC_KEYS-{'source_assets','mask_roi_policy'},'v2_schema','Unknown or missing v2 fields')
+    require(isinstance(spec,dict) and SPEC_KEYS<=set(spec) and not set(spec)-SPEC_KEYS-{'source_assets','mask_roi_policy','model_aware'},'v2_schema','Unknown or missing v2 fields')
     require(spec['schema_version']==VERSION and spec['arm_id'] in PROFILE_MAP,'v2_schema','Unknown v2 arm/version')
     validate_executor(spec['executor'])
+    if 'model_aware' in spec:
+        require(spec['arm_id']!='G2','model_aware_g2_unsupported','Model-aware compilation is separate from the existing paired G2 Mask experiment')
+        from .model_aware import validate_model_config
+        validate_model_config(spec['model_aware'])
+        allowed={'G0':{'native'},'G1':{'shared','model_aware'}}
+        require(spec['model_aware']['strategy'] in allowed[spec['arm_id']],
+                'model_aware_arm_strategy','G0 requires native; G1 requires shared or model_aware so Native never consumes Composer analysis')
     require(spec['task_scope'] in {'local','global'} and type(spec['local_mask_eligible']) is bool
             and type(spec['simulation_only']) is bool,'v2_schema','Explicit scope/eligibility/simulation status required')
     require(isinstance(spec['roi_pairs'],list) and isinstance(spec['files'],list),'v2_schema','Region/file arrays required')
@@ -239,3 +246,4 @@ def reference_targets(root,diagnosis,composition,inputs):
                             comparability_sources={'diagnosis':observed,'frozen_roi':annotated},observed_support=gap['observation'],source_gap_ids=refs))
     return dict(version='reference_targets_v2',source_assets={a['role']:a['pixel_sha256'] for a in inputs},
                 targets=targets,preservation_anchor='A',unsupported_targets=[])
+

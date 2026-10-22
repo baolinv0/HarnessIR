@@ -1,0 +1,31 @@
+{
+  "schema_version": "model_strategy_profile_v1",
+  "profile_id": "qwen21",
+  "display_name": "Qwen-Image-2.1",
+  "model_id": "Qwen/Qwen-Image-2.1",
+  "model_revision": null,
+  "capability_status": "declared_not_measured",
+  "validated_capabilities": [],
+  "execution_mode": "full_frame_A_B",
+  "allowed_compilers": ["native", "direct"],
+  "condition_kind": "semantic_instruction",
+  "native_compiler": {
+    "compiler_id": "Qwen-Image-2.1/PE-I2I",
+    "compiler_revision": null,
+    "task": "Run the actual official Qwen PE-I2I path on the instruction and A/B. Store its actual positive_prompt verbatim as edit_prompt and preserve parsed output in native_output, including positive_prompt, parse_ok, ratio_follow and wh_ratio. Require ratio_follow=<image1> (A) and an empty wh_ratio. Set the image executor canvas explicitly to A; PE metadata alone does not set pipeline dimensions. Disable any further prompt rewrite during execution."
+  },
+  "model_aware_guidance": "Write clear, concise edits that preserve the frozen relation between subject and background. Reconcile local tonal changes with the retained scene illumination, explicitly distinguishing permitted brightness/color changes from forbidden identity, text and geometric changes. Do not expand the number of goals or stack conflicting instructions.",
+  "capabilities": {
+    "maximum_reference_images_declared": 10,
+    "visual_mask_is_hard_pixel_protection": false,
+    "canvas_must_be_explicit": true,
+    "default_canvas_may_follow_last_reference": true,
+    "active_spatial_controls": []
+  },
+  "sources": [
+    "https://github.com/QwenLM/Qwen-Image-2.1",
+    "https://github.com/QwenLM/Qwen-Image-2.1/tree/main/prompt_rewrite",
+    "https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/qwenimage21/pipeline_qwenimage21.py"
+  ],
+  "reviewed_on": "2026-10-22"
+}

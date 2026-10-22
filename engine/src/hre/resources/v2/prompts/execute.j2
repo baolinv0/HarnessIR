@@ -4,5 +4,6 @@ Edit attached Image A, the original frozen Neural ISP prediction. Use attached I
 {
   "reference_v2_contract": {{ reference_v2_contract | tojson }},
   "image_bindings": {{ image_bindings | tojson }},
-  "edit_prompt": {{ (invariants ~ "\n\n" ~ edit_prompt) | tojson }}
+  "edit_prompt": {{ (edit_prompt if compiled_condition | default(false) else invariants ~ "\n\n" ~ edit_prompt) | tojson }}
 }
+

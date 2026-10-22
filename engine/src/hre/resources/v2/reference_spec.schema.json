@@ -3,6 +3,16 @@
   "title": "Opt-in generative reference enhancement v2",
   "type": "object",
   "properties": {
+    "model_aware": {
+      "type": "object",
+      "properties": {
+        "profile_id": {"type": "string", "minLength": 1},
+        "strategy": {"enum": ["native", "shared", "model_aware"]},
+        "compiler": {"enum": ["native", "direct"]}
+      },
+      "required": ["profile_id", "strategy", "compiler"],
+      "additionalProperties": false
+    },
     "schema_version": {
       "const": "ref_enhance_v2"
     },
@@ -445,3 +455,4 @@
   ],
   "additionalProperties": false
 }
+
