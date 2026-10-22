@@ -54,6 +54,9 @@ def export_task_bundle(task: dict, destination: Path, *, case_root: Path) -> Pat
         for attachment in attachments:
             shutil.copyfile(bundle / attachment['path'], editor / f"{attachment['label']}.png")
         atomic_write(editor / 'edit_prompt.txt', json.loads(rendered)['edit_prompt'].encode('utf-8'))
+        if task['payload']['prompt_source_task_id'].startswith('compiled_'):
+            from .condition_handoff import compiled_condition
+            write_json(editor/'condition.json',compiled_condition(case_root,task))
         from .reference_runtime import mask_transport
         transport=mask_transport(case_root,task)
         if transport is not None:
@@ -187,3 +190,4 @@ def import_candidate(case_root: Path, task_id: str, image_path: Path, metadata: 
         raw_text=metadata.get('raw_text', '').encode('utf-8'),
         files=[safe_path(case_root, asset['path'], must_exist=True), safe_path(case_root, asset['source_file']['path'], must_exist=True)] + audit_files,
         provenance=provenance)
+

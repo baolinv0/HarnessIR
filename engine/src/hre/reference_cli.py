@@ -11,6 +11,15 @@ def add_v2_parser(groups):
         p=sub.add_parser(action);p.add_argument('--case-root',type=Path,required=True)
         if action=='capture-g1':p.add_argument('--out',type=Path,required=True)
         if action=='probe':p.add_argument('--proof',type=Path,required=True)
+    for action in ('condition-export','stage-export'):
+        p=sub.add_parser(action);p.add_argument('--case-root',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
+    p=sub.add_parser('condition-import');p.add_argument('--case-root',type=Path,required=True);p.add_argument('--result',type=Path,required=True)
+    p=sub.add_parser('run',help='Run current Controller with configured stage/compiler/editor workers')
+    p.add_argument('--case-root',type=Path,required=True);p.add_argument('--workers',type=Path,required=True);p.add_argument('--max-steps',type=int,default=16)
+    p=sub.add_parser('stage-run',help='Check one exported analysis/compiler stage without advancing the case')
+    p.add_argument('--request',type=Path,required=True);p.add_argument('--workers',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
+    p=sub.add_parser('stage-compare',help='Create a portable side-by-side HTML report from stage-check directories')
+    p.add_argument('--checks',type=Path,nargs='+',required=True);p.add_argument('--out',type=Path,required=True)
     p=sub.add_parser('run-freeze');p.add_argument('--manifest',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
     for action in ('run-status','blind-export','analyze'):
         p=sub.add_parser(action);p.add_argument('--run',type=Path,required=True)
@@ -25,6 +34,20 @@ def add_v2_parser(groups):
 
 
 def dispatch_v2(args):
+    if args.action=='stage-compare':
+        from .stage_comparison import compare_stages
+        return {'path':str(compare_stages(args.checks,args.out))}
+    if args.action=='condition-export':
+        from .condition_handoff import export_condition_request
+        return {'path':str(export_condition_request(args.case_root,args.out))}
+    if args.action=='condition-import':
+        from .workflow import Controller
+        return Controller(args.case_root).accept_compiled_condition(args.result)
+    if args.action in {'run','stage-export','stage-run'}:
+        from .model_runner import run_case,export_worker_request,run_stage
+        if args.action=='run':return run_case(args.case_root,read_json(args.workers),max_steps=args.max_steps)
+        if args.action=='stage-export':return {'path':str(export_worker_request(args.case_root,args.out))}
+        return run_stage(args.request,read_json(args.workers),args.out)
     if args.action in {'mask-from-roi','mask-from-t4'}:
         import numpy as np
         from .storage import CaseStore
@@ -73,3 +96,4 @@ def dispatch_v2(args):
     if args.action=='run-status':return reference_run_status(args.run)
     if args.action=='blind-export':return {'path':str(export_reference_blind(args.run,args.out))}
     return summarize_reference_run(args.run,args.ratings)
+

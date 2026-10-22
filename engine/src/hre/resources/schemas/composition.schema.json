@@ -6,6 +6,20 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "region_relations": {
+      "type": "array", "maxItems": 3,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "properties": {
+          "subject_roi_id": {"type": "string", "minLength": 1},
+          "object_roi_id": {"type": "string", "minLength": 1},
+          "attribute": {"enum": ["relative_brightness", "color_balance"]},
+          "target": {"type": "string", "minLength": 1, "maxLength": 400},
+          "source": {"enum": ["evidence", "visual_observation"]}
+        },
+        "required": ["subject_roi_id", "object_roi_id", "attribute", "target", "source"]
+      }
+    },
     "edit_prompt": {
       "type": "string",
       "minLength": 1,
@@ -169,3 +183,4 @@
     "reference_limitations"
   ]
 }
+

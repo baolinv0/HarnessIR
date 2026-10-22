@@ -92,6 +92,9 @@ def template_source(case_root: Path, stage: str) -> dict:
 def dispatch_sources(case_root: Path, stage: str, request: dict) -> dict:
     sources = [template_source(case_root, stage)]
     proof = {'templates': sources}
+    if stage=='execute' and request['payload']['prompt_source_task_id'].startswith('compiled_'):
+        source=request['payload']['prompt_source_task_id']
+        proof['compiled_condition_files']=[{'path':f'tasks/{source}/{name}','sha256':file_sha256(safe_path(case_root,f'tasks/{source}/{name}',must_exist=True))} for name in ('source.json','manifest.json')]
     if stage == 'execute' and request['payload']['prompt_source_task_id'].startswith('direct_prompt_'):
         source = request['payload']['prompt_source_task_id']
         sources.append(template_source(case_root, 'direct_ref'))
@@ -307,6 +310,10 @@ def _candidate_geometry_binding(case_root: Path, candidate: dict, request: dict,
 def _validate_prompt_source(case_root: Path, request: dict) -> None:
     payload = request['payload']
     source_id = payload['prompt_source_task_id']
+    if source_id.startswith('compiled_'):
+        from .condition_handoff import compiled_condition
+        compiled_condition(case_root,request)
+        return
     directory = safe_path(case_root, f'tasks/{source_id}', must_exist=True)
     artifact = directory / 'manifest.json'
     if source_id.startswith('paired_g1_'):
@@ -385,9 +392,11 @@ def build_context(case_root: Path, request: dict) -> dict:
     if stage == 'execute':
         if payload['prediction_asset_id'] != by_role['prediction']['asset_id'] or payload['reference_asset_id'] != by_role['reference']['asset_id']:
             raise HREError('image_binding_mismatch', 'Execute source ID differs')
-        validate_edit_contract('execute', payload)
+        compiled=payload['prompt_source_task_id'].startswith('compiled_')
+        if not compiled:validate_edit_contract('execute', payload)
         _validate_prompt_source(case_root, request)
         result['edit_prompt'] = payload['edit_prompt']
+        result['compiled_condition']=compiled
         if 'reference_v2' in config:
             result['reference_v2_contract']={'schema_version':'ref_enhance_v2','minimum_engine_version':'0.2.1'}
         if config.get('reference_v2',{}).get('arm_id')=='G2':
@@ -455,6 +464,7 @@ def build_context(case_root: Path, request: dict) -> dict:
     if 'reference_v2' in config and stage in {'diagnose','compose'}:
         from .reference_evaluator import region_mask,display_attributes,_rgb8
         spec=config['reference_v2'];result['reference_regions']=spec['roi_pairs'];statistics=[]
+        result['model_aware_planning']=bool(spec.get('model_aware'))
         aa,bb=_rgb8(by_role['prediction'],case_root),_rgb8(by_role['reference'],case_root)
         for pair in spec['roi_pairs']:
             ma=region_mask(aa.shape,pair['prediction'],case_root);mb=region_mask(bb.shape,pair['reference'],case_root)
@@ -463,3 +473,4 @@ def build_context(case_root: Path, request: dict) -> dict:
                                    A=display_attributes(aa[ma]) if valid else None,B=display_attributes(bb[mb]) if valid else None))
         result['reference_statistics']=statistics
     return result
+

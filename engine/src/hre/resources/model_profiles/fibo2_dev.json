@@ -1,0 +1,33 @@
+{
+  "schema_version": "model_strategy_profile_v1",
+  "profile_id": "fibo2_dev",
+  "display_name": "Fibo 2.0 Dev",
+  "model_id": "briaai/Fibo-2.0-dev",
+  "model_revision": null,
+  "capability_status": "declared_not_measured",
+  "validated_capabilities": [],
+  "execution_mode": "full_frame_A_B",
+  "allowed_compilers": ["native"],
+  "condition_kind": "vgl_edit",
+  "native_compiler": {
+    "compiler_id": "bria-vgl/Thales/EditImages",
+    "compiler_revision": null,
+    "task": "Run the actual bria-vgl Thales EditImages path with images=[A,B], or an explicitly identified compiler that produces the verified native edit schema. The final edit_prompt is the complete serialized native JSON, including a nonempty edit_instruction and its target caption. Use <image_1> for A and <image_2> for B. Record the actual VLM/provider, version, calls and any fallback; bria-vgl is not a pure local JSON conversion."
+  },
+  "model_aware_guidance": "Express the frozen changes as named target appearance attributes and object/region relations. Keep edit_instruction consistent with every corresponding target caption field. Use appearance language for tone mapping, retaining source illumination geometry; do not equate a lighting field with a calibrated exposure or tone curve.",
+  "capabilities": {
+    "maximum_reference_images_declared": 4,
+    "single_image_mask_declared": true,
+    "multi_reference_with_mask": false,
+    "mask_preserves_source_pixels": false,
+    "mask_semantics": "The inspected Diffusers path thresholds at 128 and greys out the source region before encoding; it does not hard-copy unedited output pixels.",
+    "active_spatial_controls": []
+  },
+  "sources": [
+    "https://huggingface.co/briaai/Fibo-2.0-dev",
+    "https://github.com/Bria-AI/vgl",
+    "https://github.com/huggingface/diffusers/blob/48cdbaef5ee3d718aaee392b44f2099ae511c4a5/src/diffusers/pipelines/bria_fibo2/pipeline_bria_fibo2.py",
+    "https://github.com/huggingface/diffusers/blob/48cdbaef5ee3d718aaee392b44f2099ae511c4a5/src/diffusers/pipelines/bria_fibo2/image_processor.py"
+  ],
+  "reviewed_on": "2026-10-22"
+}

@@ -19,4 +19,5 @@ hre = "hre.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-hre = ["resources/schemas/*.json", "resources/config/*.json", "resources/prompts/*.j2", "resources/v2/*.json", "resources/v2/prompts/*.j2"]
+hre = ["resources/schemas/*.json", "resources/config/*.json", "resources/prompts/*.j2", "resources/v2/*.json", "resources/v2/prompts/*.j2", "resources/model_profiles/*.json"]
+

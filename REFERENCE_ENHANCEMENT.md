@@ -1,3 +1,7 @@
+## Model-Aware 并行运行（2026-10-22）
+
+新增 [Model-Aware 运行手册](MODEL_AWARE.md)：`hre v2 run` 直接贯通模型专属条件编译与原有执行/验证；`stage-export / stage-run / stage-compare` 独立检查并可视化比较各阶段。两部分共享冻结输入与编译代码，阶段测试不是主流程运行的前置条件。真实模型部署与质量实验状态见手册，合成演示不作为效果证据。
+
 ## v2 生成式参考增强设计（2026-10-15）
 
 基于已实现的 v1 hre 工程，新增 **G0 DirectRef / G1 AgentText / G2 条件性 AgentMask** 实验设计，以及非对齐 ROI 的 A/B/C 属性评价。只保留生成式编辑，不引入确定性 Renderer；Mask 仅在相同 Executor 真实验证后启用。v2 运行代码已实现；**真实 G0/G1/G2 增强收益与实际 Executor Mask 能力尚未验证**。运行入口见 [v2 手册](docs/reference_enhancement/v2_20261015/RUNBOOK.md) 和 [实现验证记录](docs/reference_enhancement/v2_20261015/IMPLEMENTATION_STATUS.md)。
@@ -20,3 +24,4 @@
 安装后可运行 `python -m hre --help`。真实编辑采用可审计的手动任务导出与结果导入；内置 CPU STATS/ROI 可运行，T1–T4 消费外部离线 worker 的真实结果。合成演示验证本地协议，不代表模型增强有效。真实 R1、12 对 pilot 和桌面自动能力仍待真实数据与会话验证。
 
 Executor 第一阶段使用 ChatGPT 桌面两图编辑；自动能力逐项实测。本方案属于本 fork 的新增强任务。
+

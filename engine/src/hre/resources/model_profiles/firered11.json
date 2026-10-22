@@ -1,0 +1,30 @@
+{
+  "schema_version": "model_strategy_profile_v1",
+  "profile_id": "firered11",
+  "display_name": "FireRed-Image-Edit 1.1",
+  "model_id": "FireRedTeam/FireRed-Image-Edit-1.1",
+  "model_revision": null,
+  "capability_status": "declared_not_measured",
+  "validated_capabilities": [],
+  "execution_mode": "full_frame_A_B",
+  "allowed_compilers": ["native", "direct"],
+  "condition_kind": "edit_instruction",
+  "native_compiler": {
+    "compiler_id": "FireRed-Image-Edit/Recaption",
+    "compiler_revision": null,
+    "task": "Run the actual official Recaption path and store its final instruction as edit_prompt. Recaption is a text rewriter, not an A/B image diagnosis model; do not claim it inspected images it did not receive. Record its actual model, settings and calls. Execute exactly one image generation using explicitly selected 1.1 weights; do not run the extra optimized demonstration generation or rewrite again."
+  },
+  "model_aware_guidance": "Express the frozen goals as one coherent full-frame edit, keeping subject/background relations visible and A as content anchor. Keep fine structures and text under the stated preservation constraints. Do not turn a local appearance goal into a crop/reassembly workflow in this version.",
+  "capabilities": {
+    "multi_reference_declared": true,
+    "input_composition_agent_is_output_ROI_fusion": false,
+    "hard_pixel_protection_declared": false,
+    "active_spatial_controls": []
+  },
+  "sources": [
+    "https://github.com/FireRedTeam/FireRed-Image-Edit",
+    "https://github.com/FireRedTeam/FireRed-Image-Edit/blob/main/inference.py",
+    "https://github.com/FireRedTeam/FireRed-Image-Edit/blob/main/agent/pipeline.py"
+  ],
+  "reviewed_on": "2026-10-22"
+}

@@ -118,7 +118,11 @@ class Controller:
             a=self._latest('diagnose',extra);ref=s['evidence_snapshot']
             payload=dict(diagnosis_task_id=a['task_id'],diagnosis_response_sha256=a['response_sha256'],evidence_snapshot_path=ref['path'],evidence_snapshot_sha256=ref['sha256'])
         elif stage=='execute':
-            if config.get('reference_v2',{}).get('arm_id')=='G2':
+            if config.get('reference_v2',{}).get('model_aware'):
+                from .condition_handoff import _frozen_request
+                source,_=_frozen_request(self.root,s)
+                prompt=read_json(safe_path(self.root,f'tasks/{source}/manifest.json',must_exist=True))['result']['edit_prompt']
+            elif config.get('reference_v2',{}).get('arm_id')=='G2':
                 from .reference_contracts import paired_prompt
                 prompt=paired_prompt(self.root,config)
                 source=f"paired_g1_{s['case_id']}_rev_{s['case_revision']}"
@@ -199,9 +203,26 @@ class Controller:
                 self._pause(s,'pre_enrollment_reference_not_usable');return self._commit(old,s,'start_blocked')
             if s['profile_id']=='direct_best_of_3' and s['budget']['max_generations']!=3:raise HREError('invalid_profile','Best-of-3 requires exactly three slots')
             if s['profile_id'] in ('direct_ref','direct_best_of_3'):
-                s['evidence_snapshot']=self._snapshot(s,'composition');task=self._prepare(s,'execute')
+                s['evidence_snapshot']=self._snapshot(s,'composition')
+                if config.get('reference_v2',{}).get('model_aware'):
+                    from .condition_handoff import prepare_condition_request
+                    prepare_condition_request(self.root,s)
+                    self._pause(s,'condition_compilation_required','WAIT_EXECUTION');task=None
+                else:task=self._prepare(s,'execute')
             else:task=self._prepare(s,'diagnose')
             return self._commit(old,s,'start',next_task=task)
+
+    def accept_compiled_condition(self,path:Path)->dict:
+        """Accept one native compiler output and issue the ordinary execute task."""
+        from .condition_handoff import freeze_compiled_condition
+        with case_lock(self.root):
+            old=self.state();s=deepcopy(old)
+            if (old['workflow_state']!='PAUSED' or old['pause_reason']!='condition_compilation_required'
+                    or old['pending_task'] is not None):
+                raise HREError('condition_not_waiting','Case is not waiting for condition compilation')
+            source,result=freeze_compiled_condition(self.root,s,read_json(Path(path)))
+            task=self._prepare(s,'execute')
+            return self._commit(old,s,'condition_compiled',dict(source_id=source,condition_kind=result['condition_kind']),next_task=task)
 
     def issue_task(self,stage:str)->dict:
         with case_lock(self.root):
@@ -254,6 +275,14 @@ class Controller:
             if not set(plan['roi_pair_ids'])<=ids:raise HREError('unknown_roi','Tool plan references unknown ROI')
 
     def _composition_semantics(self,p:dict,request:dict,s:dict)->None:
+        relations=p.get('region_relations',[])
+        if relations:
+            spec=self._config(s).get('reference_v2',{})
+            ids={r['roi_pair_id'] for r in spec.get('roi_pairs',[])}
+            if (not spec.get('model_aware') or len(relations)>3 or any(
+                    r['subject_roi_id'] not in ids or r['object_roi_id'] not in ids
+                    or r['subject_roi_id']==r['object_roi_id'] for r in relations)):
+                raise HREError('invalid_region_relation','Relations require model-aware planning and two distinct frozen ROI IDs')
         if 'reference_v2' in self._config(s):
             if not 1<=len(p['edit_targets'])<=3 or len(p['edit_prompt'].split())>160:
                 raise HREError('v2_prompt_contract','Require 1–3 supported priorities and at most 160 English words')
@@ -306,7 +335,12 @@ class Controller:
             if not s['evidence_plan']:
                 s['evidence_snapshot']=self._snapshot(s,'composition',extra=accepted);return self._prepare(s,'compose',accepted)
             return None
-        if stage=='compose':return self._prepare(s,'execute',accepted)
+        if stage=='compose':
+            if self._config(s).get('reference_v2',{}).get('model_aware'):
+                from .condition_handoff import prepare_condition_request
+                prepare_condition_request(self.root,s,accepted)
+                self._pause(s,'condition_compilation_required','WAIT_EXECUTION');return None
+            return self._prepare(s,'execute',accepted)
         if stage=='execute':
             e=entry_for(s['budget'],request['task_id'])
             if e['status']!='submitted':raise HREError('submission_unconfirmed','Confirm actual execution submission before import')
@@ -609,3 +643,4 @@ def reserve_generation(case_root:Path,task_id:str)->str:
         gid=reserve(s['budget'],task_id,s['round'])
         if s!=old:c._commit(old,s,'generation_reserved',dict(task_id=task_id,generation_id=gid))
         return gid
+

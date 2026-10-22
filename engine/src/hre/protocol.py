@@ -43,7 +43,10 @@ def validate_request(case_root:Path,request:dict,state:dict)->None:
             if file_sha256(f)!=p[hash_key]:raise HREError('artifact_hash_mismatch',path_key)
     if request['stage']=='execute':
         source=p['prompt_source_task_id']
-        if cfg.get('reference_v2',{}).get('arm_id')=='G2':
+        if source.startswith('compiled_'):
+            from .condition_handoff import compiled_condition
+            compiled_condition(case_root,request)
+        elif cfg.get('reference_v2',{}).get('arm_id')=='G2':
             from .prompts import _validate_prompt_source
             _validate_prompt_source(case_root,request)
         elif state['profile_id'] in ('direct_ref','direct_best_of_3'):
@@ -261,3 +264,4 @@ class TaskWriter:
         done=dict(schema_version=SCHEMA_VERSION,case_id=request['case_id'],case_revision=request['case_revision'],task_id=request['task_id'],request_sha256=request['request_sha256'],response_file=response_path.relative_to(self.root).as_posix(),response_sha256=file_sha256(response_path),artifacts=artifacts,completed_at=now(),writer=writer)
         validate_schema('response',done,fragment='/$defs/done_manifest')
         path=directory/'done.json';write_json(path,done);return path
+

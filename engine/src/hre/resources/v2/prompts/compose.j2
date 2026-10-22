@@ -3,7 +3,7 @@ Inspect attached A and B: the same scene captured within seconds under stable il
 {%- endset %}
 {
   "stage": "compose",
-  "instructions": {{ instructions | tojson }},
+  "instructions": {{ (instructions ~ (' Optionally plan up to three region_relations between distinct frozen ROI IDs when supported by evidence or direct visual observation. Describe relative_brightness or color_balance, state the qualitative target and its source; do not invent measurements or relations. Return an empty list when no relation is supported. Keep these relations consistent with edit_targets and express the intended coordination in edit_prompt.' if model_aware_planning | default(false) else '')) | tojson }},
   "image_bindings": {{ image_bindings | tojson }},
   "input_context": {
     "reference_regions": {{ reference_regions | tojson }},
@@ -17,3 +17,4 @@ Inspect attached A and B: the same scene captured within seconds under stable il
   "result_schema": {{ result_schema | tojson }},
   "response_rules": "Return one JSON response envelope. Echo response_identity exactly; preserve supplied model_observed and session_id. status=ok requires a bare result_schema payload and error=null. status=error requires payload=null and error={code,message,retryable}. No markdown or extra keys."
 }
+
