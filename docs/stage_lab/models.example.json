@@ -1,0 +1,132 @@
+{
+  "vlm_openai": {
+    "provider": "openai",
+    "model": "YOUR_VISION_MODEL_ID",
+    "base_url": "https://api.openai.com/v1",
+    "api_key_env": "OPENAI_API_KEY",
+    "stages": ["diagnose", "plan", "compile", "judge"],
+    "profile": "generic",
+    "parameters": {},
+    "timeout": 300
+  },
+  "vlm_gemini": {
+    "provider": "gemini",
+    "model": "YOUR_GEMINI_VISION_MODEL_ID",
+    "api_key_env": "GEMINI_API_KEY",
+    "stages": ["diagnose", "plan", "compile", "judge"],
+    "profile": "generic",
+    "parameters": {"temperature": 0.2},
+    "timeout": 300
+  },
+  "image_openai": {
+    "provider": "openai",
+    "mode": "image-edit",
+    "model": "YOUR_IMAGE_EDIT_MODEL_ID",
+    "base_url": "https://api.openai.com/v1",
+    "api_key_env": "OPENAI_API_KEY",
+    "stages": ["execute"],
+    "profile": "generic",
+    "parameters": {},
+    "timeout": 600
+  },
+  "image_gemini": {
+    "provider": "gemini",
+    "model": "YOUR_GEMINI_IMAGE_MODEL_ID",
+    "api_key_env": "GEMINI_API_KEY",
+    "stages": ["execute"],
+    "profile": "generic",
+    "parameters": {"responseModalities": ["TEXT", "IMAGE"]},
+    "timeout": 600
+  },
+  "flux3": {
+    "provider": "command",
+    "model": "FLUX-3-Klein",
+    "stages": ["compile", "execute"],
+    "profile": "flux3_klein",
+    "command": ["python", "-m", "hre.stage_lab.native_workers", "flux3", "--request", "{request}", "--output", "{output}"],
+    "parameters": {
+      "native_repo": "/absolute/path/to/flux3",
+      "weights_dir": "/absolute/path/to/flux3/weights",
+      "model_variant": "distilled",
+      "seed": 42,
+      "inference": {}
+    },
+    "timeout": 1800
+  },
+  "fibo2": {
+    "provider": "command",
+    "model": "briaai/Fibo-2.0-dev",
+    "stages": ["compile", "execute"],
+    "profile": "fibo2",
+    "command": ["python", "-m", "hre.stage_lab.native_workers", "fibo", "--request", "{request}", "--output", "{output}"],
+    "parameters": {
+      "checkpoint": "briaai/Fibo-2.0-dev",
+      "device": "cuda",
+      "dtype": "bfloat16",
+      "seed": 42,
+      "compiler": {},
+      "inference": {"num_inference_steps": 50, "guidance_scale": 5.0}
+    },
+    "timeout": 1800
+  },
+  "qwen_pe": {
+    "provider": "command",
+    "model": "Qwen/Qwen-Image-2.1-PE-I2I",
+    "stages": ["compile"],
+    "profile": "qwen21",
+    "command": ["python", "-m", "hre.stage_lab.native_workers", "qwen_pe", "--request", "{request}", "--output", "{output}"],
+    "parameters": {
+      "native_repo": "/absolute/path/to/Qwen-Image-2.1",
+      "checkpoint": "Qwen/Qwen-Image-2.1-PE-I2I",
+      "device": "cuda",
+      "dtype": "bfloat16",
+      "seed": 42
+    },
+    "timeout": 1800
+  },
+  "qwen21": {
+    "provider": "command",
+    "model": "Qwen/Qwen-Image-2.1",
+    "stages": ["execute"],
+    "profile": "qwen21",
+    "command": ["python", "-m", "hre.stage_lab.native_workers", "qwen21", "--request", "{request}", "--output", "{output}"],
+    "parameters": {
+      "checkpoint": "Qwen/Qwen-Image-2.1",
+      "device": "cuda",
+      "dtype": "bfloat16",
+      "seed": 42,
+      "inference": {"num_inference_steps": 40}
+    },
+    "timeout": 1800
+  },
+  "firered11": {
+    "provider": "command",
+    "model": "FireRedTeam/FireRed-Image-Edit-1.1",
+    "stages": ["compile", "execute"],
+    "profile": "firered11",
+    "command": ["python", "-m", "hre.stage_lab.native_workers", "firered", "--request", "{request}", "--output", "{output}"],
+    "parameters": {
+      "native_repo": "/absolute/path/to/FireRed-Image-Edit",
+      "checkpoint": "FireRedTeam/FireRed-Image-Edit-1.1",
+      "device": "cuda",
+      "dtype": "bfloat16",
+      "seed": 42,
+      "target_length": 512,
+      "inference": {"num_inference_steps": 40, "true_cfg_scale": 4.0}
+    },
+    "timeout": 1800
+  },
+  "manual": {
+    "provider": "manual",
+    "model": "external-manual-model",
+    "stages": ["diagnose", "plan", "compile", "execute", "judge"],
+    "profile": "generic"
+  },
+  "demo": {
+    "provider": "demo",
+    "model": "synthetic-demo",
+    "stages": ["diagnose", "plan", "compile", "execute", "judge"],
+    "profile": "generic",
+    "parameters": {"gain": 1.2}
+  }
+}

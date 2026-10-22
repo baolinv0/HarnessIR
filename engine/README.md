@@ -1,3 +1,7 @@
+## 分阶段模型测试台
+
+新增 `hre lab`：独立测试差异观察、Action 规划、模型专属条件处理、图像执行和结果判别；支持多模型调用、结果复用、并排可视化与离线 HTML 报告。安装后可先运行 `hre lab demo --root Data/stage_lab_demo`，再用 `hre lab ui --root Data/stage_lab_demo` 打开界面。完整用法与模型配置见 [分阶段测试手册](../docs/stage_lab/README.md)。演示为合成输出；真实模型通过 API、本地原生 worker 或导入接入。
+
 ## 生成式参考增强 v2（显式 opt-in）
 
 新增 `hre v2`：G0/G1 单次生成、同字节 G1→G2 Mask 适配、独立 A/B/C 区域指标和盲评 ITT。原 v1 CLI 默认和 Controller/CaseStore 文件协议继续使用。完整步骤见 [v2 运行手册](../docs/reference_enhancement/v2_20261015/RUNBOOK.md)；[实现状态](../docs/reference_enhancement/v2_20261015/IMPLEMENTATION_STATUS.md) 和 [审查验证](../docs/reference_enhancement/v2_20261015/REVIEW_AND_VALIDATION.md) 记录交付边界。真实模型效果和生产 Mask 能力未验证。

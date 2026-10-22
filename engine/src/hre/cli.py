@@ -242,11 +242,16 @@ def build_parser() -> argparse.ArgumentParser:
         else:p.add_argument('--ratings',type=Path,required=True)
     from .reference_cli import add_v2_parser
     add_v2_parser(groups)
+    from .stage_lab.cli import add_lab_parser
+    add_lab_parser(groups)
     return parser
 
 
 def dispatch(args):
     from hre.storage import read_json
+    if args.command=='lab':
+        from .stage_lab.cli import dispatch_lab
+        return dispatch_lab(args)
     if args.command=='v2':
         from .reference_cli import dispatch_v2
         return dispatch_v2(args)
