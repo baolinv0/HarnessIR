@@ -1,0 +1,9 @@
+# Candidate native image environment, Python >=3.11.
+# Install the CUDA-appropriate torch/torchvision wheels before this file.
+# The adapters verify these Diffusers source bytes, not only __version__.
+diffusers @ git+https://github.com/huggingface/diffusers.git@aaf57d03a3edfbd9de457d2872417a92f149a91d
+transformers==5.17.0
+accelerate==1.11.0
+safetensors
+sentencepiece
+protobuf

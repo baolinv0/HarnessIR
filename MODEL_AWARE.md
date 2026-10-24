@@ -1,5 +1,21 @@
 # Model-Aware HarnessIR: run and inspect stages in parallel
 
+## Four-model completion: the new v3 entry point
+
+`hre models` now provides built-in Qwen 2.1 / FireRed 1.1 / FLUX 3 Klein /
+FIBO 2.0 compilers and image executors, single-source restoration and A/B
+enhancement, bounded refinement, explicit spatial controls, persistent native
+workers and frozen batch comparisons. NB is not part of this new model catalog.
+
+- [Complete design and implemented scope](docs/four_model_v3/DESIGN_AND_COMPLETION.md)
+- [Server deployment and commands](docs/four_model_v3/RUNBOOK.md)
+
+The rest of this document describes the **unchanged v2 protocol**. Its A/B-only,
+external-native-worker and single-generation limits do not describe the new v3
+entry point. Existing v2 cases keep their original schemas and behavior.
+
+## Legacy v2 entry points
+
 Two entry points share one implementation:
 
 | Entry point | Purpose | Case progression |

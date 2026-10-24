@@ -31,6 +31,9 @@
 
 ## &#x1F4CC; Quick Links
 
+- **[Four-model implementation (Qwen / FireRed / FLUX / FIBO)](docs/four_model_v3/DESIGN_AND_COMPLETION.md)** — built-in native adapters, restoration/reference tasks and bounded feedback via `hre models`.
+- **[Four-model server runbook](docs/four_model_v3/RUNBOOK.md)** — local checkpoints, isolated workers, batch comparison and report export. Real-model validation is performed on the deployment server.
+
 - [&#x1F4F0; News](#news)
 - [&#x1F9F0; HarnessIR](#method)
 - [&#x1F4CA; Evaluation Protocol and Metrics](#evaluation)

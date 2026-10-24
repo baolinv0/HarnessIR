@@ -1,3 +1,14 @@
+# Four-model v3 runtime
+
+The opt-in `hre models` CLI adds actual Qwen 2.1, FireRed 1.1, FLUX 3 Klein
+distilled and FIBO 2.0 Dev compiler/editor adapters. See the
+[implementation design](../docs/four_model_v3/DESIGN_AND_COMPLETION.md) and
+[server runbook](../docs/four_model_v3/RUNBOOK.md). Existing commands and frozen
+v1/v2 cases retain their previous contracts. Native GPU inference and image
+quality are validated separately on the user's server.
+
+The following sections describe the unchanged v1/v2 runtime.
+
 ## 生成式参考增强 v2（显式 opt-in）
 
 新增 `hre v2`：G0/G1 单次生成、同字节 G1→G2 Mask 适配、独立 A/B/C 区域指标和盲评 ITT。原 v1 CLI 默认和 Controller/CaseStore 文件协议继续使用。完整步骤见 [v2 运行手册](../docs/reference_enhancement/v2_20261015/RUNBOOK.md)；[实现状态](../docs/reference_enhancement/v2_20261015/IMPLEMENTATION_STATUS.md) 和 [审查验证](../docs/reference_enhancement/v2_20261015/REVIEW_AND_VALIDATION.md) 记录交付边界。真实模型效果和生产 Mask 能力未验证。

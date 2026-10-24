@@ -1,0 +1,29 @@
+{
+  "schema_version": "hre_task_v3",
+  "case_id": "reference_001",
+  "task_mode": "reference_enhance",
+  "profile_id": "qwen21",
+  "strategy": "model_aware",
+  "source": {
+    "path": "/data/source.png"
+  },
+  "brief": "Improve the source's brightness, colour balance and tonal relationships using the reference only as an appearance guide. Preserve source content, viewpoint, text and illumination geometry.",
+  "geometry": {
+    "policy": "pad",
+    "grid": 32
+  },
+  "spatial": {
+    "mode": "full_frame"
+  },
+  "alpha_policy": "require_opaque",
+  "policy": {
+    "mode": "single",
+    "max_generations": 1,
+    "seed_schedule": [
+      42
+    ]
+  },
+  "reference": {
+    "path": "/data/reference.png"
+  }
+}
