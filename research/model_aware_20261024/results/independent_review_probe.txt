@@ -1,0 +1,13 @@
+{"probe": "execute_pixel_equivalence", "crop": false, "equal": true, "size": [40, 30]}
+{"probe": "execute_pixel_equivalence", "crop": true, "equal": true, "size": [1024, 768]}
+{"probe": "baseline_pixel_equivalence", "square": false, "color": false, "equal": true, "size": [40, 30]}
+{"probe": "baseline_pixel_equivalence", "square": false, "color": true, "equal": true, "size": [40, 30]}
+{"probe": "baseline_pixel_equivalence", "square": true, "color": false, "equal": true, "size": [1024, 768]}
+{"probe": "baseline_pixel_equivalence", "square": true, "color": true, "equal": true, "size": [1024, 768]}
+{"probe": "archive_failure_keeps_delivery", "passed": true, "archive_error": "FileExistsError: [Errno 17] File exists: '/tmp/tmpkgi3krbd/blocked_archive/raw_outputs'"}
+{"probe": "downstream_failure_keeps_native_receipt", "passed": true}
+{"probe": "valid_verifier_type_combinations", "count": 31}
+{"probe": "synthetic_interaction_arithmetic_only", "effect": 2.0, "cohort_bound": true}
+{"probe": "two_arms_missing_same_scene_rejected", "passed": true}
+{"probe": "cross_model_image_cohort_mismatch_rejected", "passed": true}
+ALL SOFTWARE PROBES PASSED; NO MODEL QUALITY EXPERIMENT WAS RUN

@@ -1,0 +1,34 @@
+{
+  "schema_version": "harnessir_model_aware_study_status_v1",
+  "date": "2026-10-24",
+  "source_commit": "e1b610ef034d467c8c9172e530d38a930956a3bb",
+  "paper_version": "2610.10133v3",
+  "official_code_commit": "773f19654d2d4d9a3b0ce20f80508a4dd0788aff",
+  "study_complete": false,
+  "quality_experiment_calls": 0,
+  "hypotheses": {
+    "H1": "NOT_TESTED",
+    "H2": "NOT_TESTED",
+    "H3": "NOT_TESTED",
+    "H4": "NOT_TESTED",
+    "H5": "NOT_TESTED"
+  },
+  "software_review": "provisional_same_family",
+  "software_fixes": [
+    "multi_type_verifier_name",
+    "decoded_native_output_archive"
+  ],
+  "requires_before_quality_runs": [
+    "exact_executor_and_planner_identity",
+    "single_image_adapter_parity",
+    "frozen_data_and_cohort",
+    "complete_trace_transport_cost_ledger",
+    "independent_image_evaluation"
+  ],
+  "software_tests": {
+    "passed": 469,
+    "warnings": 4,
+    "exit_code": 0,
+    "model_quality_inference": false
+  }
+}

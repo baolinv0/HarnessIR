@@ -1,0 +1,42 @@
+test_baseline_keeps_same_native_receipt_contract (test_restoration_audit.RestorationAuditTests.test_baseline_keeps_same_native_receipt_contract) ... FAIL
+test_execute_keeps_native_output_before_normalizing (test_restoration_audit.RestorationAuditTests.test_execute_keeps_native_output_before_normalizing) ... FAIL
+test_multi_type_verifier_preserves_both_checklists (test_restoration_audit.RestorationAuditTests.test_multi_type_verifier_preserves_both_checklists) ... ERROR
+
+======================================================================
+ERROR: test_multi_type_verifier_preserves_both_checklists (test_restoration_audit.RestorationAuditTests.test_multi_type_verifier_preserves_both_checklists)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7d29333b7554/HarnessIR/tests/test_restoration_audit.py", line 22, in test_multi_type_verifier_preserves_both_checklists
+    system = build_verify_system(["rain", "lowlight"])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/7d29333b7554/HarnessIR/harness/stages/verify.py", line 328, in build_verify_system
+    return build_system(load_prompt(template_name), task_types, blocks,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/7d29333b7554/HarnessIR/harness/types.py", line 234, in build_system
+    parts.append(conflict_rules(types, voice=voice).strip())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/7d29333b7554/HarnessIR/harness/types.py", line 186, in conflict_rules
+    return (_RULES_HEAD.strip() + "\n\n" + _colour_clause_judge(types) + "\n"
+                                           ^^^^^^^^^^^^^^^^^^^^
+NameError: name '_colour_clause_judge' is not defined. Did you mean: '_colour_clause'?
+
+======================================================================
+FAIL: test_baseline_keeps_same_native_receipt_contract (test_restoration_audit.RestorationAuditTests.test_baseline_keeps_same_native_receipt_contract)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7d29333b7554/HarnessIR/tests/test_restoration_audit.py", line 49, in test_baseline_keeps_same_native_receipt_contract
+    self.assertIn("raw_path", rec)
+AssertionError: 'raw_path' not found in {'id': 'case', 'lq': '/tmp/tmpzwrgwje6/lq.png', 'gt': None, 'prompt': 'Restore this low-quality image to a clear, clean and natural state.', 'output': '/tmp/tmpzwrgwje6/run/results/case.png', 'result_copy': '/tmp/tmpzwrgwje6/delivered/case.png', 'elapsed_sec': 0.0}
+
+======================================================================
+FAIL: test_execute_keeps_native_output_before_normalizing (test_restoration_audit.RestorationAuditTests.test_execute_keeps_native_output_before_normalizing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7d29333b7554/HarnessIR/tests/test_restoration_audit.py", line 34, in test_execute_keeps_native_output_before_normalizing
+    self.assertIn("raw_path", rec)
+AssertionError: 'raw_path' not found in {'path': '/tmp/tmp3a1o0n1_/run/output.png', 'elapsed_sec': 0.0, 'n_pictures': 1, 'output_size': [40, 30], 'cropped_back': False, 'error': None}
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.009s
+
+FAILED (failures=2, errors=1)

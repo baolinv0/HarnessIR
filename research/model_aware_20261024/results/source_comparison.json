@@ -1,0 +1,202 @@
+[
+  {
+    "path": "compute_df.py",
+    "official_sha256": "88bf3e7c746d1885a83c8881b5a2db7b674ff5a53c5c4420aa0ec74c2cda49cc",
+    "branch_original_sha256": "88bf3e7c746d1885a83c8881b5a2db7b674ff5a53c5c4420aa0ec74c2cda49cc"
+  },
+  {
+    "path": "compute_iqa.py",
+    "official_sha256": "0ed9242e99ada6dc5a78c561d1e03af00e2360f274bd11982d67d8cf8f76aca4",
+    "branch_original_sha256": "0ed9242e99ada6dc5a78c561d1e03af00e2360f274bd11982d67d8cf8f76aca4"
+  },
+  {
+    "path": "configs/default.json",
+    "official_sha256": "0c30de4f2f847ce56e84233aea4155f11ceab2a9eb3629d965b3032f2e4ce3af",
+    "branch_original_sha256": "0c30de4f2f847ce56e84233aea4155f11ceab2a9eb3629d965b3032f2e4ce3af"
+  },
+  {
+    "path": "harness/__init__.py",
+    "official_sha256": "1ffadb49c3d1840939b3bb49423eb3599c72210462d35eb2fae2d408f5ddc051",
+    "branch_original_sha256": "1ffadb49c3d1840939b3bb49423eb3599c72210462d35eb2fae2d408f5ddc051"
+  },
+  {
+    "path": "harness/clients.py",
+    "official_sha256": "e4e8051586ac8ac498ad7727c424eef23be23e1c8c0d8b5f8477ff4d85601023",
+    "branch_original_sha256": "e4e8051586ac8ac498ad7727c424eef23be23e1c8c0d8b5f8477ff4d85601023"
+  },
+  {
+    "path": "harness/color_adjust.py",
+    "official_sha256": "2a097dbed3548b50f950ef335391c68601654e6510549e17e5f80f416678441d",
+    "branch_original_sha256": "2a097dbed3548b50f950ef335391c68601654e6510549e17e5f80f416678441d"
+  },
+  {
+    "path": "harness/dfscore.py",
+    "official_sha256": "84af1a6cf62f7b3d6217e23365e0ca28ef6e2c8be18811c62c291ea39a88028d",
+    "branch_original_sha256": "84af1a6cf62f7b3d6217e23365e0ca28ef6e2c8be18811c62c291ea39a88028d"
+  },
+  {
+    "path": "harness/layout.py",
+    "official_sha256": "7fa2af311254dec5bebdc83233faf36fa136d03e0e077de1c96658f5a0910f52",
+    "branch_original_sha256": "7fa2af311254dec5bebdc83233faf36fa136d03e0e077de1c96658f5a0910f52"
+  },
+  {
+    "path": "harness/manifest.py",
+    "official_sha256": "c71768d415e1240cc2a75da1f5e694d460ca150ca2ccfe0bc871961b977449e4",
+    "branch_original_sha256": "c71768d415e1240cc2a75da1f5e694d460ca150ca2ccfe0bc871961b977449e4"
+  },
+  {
+    "path": "harness/metrics.py",
+    "official_sha256": "44e3033d71998cd20e78fa4c4a1e67ddd58947dbfd0002aa26ae9b3dfadcb1bc",
+    "branch_original_sha256": "44e3033d71998cd20e78fa4c4a1e67ddd58947dbfd0002aa26ae9b3dfadcb1bc"
+  },
+  {
+    "path": "harness/perception/__init__.py",
+    "official_sha256": "62da7501faeb0239a8fed472245bc9aae231bf70b51f74a06d99c58be3c8bd7c",
+    "branch_original_sha256": "62da7501faeb0239a8fed472245bc9aae231bf70b51f74a06d99c58be3c8bd7c"
+  },
+  {
+    "path": "harness/perception/_models.py",
+    "official_sha256": "bcd8b961ff0820c0130efea14ff0420b1c6b1fc3c0b18fc811041dd1ea079b25",
+    "branch_original_sha256": "bcd8b961ff0820c0130efea14ff0420b1c6b1fc3c0b18fc811041dd1ea079b25"
+  },
+  {
+    "path": "harness/perception/depth.py",
+    "official_sha256": "5ec1daf92c6b1eee8c78e8dcc2befcd86b7ab09cc2e8d91b1d2fe691b9aa6e14",
+    "branch_original_sha256": "5ec1daf92c6b1eee8c78e8dcc2befcd86b7ab09cc2e8d91b1d2fe691b9aa6e14"
+  },
+  {
+    "path": "harness/perception/faces.py",
+    "official_sha256": "7e0f5acaefd1325f8bb238740e35bdefba8b9f096520c8201da9c0e5ddd4c88b",
+    "branch_original_sha256": "7e0f5acaefd1325f8bb238740e35bdefba8b9f096520c8201da9c0e5ddd4c88b"
+  },
+  {
+    "path": "harness/perception/ocr.py",
+    "official_sha256": "d145dbe8be2e87191d768995c14a52534335e54ad7f302ffa04aa4c601e40a5e",
+    "branch_original_sha256": "d145dbe8be2e87191d768995c14a52534335e54ad7f302ffa04aa4c601e40a5e"
+  },
+  {
+    "path": "harness/perception/segment.py",
+    "official_sha256": "5f00f314862b990ab2b4b411b544dd7cad141638f7784264d6d6285332a336eb",
+    "branch_original_sha256": "5f00f314862b990ab2b4b411b544dd7cad141638f7784264d6d6285332a336eb"
+  },
+  {
+    "path": "harness/pipeline.py",
+    "official_sha256": "a531e9df6a06a0328cd82edcf09b6747d15c4d8c4ded2b47eb0f2e523e3c1b0a",
+    "branch_original_sha256": "a531e9df6a06a0328cd82edcf09b6747d15c4d8c4ded2b47eb0f2e523e3c1b0a"
+  },
+  {
+    "path": "harness/runconfig.py",
+    "official_sha256": "0182b2d5791f820db06da6516b24ddcabf35c9883451ed94ee10d245f68fa60a",
+    "branch_original_sha256": "0182b2d5791f820db06da6516b24ddcabf35c9883451ed94ee10d245f68fa60a"
+  },
+  {
+    "path": "harness/selection.py",
+    "official_sha256": "d44963a577b54096b93dc7a5c9e359013f0451cf8f080c45922f21cf4b99860c",
+    "branch_original_sha256": "d44963a577b54096b93dc7a5c9e359013f0451cf8f080c45922f21cf4b99860c"
+  },
+  {
+    "path": "harness/settings.py",
+    "official_sha256": "e015f875d766ed365cf2abb6444019bfcc769f1d897a931fe17cc212eb5a5095",
+    "branch_original_sha256": "e015f875d766ed365cf2abb6444019bfcc769f1d897a931fe17cc212eb5a5095"
+  },
+  {
+    "path": "harness/stages/compose.py",
+    "official_sha256": "df7b7fb0c24f4bf8ebc99d9d52d9e7c0285bdf90cb5491eb878b6f1bfa212ae5",
+    "branch_original_sha256": "df7b7fb0c24f4bf8ebc99d9d52d9e7c0285bdf90cb5491eb878b6f1bfa212ae5"
+  },
+  {
+    "path": "harness/stages/diagnosis.py",
+    "official_sha256": "8de037d987e3dfb95822dee9912f8802426e86ba9c59dcf7ee2facfc7a267114",
+    "branch_original_sha256": "8de037d987e3dfb95822dee9912f8802426e86ba9c59dcf7ee2facfc7a267114"
+  },
+  {
+    "path": "harness/stages/execute.py",
+    "official_sha256": "8597a964098b72cfe1f085b2ed5776f797249d97d88f66d7fdd94259a668ce9b",
+    "branch_original_sha256": "8597a964098b72cfe1f085b2ed5776f797249d97d88f66d7fdd94259a668ce9b"
+  },
+  {
+    "path": "harness/stages/refine.py",
+    "official_sha256": "7af39c59c54d7d42bf1fd71472174634be2935dbf0fa08ba2533ade978d6d9b7",
+    "branch_original_sha256": "7af39c59c54d7d42bf1fd71472174634be2935dbf0fa08ba2533ade978d6d9b7"
+  },
+  {
+    "path": "harness/stages/tools.py",
+    "official_sha256": "ebfc68f2aa42b7c295602d1848d0fc802c990393c2faf78db7201c9fc32e1a6d",
+    "branch_original_sha256": "ebfc68f2aa42b7c295602d1848d0fc802c990393c2faf78db7201c9fc32e1a6d"
+  },
+  {
+    "path": "harness/stages/verify.py",
+    "official_sha256": "f1a9be0f703e6575a1fd3a32bae7fdea272ee6daee3cb46db77238a4dde622a8",
+    "branch_original_sha256": "f1a9be0f703e6575a1fd3a32bae7fdea272ee6daee3cb46db77238a4dde622a8"
+  },
+  {
+    "path": "harness/stages/visuals.py",
+    "official_sha256": "afbf449bcbb0466b27285ae6fbe444f17989d52387b413beec272d300f33d153",
+    "branch_original_sha256": "afbf449bcbb0466b27285ae6fbe444f17989d52387b413beec272d300f33d153"
+  },
+  {
+    "path": "harness/types.py",
+    "official_sha256": "281343515b6cd9a461c5397a1be82df24945bb093c5ae3ecaf551d11a30269f7",
+    "branch_original_sha256": "281343515b6cd9a461c5397a1be82df24945bb093c5ae3ecaf551d11a30269f7"
+  },
+  {
+    "path": "harness/utils.py",
+    "official_sha256": "23478b94b1f89cc05d6cc27a21e5d7382956690524003bbb8d2a5bc0eab8a9e5",
+    "branch_original_sha256": "23478b94b1f89cc05d6cc27a21e5d7382956690524003bbb8d2a5bc0eab8a9e5"
+  },
+  {
+    "path": "prompts/compose.txt",
+    "official_sha256": "2b6fa95814543e8f780dbb052ede9879c48566a254607eeb51e240bfb0611c30",
+    "branch_original_sha256": "2b6fa95814543e8f780dbb052ede9879c48566a254607eeb51e240bfb0611c30"
+  },
+  {
+    "path": "prompts/compose_blocks.txt",
+    "official_sha256": "d116303f35d7f36be4784b981008aca5e5d251a52d0f3bc4208fbbda3707a3b5",
+    "branch_original_sha256": "d116303f35d7f36be4784b981008aca5e5d251a52d0f3bc4208fbbda3707a3b5"
+  },
+  {
+    "path": "prompts/df/df_core.txt",
+    "official_sha256": "bf59e2702366fa6e800de6d23dc98e3bfeef1a49d41ddacab385ff3a3d48cc78",
+    "branch_original_sha256": "bf59e2702366fa6e800de6d23dc98e3bfeef1a49d41ddacab385ff3a3d48cc78"
+  },
+  {
+    "path": "prompts/df/df_intent.txt",
+    "official_sha256": "9478c0c20b0c525bc98c55349603bee41b80e0e595f417e2ba3a9ac2a47416f1",
+    "branch_original_sha256": "9478c0c20b0c525bc98c55349603bee41b80e0e595f417e2ba3a9ac2a47416f1"
+  },
+  {
+    "path": "prompts/df/df_types.txt",
+    "official_sha256": "a74d58bc1508fcba9f903d3b77ddd4a5d5f4dae82039db9a0ba8bde15a6cf7a6",
+    "branch_original_sha256": "a74d58bc1508fcba9f903d3b77ddd4a5d5f4dae82039db9a0ba8bde15a6cf7a6"
+  },
+  {
+    "path": "prompts/diagnosis.txt",
+    "official_sha256": "f49c45f3a84cec770017aa50f3783860112d22021cb24ca6d190e4d9f328b246",
+    "branch_original_sha256": "f49c45f3a84cec770017aa50f3783860112d22021cb24ca6d190e4d9f328b246"
+  },
+  {
+    "path": "prompts/refine.txt",
+    "official_sha256": "280bb6c34ed5ee8e70ec84fbde287ac1680bced7293482986b95b06ef65f13e8",
+    "branch_original_sha256": "280bb6c34ed5ee8e70ec84fbde287ac1680bced7293482986b95b06ef65f13e8"
+  },
+  {
+    "path": "prompts/verify.txt",
+    "official_sha256": "4dea6e739f29ec1ec6481ab5f60aa70e37ef18b5bbc8fda02f730af18dbd595f",
+    "branch_original_sha256": "4dea6e739f29ec1ec6481ab5f60aa70e37ef18b5bbc8fda02f730af18dbd595f"
+  },
+  {
+    "path": "prompts/verify_blocks.txt",
+    "official_sha256": "1db5f1e473b08324af0fc4e5622a3453f81152a5b60a86ad2bf4f53c05439c1a",
+    "branch_original_sha256": "1db5f1e473b08324af0fc4e5622a3453f81152a5b60a86ad2bf4f53c05439c1a"
+  },
+  {
+    "path": "run_baseline.py",
+    "official_sha256": "e23458259deb9474fe7284c4fd96a40a7d5dd2465a5311c471ea16af7e952be8",
+    "branch_original_sha256": "e23458259deb9474fe7284c4fd96a40a7d5dd2465a5311c471ea16af7e952be8"
+  },
+  {
+    "path": "run_harness.py",
+    "official_sha256": "5beebfaf56c43d1065b4b789cb0cedf0da0e72303181cd0042abd93fc3b5ab22",
+    "branch_original_sha256": "5beebfaf56c43d1065b4b789cb0cedf0da0e72303181cd0042abd93fc3b5ab22"
+  }
+]

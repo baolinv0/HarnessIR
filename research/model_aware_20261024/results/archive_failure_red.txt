@@ -1,0 +1,26 @@
+test_archiving_failure_is_explicit_without_discarding_generation (test_restoration_audit.RestorationAuditTests.test_archiving_failure_is_explicit_without_discarding_generation) ... FAIL
+test_baseline_keeps_same_native_receipt_contract (test_restoration_audit.RestorationAuditTests.test_baseline_keeps_same_native_receipt_contract) ... ok
+test_downstream_write_failure_retains_successful_raw_receipt (test_restoration_audit.RestorationAuditTests.test_downstream_write_failure_retains_successful_raw_receipt) ... FAIL
+test_execute_keeps_native_output_before_normalizing (test_restoration_audit.RestorationAuditTests.test_execute_keeps_native_output_before_normalizing) ... ok
+test_multi_type_verifier_preserves_both_checklists (test_restoration_audit.RestorationAuditTests.test_multi_type_verifier_preserves_both_checklists) ... ok
+
+======================================================================
+FAIL: test_archiving_failure_is_explicit_without_discarding_generation (test_restoration_audit.RestorationAuditTests.test_archiving_failure_is_explicit_without_discarding_generation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7d29333b7554/HarnessIR/tests/test_restoration_audit.py", line 65, in test_archiving_failure_is_explicit_without_discarding_generation
+    self.assertIsNone(rec["error"])
+AssertionError: "FileExistsError: [Errno 17] File exists: '/tmp/tmp101nzfxt/run/raw_outputs'" is not None
+
+======================================================================
+FAIL: test_downstream_write_failure_retains_successful_raw_receipt (test_restoration_audit.RestorationAuditTests.test_downstream_write_failure_retains_successful_raw_receipt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7d29333b7554/HarnessIR/tests/test_restoration_audit.py", line 79, in test_downstream_write_failure_retains_successful_raw_receipt
+    self.assertIn("raw_path", rec)
+AssertionError: 'raw_path' not found in {'path': None, 'elapsed_sec': 0.0, 'n_pictures': 1, 'cropped_back': False, 'error': "IsADirectoryError: [Errno 21] Is a directory: '/tmp/tmpykjl26qm/run/output.png'"}
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.009s
+
+FAILED (failures=2)

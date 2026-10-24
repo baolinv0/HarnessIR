@@ -1,0 +1,43 @@
+[
+  {
+    "dataset": "MiO",
+    "entries": 1440,
+    "type_counts": {
+      "lowlight": 260,
+      "haze": 280,
+      "mix": 540,
+      "rain|haze": 80,
+      "rain": 180,
+      "rain|lowlight": 100
+    },
+    "multi_type": 180,
+    "sha256": "7bb7161d0615ca2caf18636c18182c3e6f1dbceb630dcdbf1ba5764be78b678e",
+    "source_revision": "d64b3fc51d30944b6750326f3aeadecd2006ed8d"
+  },
+  {
+    "dataset": "Real-NoGT-200",
+    "entries": 200,
+    "type_counts": {
+      "haze": 25,
+      "lowlight": 25,
+      "rain": 25,
+      "snow": 25,
+      "mix": 100
+    },
+    "multi_type": 0,
+    "sha256": "0e60e5da2b93c50490804db1d8ead2757d9b260e85c3ed753d8c008ea76f37cd",
+    "source_revision": "d64b3fc51d30944b6750326f3aeadecd2006ed8d"
+  },
+  {
+    "dataset": "Real-Paired-200",
+    "entries": 200,
+    "type_counts": {
+      "mix": 120,
+      "haze": 40,
+      "rain": 40
+    },
+    "multi_type": 0,
+    "sha256": "3e46f00ad1526344b91fce51b21e7dc6b250e7e8b3541fb63ec7e76ad4f19c9e",
+    "source_revision": "d64b3fc51d30944b6750326f3aeadecd2006ed8d"
+  }
+]
