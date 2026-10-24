@@ -9,6 +9,7 @@ workers and frozen batch comparisons. NB is not part of this new model catalog.
 
 - [Complete design and implemented scope](docs/four_model_v3/DESIGN_AND_COMPLETION.md)
 - [Server deployment and commands](docs/four_model_v3/RUNBOOK.md)
+- [S26 / iPhone front-camera experiment plan and report kit](research/front_camera_20/README.md)
 
 The rest of this document describes the **unchanged v2 protocol**. Its A/B-only,
 external-native-worker and single-generation limits do not describe the new v3

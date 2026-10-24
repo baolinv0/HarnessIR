@@ -1,0 +1,200 @@
+{
+  "schema_version": "front_camera_dataset_v1",
+  "meta": {
+    "data_count_confirmed": false,
+    "paired_count": 20,
+    "color_contract_confirmed": false,
+    "source_encoding": "srgb_sdr_8bit",
+    "reference_encoding": "srgb_sdr_8bit",
+    "baseline_id": "REPLACE_BASELINE_NAME",
+    "baseline_revision": "REPLACE_CODE_AND_CHECKPOINT_REVISION",
+    "source_export_recipe": "REPLACE_WITH_ACTUAL_BASELINE_OUTPUT_TRANSFER_PRIMARIES_WHITEPOINT_RANGE_AND_FROZEN_EXPORT_RECIPE",
+    "reference_export_recipe": "REPLACE_WITH_ACTUAL_IPHONE_FILE_ENCODING_ICC_HDR_AND_FROZEN_SDR_EXPORT_RECIPE",
+    "brief_reference": "Improve the source portrait brightness, white balance, skin-tone naturalness and tonal relationships using image B only as an unaligned appearance guide. Image A is the source of identity, expression, gaze, facial geometry, readable text, objects, viewpoint and composition. Keep the source illumination geometry. Make only evidence-supported corrections to visible noise and blur. Do not reshape the face, whiten skin indiscriminately, smooth away natural skin texture, invent detail, or copy people, facial features, text or objects from image B.",
+    "brief_source_only": "Improve the source portrait brightness, white balance, skin-tone naturalness and tonal relationships using only evidence in the source. Preserve identity, expression, gaze, facial geometry, readable text, objects, viewpoint, composition and illumination geometry. Make only evidence-supported corrections to visible noise and blur. Do not reshape the face, whiten skin indiscriminately, smooth away natural skin texture, invent detail, or replace people or objects.",
+    "notes": "这是待填写模板，并不代表已收到20对照片。确认20张是20对还是两机合计20张后修改paired_count和cases。默认20对全部test，仅在正式运行前冻结所有设置时采用；建议另加2–4对dev做部署pilot。若只有20对且根据pilot调prompt，改4 dev / 16 test，核心候选数由320变为256（每臂一个seed）。group_id是同场景/拍摄session/连拍统计簇，不能跨split，不得虚构独立簇。subject_id可空或重复，仅限制跨身份泛化结论。先冻结颜色转换和分辨率，所有模型使用完全相同导出。0 dev时需外部pilot或预先冻结设置。regions留空，不编造人脸坐标。",
+    "group_contract_confirmed": false
+  },
+  "cases": [
+    {
+      "pair_id": "front001",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front001",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front001/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front001/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front002",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front002",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front002/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front002/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front003",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front003",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front003/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front003/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front004",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front004",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front004/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front004/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front005",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front005",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front005/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front005/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front006",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front006",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front006/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front006/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front007",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front007",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front007/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front007/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front008",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front008",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front008/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front008/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front009",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front009",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front009/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front009/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front010",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front010",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front010/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front010/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front011",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front011",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front011/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front011/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front012",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front012",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front012/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front012/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front013",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front013",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front013/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front013/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front014",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front014",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front014/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front014/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front015",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front015",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front015/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front015/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front016",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front016",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front016/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front016/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front017",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front017",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front017/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front017/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front018",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front018",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front018/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front018/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front019",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front019",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front019/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front019/iphone_srgb.png",
+      "regions": []
+    },
+    {
+      "pair_id": "front020",
+      "split": "test",
+      "group_id": "REPLACE_CAPTURE_GROUP_FOR_front020",
+      "subject_id": "unknown",
+      "source": "/data/front20/REPLACE_WITH_REAL_EXPORT/front020/prediction_srgb.png",
+      "reference": "/data/front20/REPLACE_WITH_REAL_EXPORT/front020/iphone_srgb.png",
+      "regions": []
+    }
+  ]
+}

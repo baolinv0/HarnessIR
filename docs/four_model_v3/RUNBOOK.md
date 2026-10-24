@@ -2,6 +2,8 @@
 
 这份运行手册对应 `hre models` / `hre_task_v3`。完整设计见 [DESIGN_AND_COMPLETION.md](DESIGN_AND_COMPLETION.md)。命令从仓库根目录执行；代码本身不下载权重、不猜测模型 revision、不在失败时换模型。
 
+S26 baseline prediction 与未对齐 iPhone 前置实拍参考的专用实验矩阵、颜色合同、匿名评审和结果报告见 [前置实拍实验包](../../research/front_camera_20/README.md)。
+
 ## 1. 部署环境
 
 建议将 Qwen PE 与图像模型分成两个 Python 环境：官方 PE 使用 Transformers 5.4.0，而 Qwen 2.1 图像说明要求至少 5.17。默认示例已为 compiler/editor 配置仓库自带的常驻 worker，不需要另写模型脚本。
