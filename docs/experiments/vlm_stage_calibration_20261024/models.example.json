@@ -1,0 +1,193 @@
+{
+  "q27_t06": {
+    "provider": "openai",
+    "model": "Qwen/Qwen3.8-27B",
+    "base_url": "http://127.0.0.1:8027/v1",
+    "stages": [
+      "diagnose",
+      "plan",
+      "judge"
+    ],
+    "profile": "generic",
+    "parameters": {
+      "temperature": 0.6,
+      "top_p": 0.95,
+      "top_k": 20,
+      "min_p": 0,
+      "presence_penalty": 0,
+      "repetition_penalty": 1,
+      "max_tokens": 8192,
+      "seed": 17,
+      "stream": false,
+      "response_format": {
+        "type": "json_object"
+      },
+      "chat_template_kwargs": {
+        "enable_thinking": true
+      }
+    },
+    "timeout": 600
+  },
+  "q27_t10": {
+    "provider": "openai",
+    "model": "Qwen/Qwen3.8-27B",
+    "base_url": "http://127.0.0.1:8027/v1",
+    "stages": [
+      "diagnose",
+      "plan",
+      "judge"
+    ],
+    "profile": "generic",
+    "parameters": {
+      "temperature": 1,
+      "top_p": 0.95,
+      "top_k": 20,
+      "min_p": 0,
+      "presence_penalty": 0,
+      "repetition_penalty": 1,
+      "max_tokens": 8192,
+      "seed": 17,
+      "stream": false,
+      "response_format": {
+        "type": "json_object"
+      },
+      "chat_template_kwargs": {
+        "enable_thinking": true
+      }
+    },
+    "timeout": 600
+  },
+  "q27_off": {
+    "provider": "openai",
+    "model": "Qwen/Qwen3.8-27B",
+    "base_url": "http://127.0.0.1:8027/v1",
+    "stages": [
+      "diagnose",
+      "plan",
+      "judge"
+    ],
+    "profile": "generic",
+    "parameters": {
+      "temperature": 0.7,
+      "top_p": 0.8,
+      "top_k": 20,
+      "min_p": 0,
+      "presence_penalty": 1.5,
+      "repetition_penalty": 1,
+      "max_tokens": 8192,
+      "seed": 17,
+      "stream": false,
+      "response_format": {
+        "type": "json_object"
+      },
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      }
+    },
+    "timeout": 600
+  },
+  "q32_t02": {
+    "provider": "openai",
+    "model": "Qwen/Qwen3-VL-32B-Instruct",
+    "base_url": "http://127.0.0.1:8032/v1",
+    "stages": [
+      "diagnose",
+      "plan",
+      "judge"
+    ],
+    "profile": "generic",
+    "parameters": {
+      "temperature": 0.2,
+      "top_p": 0.8,
+      "top_k": 20,
+      "min_p": 0,
+      "presence_penalty": 1.5,
+      "repetition_penalty": 1,
+      "max_tokens": 8192,
+      "seed": 17,
+      "stream": false,
+      "response_format": {
+        "type": "json_object"
+      }
+    },
+    "timeout": 600
+  },
+  "q32_t07": {
+    "provider": "openai",
+    "model": "Qwen/Qwen3-VL-32B-Instruct",
+    "base_url": "http://127.0.0.1:8032/v1",
+    "stages": [
+      "diagnose",
+      "plan",
+      "judge"
+    ],
+    "profile": "generic",
+    "parameters": {
+      "temperature": 0.7,
+      "top_p": 0.8,
+      "top_k": 20,
+      "min_p": 0,
+      "presence_penalty": 1.5,
+      "repetition_penalty": 1,
+      "max_tokens": 8192,
+      "seed": 17,
+      "stream": false,
+      "response_format": {
+        "type": "json_object"
+      }
+    },
+    "timeout": 600
+  },
+  "q8_t02": {
+    "provider": "openai",
+    "model": "Qwen/Qwen3-VL-8B-Instruct",
+    "base_url": "http://127.0.0.1:8008/v1",
+    "stages": [
+      "diagnose",
+      "plan",
+      "judge"
+    ],
+    "profile": "generic",
+    "parameters": {
+      "temperature": 0.2,
+      "top_p": 0.8,
+      "top_k": 20,
+      "min_p": 0,
+      "presence_penalty": 1.5,
+      "repetition_penalty": 1,
+      "max_tokens": 8192,
+      "seed": 17,
+      "stream": false,
+      "response_format": {
+        "type": "json_object"
+      }
+    },
+    "timeout": 600
+  },
+  "q8_t07": {
+    "provider": "openai",
+    "model": "Qwen/Qwen3-VL-8B-Instruct",
+    "base_url": "http://127.0.0.1:8008/v1",
+    "stages": [
+      "diagnose",
+      "plan",
+      "judge"
+    ],
+    "profile": "generic",
+    "parameters": {
+      "temperature": 0.7,
+      "top_p": 0.8,
+      "top_k": 20,
+      "min_p": 0,
+      "presence_penalty": 1.5,
+      "repetition_penalty": 1,
+      "max_tokens": 8192,
+      "seed": 17,
+      "stream": false,
+      "response_format": {
+        "type": "json_object"
+      }
+    },
+    "timeout": 600
+  }
+}

@@ -1,5 +1,7 @@
 # 分阶段模型测试台
 
+服务器 VLM 校准实验：[完整实验计划](../experiments/vlm_stage_calibration_20261024/EXPERIMENT_PLAN.md) · [报告模板](../experiments/vlm_stage_calibration_20261024/REPORT_TEMPLATE.md) · [配置与记录表](../experiments/vlm_stage_calibration_20261024/README.md)。测试对象为本分支；先对比 27B/32B/8B 的 D/P/J，再按需验证 C/E。
+
 `hre lab` 把参考增强拆成五个可独立运行、保存和比较的阶段。每次只选择要测试的阶段、模型和输入；已有结果可以继续交给任意下一阶段。CLI、Streamlit 界面和离线 HTML 报告共用同一份实验数据。
 
 | 阶段 | 要测试什么 | 输入 | 输出与对比 |
