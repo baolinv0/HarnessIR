@@ -1,6 +1,6 @@
 # 服务器执行与回传
 
-以下命令从 HarnessIR 仓库根目录执行。先完成 [DATA_REQUIREMENTS.md](DATA_REQUIREMENTS.md)，再冻结计划。部署四模型、权重锁和原生 helper 的完整步骤沿用 [四模型运行手册](../../docs/four_model_v3/RUNBOOK.md)。本手册不自动下载或启动模型。
+以下命令从 HarnessIR 仓库根目录执行。先完成 [DATA_REQUIREMENTS.md](DATA_REQUIREMENTS.md)，再冻结计划。部署四模型、权重锁和原生 helper 的完整步骤沿用 [四模型运行手册](../../docs/four_model_v3/RUNBOOK.md)。本手册不自动下载或启动模型。**最终只复制粘贴一份 EXPERIMENT_REPORT.md；其他文件均供服务器使用，不作为回传附件。**
 
 ## 1. 准备目录、输入与配置
 
@@ -14,7 +14,6 @@ mkdir -p /data/front20/study-v1
 cp research/front_camera_20/dataset.example.json /data/front20/study-v1/dataset.json
 cp research/front_camera_20/metadata.csv /data/front20/study-v1/metadata.csv
 cp research/front_camera_20/environment.example.json /data/front20/study-v1/environment.json
-cp research/front_camera_20/EXPERIMENT_REPORT.md /data/front20/study-v1/EXPERIMENT_REPORT.md
 ```
 
 若尚无本地分支，使用 `git switch --track origin/implementation/four-model-completion-20261024`；有未提交工作时先自行保留，不强制 checkout/reset。
@@ -133,21 +132,40 @@ python3 research/front_camera_20/scripts/prepare_blind_review.py \
 
 注意：匿名工具需要每个可评 pair 的 B；若参考报告整体损坏/缺失，先修复导出或保留该 pair 为缺失，不拿另一场景 B 替代。
 
-## 6. 填报告与回传
+## 6. 生成唯一回传文档
 
-填写 EXPERIMENT_REPORT.md，补齐本目录提供的 `per_pair_results.csv`、`review_adjudication.csv` 和 `failures.csv`。这些表是人工汇总模板，脚本不会自动推断真实画质、bootstrap 置信区间或模型排名。
+在服务器执行：
 
-推荐回传以下内容：
+```bash
+python3 research/front_camera_20/scripts/export_text_report.py \
+  --study-root /data/front20/study-v1
+```
 
-| 内容 | 用途 |
+默认只生成一个文件：`/data/front20/study-v1/EXPERIMENT_REPORT.md`。脚本从现有计划与实际 report.json 读取数据，不调用模型，也不修改原始图像/运行记录。它不会凭 verifier 的 accepted/confidence 填人工画质分。
+
+- `manifests/` 与 `manifests-extended/` 只存在一个时自动选用；两者都存在时必须加 `--manifest-dir /data/front20/study-v1/manifests-extended` 指定本次计划。
+- 已有人工汇总表时，可加 `--results /data/front20/study-v1/per_pair_results.csv` 在服务器读取；该 CSV 不需要回传。主参考与无参考组必须用完整 case_root 或含 task_mode 的键对应；model 填 profile ID（如 qwen21），不能只靠重名的 aware_single 关联。usable_final 是按冻结投票/裁决得到的最终结果，不能由平均分推断；报告中注明分数是单人分、均分还是中位数。
+- 默认目标文件已存在时拒绝覆盖，以免抹掉人工填写。再次导出用 `--out /data/front20/study-v1/EXPERIMENT_REPORT_v2.md`；最后只复制粘贴选定的一个完整版本。
+- 不使用脚本时，直接复制仓库内 [EXPERIMENT_REPORT.md](EXPERIMENT_REPORT.md) 模板，填写同一份文件即可。
+
+### 只需补写的人工内容
+
+1. 确认颜色出口、工作尺寸、目标优先级、评审人数/显示条件等尚缺信息，直接写在文档里。
+2. 填逐 pair/model/seed 的外观、保真、自然度与最终人评。20 对四模型共 80 行，同一格保留所有 seed；不需手动抄 320/960 行宽 CSV。
+3. 写清关键失败、争议裁决、实际设置偏离与3–5个具体观察。
+4. 如果直接在 Markdown 中补评分，汇总表人工评分列可标为“待按明细复算”，由接收方依据逐例记录重算；不要保留已过时的汇总数当最终结果。
+
+然后**从 BEGIN_OF_REPORT 到 END_OF_REPORT 完整复制粘贴**。若消息长度受限，可以按顺序分段粘贴同一个文件，并标注第1/2段；不拆成多种附件。开头的报告 ID、预期行数与末尾标记用于检查是否截断。
+
+### 必须内联、仅在服务器留存
+
+| 写在唯一 Markdown 里 | 留在服务器，无需回传 |
 |---|---|
-| EXPERIMENT_REPORT.md、metadata.csv、environment.json | 理解实验事实和局限 |
-| dataset.json、manifests/ 内所有 JSON、实际 runtime 身份 | 重建计划与输入，识别数量/颜色/配置变化 |
-| reports/main_reference 与 reports/source_only 整个目录 | 含 report.json、comparisons.csv、index.html、images；离线复核结果 |
-| 全部 ratings、private_mapping、裁决、逐例/失败表 | 重算人评汇总和完整分母 |
-| 时间、GPU samples、错误日志 | 成本、部署与失败分析 |
-| batch.freeze.json、batch.state.json、planning/ | 共享意图、配对与运行身份 |
+| 实验身份、实际模型/公共VLM版本、关键参数、GPU | 完整环境/配置 JSON、权重 |
+| A/B颜色与尺寸定义、baseline身份、pair→group/subject关系 | 原始 linear、prediction、iPhone原图、逐文件完整hash |
+| 计划分母、技术状态、逐pair/seed评分、失败与缺失 | 原始 report.json、comparisons.csv、匿名映射与原始人评 |
+| 调用成本摘要、关键异常代码、协议偏离、人工观察 | 图片/HTML、完整stack trace、condition/VGL、journal/receipt |
 
-完整 `runs/`、所有原生输出、condition、receipt、journal 及原始高精度输入继续保留在服务器。报告目录不包含全部日志；需要追查时可据 case_root 返回指定 run。不要只回传截图、最佳输出或填好百分比的汇总表。
+回传文档应当能够独立阅读，不写“结果见附件”“评分见CSV”或仅给服务器路径。完整证据继续在服务器保存；后续需要定位问题时，仍由服务器补充相关文字摘录。
 
-在回传前处理实际 runtime 文件中的凭据值；保留字段和模型/参数/版本，凭据本身不需要用于结果分析。
+**证据边界**：接收者可以核对计划、分母、配置、配对趋势和已报告人评分数；未收到图片，不能独立复核像素、肤色和人物变化。若仅回传最终裁决而没有原始评审投票，不能据此重新计算评审间一致性。实验尚未完成的部分仍写未运行/待评，不补造结论。
