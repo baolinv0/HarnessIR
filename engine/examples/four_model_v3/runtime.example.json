@@ -1,0 +1,213 @@
+{
+  "schema_version": "hre_runtime_config_v3",
+  "stage": {
+    "base_url": "http://127.0.0.1:8000/v1",
+    "model": "SET_LOCAL_VLM_DEPLOYMENT_NAME",
+    "timeout_seconds": 600,
+    "response_format": "json_object",
+    "settings": {
+      "temperature": 0,
+      "max_tokens": 8192
+    }
+  },
+  "models": {
+    "qwen21": {
+      "compiler": {
+        "backend": "qwen_pe_i2i",
+        "settings": {},
+        "upstream_path": "/srv/upstream/qwen21",
+        "upstream_revision": "ab96caa944157ca28a4f36b695c3047549f48f98",
+        "model_id": "Qwen/Qwen-Image-2.1-PE-I2I",
+        "local_path": "/srv/models/qwen21_compiler",
+        "revision": "SET_ACTUAL_40_HEX_CHECKPOINT_REVISION",
+        "device": "cuda:0",
+        "torch_dtype": "bfloat16",
+        "worker": {
+          "command": [
+            "/srv/venvs/hre-pe/bin/python",
+            "-m",
+            "hre.v3.worker",
+            "--serve"
+          ],
+          "timeout_seconds": 1800,
+          "keep_other_workers": false
+        }
+      },
+      "editor": {
+        "model_id": "Qwen/Qwen-Image-2.1",
+        "local_path": "/srv/models/qwen21",
+        "revision": "SET_ACTUAL_40_HEX_CHECKPOINT_REVISION",
+        "device": "cuda:0",
+        "torch_dtype": "bfloat16",
+        "pipeline_version": "0.42.0.dev0",
+        "settings": {
+          "num_inference_steps": 40,
+          "true_cfg_scale": 1.0,
+          "negative_prompt": "",
+          "output_resolution": 1024,
+          "use_kv_cache": true,
+          "num_images_per_prompt": 1
+        },
+        "worker": {
+          "command": [
+            "/srv/venvs/hre-edit/bin/python",
+            "-m",
+            "hre.v3.worker",
+            "--serve"
+          ],
+          "timeout_seconds": 1800,
+          "keep_other_workers": false
+        }
+      }
+    },
+    "firered11": {
+      "compiler": {
+        "backend": "firered_recaption",
+        "settings": {},
+        "upstream_path": "/srv/upstream/firered11",
+        "upstream_revision": "456d010bd3f9bd727f1ab7fe60838caf6ee479e6",
+        "endpoint": {
+          "base_url": "http://127.0.0.1:8000/v1",
+          "model": "SET_LOCAL_VLM_DEPLOYMENT_NAME",
+          "timeout_seconds": 600,
+          "response_format": "json_object",
+          "settings": {
+            "temperature": 0,
+            "max_tokens": 8192
+          }
+        },
+        "worker": {
+          "command": [
+            "/srv/venvs/hre-edit/bin/python",
+            "-m",
+            "hre.v3.worker",
+            "--serve"
+          ],
+          "timeout_seconds": 1800,
+          "keep_other_workers": false
+        }
+      },
+      "editor": {
+        "model_id": "FireRedTeam/FireRed-Image-Edit-1.1",
+        "local_path": "/srv/models/firered11",
+        "revision": "SET_ACTUAL_40_HEX_CHECKPOINT_REVISION",
+        "device": "cuda:0",
+        "torch_dtype": "bfloat16",
+        "pipeline_version": "0.42.0.dev0",
+        "settings": {
+          "num_inference_steps": 40,
+          "true_cfg_scale": 4.0,
+          "negative_prompt": " ",
+          "num_images_per_prompt": 1
+        },
+        "worker": {
+          "command": [
+            "/srv/venvs/hre-edit/bin/python",
+            "-m",
+            "hre.v3.worker",
+            "--serve"
+          ],
+          "timeout_seconds": 1800,
+          "keep_other_workers": false
+        }
+      }
+    },
+    "flux3_klein": {
+      "compiler": {
+        "backend": "flux3_pup_local",
+        "settings": {},
+        "model_id": "black-forest-labs/flux-3-image-klein-pup",
+        "local_path": "/srv/models/flux3_klein_compiler",
+        "revision": "SET_ACTUAL_40_HEX_CHECKPOINT_REVISION",
+        "device": "cuda:0",
+        "torch_dtype": "bfloat16",
+        "worker": {
+          "command": [
+            "/srv/venvs/hre-edit/bin/python",
+            "-m",
+            "hre.v3.worker",
+            "--serve"
+          ],
+          "timeout_seconds": 1800,
+          "keep_other_workers": false
+        }
+      },
+      "editor": {
+        "model_id": "black-forest-labs/flux-3-image-klein",
+        "local_path": "/srv/models/flux3_klein",
+        "revision": "SET_ACTUAL_40_HEX_CHECKPOINT_REVISION",
+        "device": "cuda:0",
+        "torch_dtype": "bfloat16",
+        "pipeline_version": "0.42.0.dev0",
+        "settings": {
+          "num_inference_steps": 16,
+          "num_images_per_prompt": 1,
+          "geometry_policy": "explicit_canvas"
+        },
+        "worker": {
+          "command": [
+            "/srv/venvs/hre-edit/bin/python",
+            "-m",
+            "hre.v3.worker",
+            "--serve"
+          ],
+          "timeout_seconds": 1800,
+          "keep_other_workers": false
+        }
+      }
+    },
+    "fibo2_dev": {
+      "compiler": {
+        "backend": "fibo2_thales_local_openai",
+        "settings": {},
+        "upstream_path": "/srv/upstream/fibo2_dev",
+        "upstream_revision": "8211c2cdbc4c1a2bd78b51e40ffbc8e6c751f6f8",
+        "endpoint": {
+          "base_url": "http://127.0.0.1:8000/v1",
+          "model": "SET_LOCAL_VLM_DEPLOYMENT_NAME",
+          "timeout_seconds": 600,
+          "response_format": "json_object",
+          "settings": {
+            "temperature": 0,
+            "max_tokens": 8192
+          }
+        },
+        "worker": {
+          "command": [
+            "/srv/venvs/hre-edit/bin/python",
+            "-m",
+            "hre.v3.worker",
+            "--serve"
+          ],
+          "timeout_seconds": 1800,
+          "keep_other_workers": false
+        }
+      },
+      "editor": {
+        "model_id": "briaai/Fibo-2.0-dev",
+        "local_path": "/srv/models/fibo2_dev",
+        "revision": "SET_ACTUAL_40_HEX_CHECKPOINT_REVISION",
+        "device": "cuda:0",
+        "torch_dtype": "bfloat16",
+        "pipeline_version": "0.42.0.dev0",
+        "settings": {
+          "num_inference_steps": 50,
+          "guidance_scale": 5.0,
+          "num_images_per_prompt": 1,
+          "fonts": [],
+          "render_text_images": true
+        },
+        "worker": {
+          "command": [
+            "/srv/venvs/hre-edit/bin/python",
+            "-m",
+            "hre.v3.worker",
+            "--serve"
+          ],
+          "timeout_seconds": 1800,
+          "keep_other_workers": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+# Separate Qwen PE Transformers environment; no vLLM dependency is used here.
+# Version source: QwenLM/Qwen-Image-2.1@ab96caa944157ca28a4f36b695c3047549f48f98
+# Install torch==2.10.0 and torchvision==0.25.0 for the server's CUDA build first.
+transformers==5.4.0
+tokenizers==0.22.1
+huggingface_hub==1.27.0
+accelerate==1.11.0
+Pillow==11.1.0
+tqdm==4.67.1
+json-repair

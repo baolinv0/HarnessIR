@@ -1,0 +1,118 @@
+{
+  "schema_version": "front_camera_environment_v1",
+  "status": "NOT_RUN",
+  "experiment_id": null,
+  "run_start_utc": null,
+  "run_end_utc": null,
+  "git_commit": null,
+  "git_dirty": null,
+  "gpu": {
+    "models": [],
+    "count": null,
+    "memory_gib_per_gpu": null,
+    "driver": null,
+    "cuda": null,
+    "other_workloads": null
+  },
+  "environments": {
+    "image": {
+      "python": null,
+      "torch": null,
+      "diffusers_commit": null,
+      "transformers": null,
+      "freeze_file": null
+    },
+    "qwen_pe": {
+      "python": null,
+      "torch": null,
+      "transformers": null,
+      "freeze_file": null
+    }
+  },
+  "public_stage_vlm": {
+    "model_id": null,
+    "revision": null,
+    "server_version": null,
+    "sampling": {},
+    "stage_template_hash": null,
+    "endpoint_alias": null
+  },
+  "profiles": {
+    "qwen21": {
+      "model_id": null,
+      "revision": null,
+      "weight_manifest_sha256": null,
+      "compiler_id": null,
+      "compiler_revision": null,
+      "helper_commit": null,
+      "dtype": null,
+      "quantization": null,
+      "offload": null,
+      "editor_parameters": {},
+      "compiler_parameters": {},
+      "worker_residency_policy": null
+    },
+    "firered11": {
+      "model_id": null,
+      "revision": null,
+      "weight_manifest_sha256": null,
+      "compiler_id": null,
+      "compiler_revision": null,
+      "helper_commit": null,
+      "dtype": null,
+      "quantization": null,
+      "offload": null,
+      "editor_parameters": {},
+      "compiler_parameters": {},
+      "worker_residency_policy": null
+    },
+    "flux3_klein": {
+      "model_id": null,
+      "revision": null,
+      "weight_manifest_sha256": null,
+      "compiler_id": null,
+      "compiler_revision": null,
+      "helper_commit": null,
+      "dtype": null,
+      "quantization": null,
+      "offload": null,
+      "editor_parameters": {},
+      "compiler_parameters": {},
+      "worker_residency_policy": null
+    },
+    "fibo2_dev": {
+      "model_id": null,
+      "revision": null,
+      "weight_manifest_sha256": null,
+      "compiler_id": null,
+      "compiler_revision": null,
+      "helper_commit": null,
+      "dtype": null,
+      "quantization": null,
+      "offload": null,
+      "editor_parameters": {},
+      "compiler_parameters": {},
+      "worker_residency_policy": null
+    }
+  },
+  "input_contract": {
+    "dataset_lock_sha256": null,
+    "source_export_recipe": null,
+    "reference_export_recipe": null,
+    "geometry_policy": "pad",
+    "grid": 32,
+    "spatial_mode": "full_frame",
+    "source_test_resolution_rule": null,
+    "reference_test_resolution_rule": null
+  },
+  "review": {
+    "rater_count": null,
+    "display_model": null,
+    "display_sdr_mode": null,
+    "icc_profile": null,
+    "ambient_light": null,
+    "fit_and_crop_rule": null,
+    "randomization_seed": 20261024
+  },
+  "notes": "Fill actual identities and settings; do not include tokens, passwords or secret values. Null means not recorded, not default."
+}

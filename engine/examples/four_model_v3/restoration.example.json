@@ -1,0 +1,26 @@
+{
+  "schema_version": "hre_task_v3",
+  "case_id": "restoration_001",
+  "task_mode": "restoration",
+  "profile_id": "qwen21",
+  "strategy": "model_aware",
+  "source": {
+    "path": "/data/source.png"
+  },
+  "brief": "Remove visible motion blur and noise while preserving identities, lettering, structure and composition. Do not invent unreadable text.",
+  "geometry": {
+    "policy": "pad",
+    "grid": 32
+  },
+  "spatial": {
+    "mode": "full_frame"
+  },
+  "alpha_policy": "require_opaque",
+  "policy": {
+    "mode": "single",
+    "max_generations": 1,
+    "seed_schedule": [
+      42
+    ]
+  }
+}

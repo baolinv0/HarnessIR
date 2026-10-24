@@ -1,0 +1,1 @@
+﻿batch,case_root,model,arm,seed,gpu_id,wall_seconds,load_seconds,compiler_seconds,image_seconds,stage_seconds,shared_planning_seconds,peak_vram_mib,vram_measurement_method,measurement_interval_seconds,concurrent_gpu_work,notes

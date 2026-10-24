@@ -1,0 +1,6 @@
+Unmodified edit.json from Bria-AI/vgl (MIT), commit
+8211c2cdbc4c1a2bd78b51e40ffbc8e6c751f6f8.
+https://github.com/Bria-AI/vgl/blob/8211c2cdbc4c1a2bd78b51e40ffbc8e6c751f6f8/src/bria_vgl/dialects/thales/output_schema/edit.json
+
+This fixture tests the complete native schema rather than a reduced local
+replacement. It contains the upstream uppercase Gemini types and nullable keys.
