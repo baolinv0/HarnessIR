@@ -2,6 +2,8 @@
 
 日期：2026-10-24；版本：1.0；状态：计划与空白模板，未在服务器执行。
 
+**范围说明：本目录保留为 VLM 调用校准专题。完整项目验证请以 [五阶段完整实验](../full_stage_validation_20261024/README.md) 为主，其中 C/E 为必测，覆盖四种编辑器。已有校准结果可复用。**
+
 目的：为 Qwen3.8-27B、Qwen3-VL-32B-Instruct、Qwen3-VL-8B-Instruct 选择合理调用方式，分别测诊断 D、规划 P、判别 J；可选用固定 Qwen-Image-2.1 做 C/E 验证。不是四种图像编辑器的横向 benchmark。
 
 1. 按 [实验计划](EXPERIMENT_PLAN.md) 的 S0→S4 执行，每一步都可单独返回结果。
