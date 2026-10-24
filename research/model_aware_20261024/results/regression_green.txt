@@ -1,0 +1,15 @@
+test_both_arms_omitting_a_frozen_sample_is_rejected (test_paired_analysis.PairedAnalysisTests.test_both_arms_omitting_a_frozen_sample_is_rejected) ... ok
+test_error_rows_cannot_become_zero_scores (test_paired_analysis.PairedAnalysisTests.test_error_rows_cannot_become_zero_scores) ... ok
+test_interaction_uses_within_scene_difference_of_policy_effects (test_paired_analysis.PairedAnalysisTests.test_interaction_uses_within_scene_difference_of_policy_effects) ... ok
+test_replicates_are_averaged_within_scene_before_bootstrap (test_paired_analysis.PairedAnalysisTests.test_replicates_are_averaged_within_scene_before_bootstrap) ... ok
+test_unmatched_rows_cannot_silently_change_the_paired_cohort (test_paired_analysis.PairedAnalysisTests.test_unmatched_rows_cannot_silently_change_the_paired_cohort) ... ok
+test_archiving_failure_is_explicit_without_discarding_generation (test_restoration_audit.RestorationAuditTests.test_archiving_failure_is_explicit_without_discarding_generation) ... ok
+test_baseline_keeps_same_native_receipt_contract (test_restoration_audit.RestorationAuditTests.test_baseline_keeps_same_native_receipt_contract) ... ok
+test_downstream_write_failure_retains_successful_raw_receipt (test_restoration_audit.RestorationAuditTests.test_downstream_write_failure_retains_successful_raw_receipt) ... ok
+test_execute_keeps_native_output_before_normalizing (test_restoration_audit.RestorationAuditTests.test_execute_keeps_native_output_before_normalizing) ... ok
+test_multi_type_verifier_preserves_both_checklists (test_restoration_audit.RestorationAuditTests.test_multi_type_verifier_preserves_both_checklists) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.020s
+
+OK

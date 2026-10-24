@@ -23,6 +23,7 @@ near-miss size shifts the whole crop box.
 """
 from __future__ import annotations
 
+import hashlib
 import time
 from pathlib import Path
 
@@ -88,6 +89,37 @@ def prepare_lq(lq_path: str | Path, out_dir: Path) -> tuple[Path, dict]:
     }
 
 
+def archive_native_output(img: Image.Image, out_dir: Path, filename: str,
+                          send_path: str, input_size: tuple[int, int]) -> dict:
+    """Keep the decoded editor output before harness geometry/colour changes.
+
+    This is the image returned by ``edit``, not the original HTTP response bytes.
+    Archiving has no effect on the pixels delivered by the existing pipeline.
+    """
+    raw_path = out_dir / "raw_outputs" / filename
+    receipt = {
+        "raw_path": None,
+        "raw_sha256": None,
+        "raw_output_size": list(img.size),
+        "executor_input": send_path,
+        "executor_input_size": list(input_size),
+        "geometry_normalized": img.size != input_size,
+        "native_archive_complete": False,
+        "archive_error": None,
+    }
+    try:
+        raw_path.parent.mkdir(parents=True, exist_ok=True)
+        img.save(raw_path)
+        receipt.update(raw_path=str(raw_path),
+                       raw_sha256=hashlib.sha256(raw_path.read_bytes()).hexdigest(),
+                       native_archive_complete=True)
+    except OSError as exc:
+        # A failed audit write must be visible but must not discard a generation
+        # that can still be delivered. Such a run is ineligible as complete evidence.
+        receipt["archive_error"] = f"{type(exc).__name__}: {exc}"
+    return receipt
+
+
 def run_execute(mfm, lq_path: str | Path, prompt: str, out_dir: Path,
                 *, filename: str = "output.png",
                 crop_back: tuple[tuple[int, int], float] | None = None) -> dict:
@@ -109,6 +141,7 @@ def run_execute(mfm, lq_path: str | Path, prompt: str, out_dir: Path,
         input_size = im.size
     out_path = out_dir / filename
     send_path = str(lq_path)
+    native = {}
 
     try:
         if crop_back is not None:
@@ -121,6 +154,8 @@ def run_execute(mfm, lq_path: str | Path, prompt: str, out_dir: Path,
             input_size = (settings.SQUARE, settings.SQUARE)
 
         img = mfm.edit([send_path], prompt)
+        native = archive_native_output(img, out_dir, Path(filename).name,
+                                       send_path, input_size)
 
         if crop_back is not None:
             # The executor picks its own output size from the aspect ratio, so
@@ -133,6 +168,7 @@ def run_execute(mfm, lq_path: str | Path, prompt: str, out_dir: Path,
 
         img.save(out_path)
         return {
+            **native,
             "path": str(out_path),
             "elapsed_sec": round(time.perf_counter() - t0, 1),
             "n_pictures": 1,
@@ -142,6 +178,7 @@ def run_execute(mfm, lq_path: str | Path, prompt: str, out_dir: Path,
         }
     except Exception as e:                    # noqa: BLE001 - record, do not raise
         return {
+            **native,
             "path": None,
             "elapsed_sec": round(time.perf_counter() - t0, 1),
             "n_pictures": 1,

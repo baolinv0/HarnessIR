@@ -1,0 +1,38 @@
+{
+  "source_revision": "d64b3fc51d30944b6750326f3aeadecd2006ed8d",
+  "archive": "dataset.zip",
+  "entry": "dataset/Real-NoGT-200/LQ/Low-Light/night_0043_acdc-night.png",
+  "sha256": "6229dee35553144eaf0f8822f0c69bf4bf0effe35b3b3e1f1eea365b0338a8f3",
+  "size": [
+    1024,
+    1024
+  ],
+  "rois": {
+    "silver_car": [
+      0,
+      576,
+      384,
+      960
+    ],
+    "white_car": [
+      352,
+      480,
+      672,
+      800
+    ],
+    "light_sign": [
+      800,
+      256,
+      1024,
+      480
+    ],
+    "dark_tree": [
+      352,
+      128,
+      608,
+      384
+    ]
+  },
+  "gt_status": "unpaired",
+  "note": "ROI selected on LQ before any present-session model output; use only for development/casebook"
+}

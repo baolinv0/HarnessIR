@@ -1,0 +1,55 @@
+........................................................................ [ 15%]
+........................................................................ [ 30%]
+........................................................................ [ 46%]
+........................................................................ [ 61%]
+........................................................................ [ 76%]
+........................................................................ [ 92%]
+...............................F.F..                                     [100%]
+=================================== FAILURES ===================================
+_ RestorationAuditTests.test_archiving_failure_is_explicit_without_discarding_generation _
+
+self = <test_restoration_audit.RestorationAuditTests testMethod=test_archiving_failure_is_explicit_without_discarding_generation>
+
+    def test_archiving_failure_is_explicit_without_discarding_generation(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "lq.png"
+            Image.new("RGB", (40, 30)).save(source)
+            run = root / "run"
+            run.mkdir()
+            (run / "raw_outputs").write_text("Not a writable directory")
+            rec = run_execute(FixedEditor(), source, "Restore.", run)
+>           self.assertIsNone(rec["error"])
+E           AssertionError: "FileExistsError: [Errno 17] File exists: '/tmp/tmpga067ndi/run/raw_outputs'" is not None
+
+tests/test_restoration_audit.py:65: AssertionError
+_ RestorationAuditTests.test_downstream_write_failure_retains_successful_raw_receipt _
+
+self = <test_restoration_audit.RestorationAuditTests testMethod=test_downstream_write_failure_retains_successful_raw_receipt>
+
+    def test_downstream_write_failure_retains_successful_raw_receipt(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "lq.png"
+            Image.new("RGB", (40, 30)).save(source)
+            run = root / "run"
+            (run / "output.png").mkdir(parents=True)
+            rec = run_execute(FixedEditor(), source, "Restore.", run)
+            self.assertIsNotNone(rec["error"])
+>           self.assertIn("raw_path", rec)
+E           AssertionError: 'raw_path' not found in {'path': None, 'elapsed_sec': 0.0, 'n_pictures': 1, 'cropped_back': False, 'error': "IsADirectoryError: [Errno 21] Is a directory: '/tmp/tmpcdp6j3xm/run/output.png'"}
+
+tests/test_restoration_audit.py:79: AssertionError
+=============================== warnings summary ===============================
+tests/test_hre_storage.py::test_os_lock_serializes_processes
+tests/test_hre_storage.py::test_os_lock_serializes_processes
+tests/test_hre_storage.py::test_os_lock_serializes_processes
+tests/test_hre_storage.py::test_os_lock_serializes_processes
+  /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/multiprocessing/popen_fork.py:66: DeprecationWarning: This process (pid=5) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED engine/test_restoration_audit.py::RestorationAuditTests::test_archiving_failure_is_explicit_without_discarding_generation
+FAILED engine/test_restoration_audit.py::RestorationAuditTests::test_downstream_write_failure_retains_successful_raw_receipt
+2 failed, 466 passed, 4 warnings in 268.00s (0:04:28)

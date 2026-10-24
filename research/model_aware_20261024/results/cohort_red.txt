@@ -1,0 +1,21 @@
+test_both_arms_omitting_a_frozen_sample_is_rejected (test_paired_analysis.PairedAnalysisTests.test_both_arms_omitting_a_frozen_sample_is_rejected) ... ERROR
+test_error_rows_cannot_become_zero_scores (test_paired_analysis.PairedAnalysisTests.test_error_rows_cannot_become_zero_scores) ... ok
+test_interaction_uses_within_scene_difference_of_policy_effects (test_paired_analysis.PairedAnalysisTests.test_interaction_uses_within_scene_difference_of_policy_effects) ... ok
+test_replicates_are_averaged_within_scene_before_bootstrap (test_paired_analysis.PairedAnalysisTests.test_replicates_are_averaged_within_scene_before_bootstrap) ... ok
+test_unmatched_rows_cannot_silently_change_the_paired_cohort (test_paired_analysis.PairedAnalysisTests.test_unmatched_rows_cannot_silently_change_the_paired_cohort) ... ok
+
+======================================================================
+ERROR: test_both_arms_omitting_a_frozen_sample_is_rejected (test_paired_analysis.PairedAnalysisTests.test_both_arms_omitting_a_frozen_sample_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7d29333b7554/HarnessIR/tests/test_paired_analysis.py", line 59, in test_both_arms_omitting_a_frozen_sample_is_rejected
+    self.mod.compare(rows,'qwen','shared','aware','PSNR',1,
+  File "/workspace/scratch/7d29333b7554/HarnessIR/research/model_aware_20261024/scripts/analyze_pairs.py", line 59, in compare
+    return summarize(scene_effects(rows,model,control,treatment,metric,direction),**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'expected'
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.015s
+
+FAILED (errors=1)

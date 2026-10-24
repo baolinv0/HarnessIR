@@ -1,0 +1,7 @@
+single_image_contract: condition_inputs: This version requires exactly A and B, without editor masks
+profile: flux3_klein mode= full_frame_A_B compilers= ['native'] status= declared_not_measured validated= []
+profile: fibo2_dev mode= full_frame_A_B compilers= ['native'] status= declared_not_measured validated= []
+profile: qwen21 mode= full_frame_A_B compilers= ['native', 'direct'] status= declared_not_measured validated= []
+profile: firered11 mode= full_frame_A_B compilers= ['native', 'direct'] status= declared_not_measured validated= []
+runtime_imports: {'torch': False, 'diffusers': False, 'transformers': False}
+native_is_not_synthesized: condition_compiler: The native compiler must run externally; no native output is synthesized

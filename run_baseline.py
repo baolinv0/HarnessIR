@@ -35,7 +35,7 @@ from harness import settings                                    # noqa: E402
 from harness.clients import make_mfm                            # noqa: E402
 from harness.layout import collect_result, result_exists        # noqa: E402
 from harness.manifest import build_index, load_manifest         # noqa: E402
-from harness.stages.execute import crop_black_border, pad_to_square  # noqa: E402
+from harness.stages.execute import archive_native_output, crop_black_border, pad_to_square  # noqa: E402
 from harness.utils import write_json                            # noqa: E402
 
 DEFAULT_PROMPT = ("Restore this low-quality image to a clear, clean and natural "
@@ -77,6 +77,8 @@ def _run_one(mfm, sid: str, item: dict, out_dir: Path, results_dir: Path, *,
             input_size = original_size
 
         img = mfm.edit([str(staged)], rec["prompt"])
+        rec.update(archive_native_output(img, out_dir, f"{sid}.png",
+                                         str(staged), input_size))
 
         if square1024:
             # The executor chooses its own output size from the aspect ratio, so

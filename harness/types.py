@@ -183,7 +183,7 @@ def conflict_rules(types: list[str], voice: str = "compose") -> str:
     verifier (stage 5). The physics is identical, only the addressee differs.
     """
     if voice == "verify":
-        return (_RULES_HEAD.strip() + "\n\n" + _colour_clause_judge(types) + "\n"
+        return (_RULES_HEAD.strip() + "\n\n" + _colour_clause_verify(types) + "\n"
                 + _RULES_TAIL_JUDGE.rstrip())
     return (_RULES_HEAD.strip() + "\n\n" + _colour_clause(types) + "\n"
             + _RULES_TAIL.rstrip())

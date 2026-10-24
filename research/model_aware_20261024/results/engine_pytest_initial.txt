@@ -1,0 +1,159 @@
+........................................................................ [ 15%]
+........................................................................ [ 31%]
+........................................................................ [ 47%]
+.............................F.......................................... [ 62%]
+...................................F.................................... [ 78%]
+...............................F.....F.FFF.............................. [ 94%]
+...........................                                              [100%]
+=================================== FAILURES ===================================
+___________________ test_builtin_cli_runs_through_transport ____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_builtin_cli_runs_through_0')
+local_endpoint = ([], {'choices': [{'message': {'content': '{"payload":{"observed":"ok"}}'}}]})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2a8c124170>
+
+    def test_builtin_cli_runs_through_transport(tmp_path, local_endpoint, monkeypatch):
+        observed, _ = local_endpoint
+        monkeypatch.setenv("PYTHONPATH", str(Path(__file__).parents[1] / "src"))
+        request, response = paths(tmp_path)
+        request.write_text(json.dumps(envelope(tmp_path)))
+>       result = run_worker([sys.executable, "-m", "hre.model_workers"], request, response, timeout=10)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+engine/tests/test_hre_model_workers.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+command = ['/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python', '-m', 'hre.model_workers']
+request_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_builtin_cli_runs_through_0/request.json')
+response_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_builtin_cli_runs_through_0/response.json')
+timeout = 10
+
+    def run_worker(command: list[str], request_path: Path, response_path: Path, *, timeout: float) -> dict:
+        """Run one worker without a shell or retries, retaining logs and invocation status.
+    
+        The returned dict is exactly the worker response. Sidecars use the response
+        stem: ``.stdout.log``, ``.stderr.log``, and ``.invocation.json``. A response
+        that already exists is rejected so an old result cannot satisfy a new call.
+        The caller is responsible for unique task directories and resume policy.
+        """
+        if (not isinstance(command, list) or not command or
+                any(not isinstance(item, str) or not item or "\0" in item for item in command)):
+            raise HREError("worker_command_invalid", "Use a non-empty argument list, not a shell command string")
+        if not isinstance(timeout, (int, float)) or isinstance(timeout, bool) or not math.isfinite(timeout) or timeout <= 0:
+            raise HREError("worker_timeout_invalid", "Worker timeout must be a positive finite number")
+        if shutil.which(command[0]) is None:
+            raise HREError("worker_command_missing", "Worker executable was not found or is not executable")
+        request_path, response_path = Path(request_path).resolve(), Path(response_path).resolve()
+        if not request_path.is_file():
+            raise HREError("worker_request_missing", "Worker request file does not exist")
+        if response_path.exists():
+            raise HREError("worker_response_exists", "Use a new response path for each invocation")
+        response_path.parent.mkdir(parents=True, exist_ok=True)
+        receipt_path = response_path.with_suffix(".invocation.json")
+        receipt = {"schema_version": "hre_worker_invocation_v1", "started_at": now(),
+                   "finished_at": None, "status": "running", "returncode": None,
+                   "timeout_seconds": timeout, "attempts": 1}
+        _write_json(receipt_path, receipt)
+        started = time.monotonic()
+        try:
+            with response_path.with_suffix(".stdout.log").open("wb") as stdout, \
+                    response_path.with_suffix(".stderr.log").open("wb") as stderr:
+                try:
+                    process = subprocess.Popen(
+                        command + ["--request", str(request_path), "--response", str(response_path)],
+                        stdout=stdout, stderr=stderr, stdin=subprocess.DEVNULL,
+                        shell=False, start_new_session=(os.name=='posix'),
+                    )
+                    try:
+                        process.wait(timeout=timeout)
+                    except subprocess.TimeoutExpired:
+                        if os.name=='posix':
+                            try:os.killpg(process.pid,signal.SIGKILL)
+                            except ProcessLookupError:pass
+                        else:process.kill()
+                        process.wait()
+                        raise
+                except subprocess.TimeoutExpired as exc:
+                    raise HREError("worker_timeout", "Worker exceeded its timeout; no retry was made") from exc
+                except OSError as exc:
+                    raise HREError("worker_start_failed", "Worker could not be started") from exc
+            receipt["returncode"] = process.returncode
+            if process.returncode != 0:
+>               raise HREError("worker_exit_error", f"Worker exited with status {process.returncode}; see stderr log")
+E               hre.models.HREError: worker_exit_error: Worker exited with status 1; see stderr log
+
+engine/src/hre/model_workers.py:94: HREError
+__________ test_v2_panel_shows_unprobed_mask_without_enabling_control __________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_v2_panel_shows_unprobed_m0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2a8c126900>
+
+    def test_v2_panel_shows_unprobed_mask_without_enabling_control(tmp_path,monkeypatch):
+        from hre.reference_contracts import create_reference_case
+>       from streamlit.testing.v1 import AppTest
+E       ModuleNotFoundError: No module named 'streamlit'
+
+engine/tests/test_hre_reference_ui.py:8: ModuleNotFoundError
+______________ test_streamlit_renders_real_case_and_pause_resume _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_streamlit_renders_real_ca0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2a8c152120>
+
+    def test_streamlit_renders_real_case_and_pause_resume(tmp_path,monkeypatch):
+>       from streamlit.testing.v1 import AppTest
+E       ModuleNotFoundError: No module named 'streamlit'
+
+engine/tests/test_hre_ui.py:17: ModuleNotFoundError
+_______ test_streamlit_analysis_displays_task_without_candidate_controls _______
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_streamlit_analysis_displa0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2a87f11670>
+
+    def test_streamlit_analysis_displays_task_without_candidate_controls(tmp_path,monkeypatch):
+>       from streamlit.testing.v1 import AppTest
+E       ModuleNotFoundError: No module named 'streamlit'
+
+engine/tests/test_hre_ui.py:49: ModuleNotFoundError
+___ test_streamlit_execution_exposes_extra_uploads_and_explicit_order_table ____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_streamlit_execution_expos0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2a87f126c0>
+
+    def test_streamlit_execution_exposes_extra_uploads_and_explicit_order_table(tmp_path,monkeypatch):
+>       from streamlit.testing.v1 import AppTest
+E       ModuleNotFoundError: No module named 'streamlit'
+
+engine/tests/test_hre_ui.py:76: ModuleNotFoundError
+_ test_streamlit_explicit_new_generation_retry_after_failure_or_confirmed_release[True] _
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_streamlit_explicit_new_ge0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2a87f10590>
+failed = True
+
+    @pytest.mark.parametrize('failed',[True,False])
+    def test_streamlit_explicit_new_generation_retry_after_failure_or_confirmed_release(tmp_path,monkeypatch,failed):
+>       from streamlit.testing.v1 import AppTest
+E       ModuleNotFoundError: No module named 'streamlit'
+
+engine/tests/test_hre_ui.py:87: ModuleNotFoundError
+_ test_streamlit_explicit_new_generation_retry_after_failure_or_confirmed_release[False] _
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_streamlit_explicit_new_ge1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2a87f13f80>
+failed = False
+
+    @pytest.mark.parametrize('failed',[True,False])
+    def test_streamlit_explicit_new_generation_retry_after_failure_or_confirmed_release(tmp_path,monkeypatch,failed):
+>       from streamlit.testing.v1 import AppTest
+E       ModuleNotFoundError: No module named 'streamlit'
+
+engine/tests/test_hre_ui.py:87: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED engine/tests/test_hre_model_workers.py::test_builtin_cli_runs_through_transport
+FAILED engine/tests/test_hre_reference_ui.py::test_v2_panel_shows_unprobed_mask_without_enabling_control
+FAILED engine/tests/test_hre_ui.py::test_streamlit_renders_real_case_and_pause_resume
+FAILED engine/tests/test_hre_ui.py::test_streamlit_analysis_displays_task_without_candidate_controls
+FAILED engine/tests/test_hre_ui.py::test_streamlit_execution_exposes_extra_uploads_and_explicit_order_table
+FAILED engine/tests/test_hre_ui.py::test_streamlit_explicit_new_generation_retry_after_failure_or_confirmed_release[True]
+FAILED engine/tests/test_hre_ui.py::test_streamlit_explicit_new_generation_retry_after_failure_or_confirmed_release[False]
+7 failed, 452 passed in 260.13s (0:04:20)

@@ -1,0 +1,15 @@
+{
+  "python": "3.12.14",
+  "system": "Linux",
+  "machine": "x86_64",
+  "runtime_dependencies": {
+    "torch": false,
+    "diffusers": false,
+    "transformers": false,
+    "numpy": true,
+    "PIL": true
+  },
+  "model_calls": 0,
+  "api_settings_configured": false,
+  "note": "Light test dependencies isolated in scratch; no model weights downloaded. No credential values persisted."
+}
