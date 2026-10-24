@@ -1,0 +1,42 @@
+{
+  "schema_version": "hre_batch_v3",
+  "models": [
+    "qwen21",
+    "firered11",
+    "flux3_klein",
+    "fibo2_dev"
+  ],
+  "arms": [
+    {
+      "name": "native",
+      "strategy": "native",
+      "policy": "single"
+    },
+    {
+      "name": "shared",
+      "strategy": "shared",
+      "policy": "single"
+    },
+    {
+      "name": "model_aware",
+      "strategy": "model_aware",
+      "policy": "single"
+    }
+  ],
+  "seeds": [
+    42
+  ],
+  "share_planning": true,
+  "cases": [
+    {
+      "id": "sample001",
+      "task_mode": "restoration",
+      "source": "/data/source.png",
+      "brief": "Remove visible motion blur and noise while preserving identities, lettering, structure and composition. Do not invent unreadable text.",
+      "geometry": {
+        "policy": "pad",
+        "grid": 32
+      }
+    }
+  ]
+}

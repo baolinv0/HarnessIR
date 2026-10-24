@@ -242,11 +242,16 @@ def build_parser() -> argparse.ArgumentParser:
         else:p.add_argument('--ratings',type=Path,required=True)
     from .reference_cli import add_v2_parser
     add_v2_parser(groups)
+    from .v3.cli import add_models_parser
+    add_models_parser(groups)
     return parser
 
 
 def dispatch(args):
     from hre.storage import read_json
+    if args.command=='models':
+        from .v3.cli import dispatch_models
+        return dispatch_models(args)
     if args.command=='v2':
         from .reference_cli import dispatch_v2
         return dispatch_v2(args)
