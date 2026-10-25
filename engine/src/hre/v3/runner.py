@@ -19,7 +19,8 @@ from ..storage import case_lock, read_json, write_json
 from .common import digest, require
 from .runner_journal import Journal, immutable_json
 from .stages import (SCHEMAS, TEMPLATE_VERSION, collect_basic_evidence, evidence_refs,
-                     run_stage, stage_instruction, validate_intent, validate_payload)
+                     run_stage, stage_instruction, stage_template, validate_intent, validate_payload)
+from . import reference_retouch
 
 
 class _UnknownSubmission(HREError):
@@ -72,11 +73,16 @@ def shared_intent_artifact(spec: dict, state: dict, intent: dict, provenance: di
     if planning is not None:
         result["planning"] = deepcopy(planning)
         result["planning_sha256"] = digest(planning)
+    if reference_retouch.enabled(spec):
+        result.update(workflow_contract=spec["workflow_contract"],
+                      reference_contract_sha256=digest(reference_retouch.frozen_contract(intent)))
     return result
 
 
 def import_shared_intent(path: Path, spec: dict, state: dict) -> dict:
     value = read_json(path)
+    require(value.get("workflow_contract") == spec.get("workflow_contract"),
+            "shared_contract_version", "Shared planning belongs to another workflow contract")
     require(value.get("schema_version") == "hre_shared_intent_v3"
             and value.get("task_mode") == spec["task_mode"]
             and value.get("brief_sha256") == sha256_bytes(spec["brief"].encode())
@@ -95,6 +101,7 @@ def import_shared_intent(path: Path, spec: dict, state: dict) -> dict:
         diagnosis, evidence = planning.get("diagnosis"), planning.get("evidence")
         if diagnosis is not None:
             validate_payload("diagnose", diagnosis, {"task_mode": spec["task_mode"],
+                **({"workflow_contract": spec["workflow_contract"]} if reference_retouch.enabled(spec) else {}),
                 "context": {"available_evidence_refs": evidence_refs(state["inputs"])}})
         if evidence is not None:
             require(isinstance(evidence, dict) and evidence.get("schema_version") == "hre_evidence_v3"
@@ -112,6 +119,15 @@ def import_shared_intent(path: Path, spec: dict, state: dict) -> dict:
         # Older explicitly supplied artifacts may contain the intent alone.
         # Their original references remain provenance, not newly measured tools.
         allowed = None
+    if reference_retouch.enabled(spec):
+        require(isinstance(value.get("planning", {}).get("diagnosis"), dict),
+                "shared_reference_diagnosis", "Reference planning requires its bound diagnosis")
+        intent = validate_payload("compose", value["intent"], {"workflow_contract": spec["workflow_contract"],
+            "task_mode": spec["task_mode"], "context": {"diagnosis": value["planning"]["diagnosis"],
+                "available_evidence_refs": sorted(allowed or [])}})
+        require(value.get("reference_contract_sha256") == digest(reference_retouch.frozen_contract(intent)),
+                "shared_reference_contract", "Shared evaluation contract hash differs")
+        return intent
     return validate_intent(value["intent"], spec["task_mode"], revision=0, check_parent=True, allowed_refs=allowed)
 
 
@@ -246,8 +262,11 @@ def _stage_request(spec: dict, state: dict, stage: str, context: dict,
     request = {"schema_version": "hre_stage_request_v3", "stage": stage,
                "task_mode": spec["task_mode"], "brief": spec["brief"],
                "inputs": inputs, "canvas": state["canvas"], "context": context}
-    request["stage_template"] = {"version": TEMPLATE_VERSION, "instruction": stage_instruction(request),
-                                 "response_schema": deepcopy(SCHEMAS[stage])}
+    if reference_retouch.enabled(spec):
+        request["workflow_contract"] = spec["workflow_contract"]
+        if candidate and stage == "verify":
+            request["inputs"].append({**deepcopy(candidate["native"]), "role": "candidate_native"})
+    request["stage_template"] = stage_template(request)
     request["request_id"] = digest(request)
     return request
 
@@ -282,14 +301,59 @@ def _get_round(state: dict) -> dict:
 
 def _accepted(candidate: dict, spec: dict) -> bool:
     verification = candidate.get("verification")
+    if reference_retouch.enabled(spec):
+        if not candidate.get("delivery_assessment", {}).get("pass", False):
+            return False
     return bool(verification and candidate.get("geometry_valid", False)
                 and verification["verdict"] == "accept" and verification["preservation"] == "pass"
                 and verification["task_progress"] == "improved"
                 and verification["confidence"] >= spec.get("evaluation", {}).get("minimum_confidence", 0.7))
 
 
+def _reference_delivery(candidate: dict, spec: dict, canvas: dict) -> dict:
+    """Check actual native pixels independently of appearance or delivered size."""
+    requirements = spec.get("delivery_requirements", {})
+    minimum = requirements.get("minimum_native_size", [1, 1])
+    if requirements.get("require_native_source_resolution", True):
+        minimum = [max(minimum[0], canvas["width"]), max(minimum[1], canvas["height"])]
+    native = candidate["native"]
+    native_pass = native["width"] >= minimum[0] and native["height"] >= minimum[1]
+    detail = (candidate.get("verification") or {}).get("detail_preservation", "uncertain")
+    detail_pass = not requirements.get("require_detail_pass", False) or detail == "pass"
+    return {"native_size": [native["width"], native["height"]],
+            "delivered_size": [candidate["delivered"]["width"], candidate["delivered"]["height"]],
+            "minimum_native_size": minimum, "native_resolution": "pass" if native_pass else "fail",
+            "detail_preservation": detail, "detail_required": requirements.get("require_detail_pass", False),
+            "geometry": "pass" if candidate.get("geometry_valid") else "fail",
+            "pass": bool(native_pass and detail_pass and candidate.get("geometry_valid"))}
+
+
+def _freeze_reference(value: dict, root: Path) -> None:
+    contract = reference_retouch.frozen_contract(value["intent"])
+    if "reference_contract" in value["artifacts"]:
+        require(_read_ref(root, value["artifacts"]["reference_contract"]) == contract,
+                "reference_contract_changed", "Frozen evaluation contract cannot change between rounds")
+    else:
+        value["artifacts"]["reference_contract"] = _put(root, "artifacts/reference_contract.json", contract)
+
+
 def _finish(journal: Journal, spec: dict, reason: str, *, failed: bool = False) -> dict:
     value = deepcopy(journal.state)
+    if reference_retouch.enabled(spec) and reason == "already_satisfied" and not failed:
+        require(value.get("intent", {}).get("overall_status") == "already_satisfied"
+                and value["budget"]["generations"] == 0 and value["budget"]["compiler_calls"] == 0,
+                "already_satisfied_invalid", "No-edit success requires a validated contract and zero image/compiler calls")
+        _freeze_reference(value, journal.root)
+        source = _asset(value["inputs"][0])
+        delivery = _reference_delivery({"native": source, "delivered": source, "geometry_valid": True,
+            "verification": {"detail_preservation": "pass"}}, spec, value["canvas"])
+        value.update(status="completed", phase="finished", pending=None,
+                     terminal_reason=reason if delivery["pass"] else "delivery_requirements_not_met", success=delivery["pass"],
+                     selected_kind="source_already_satisfied", selected_candidate_id=None,
+                     selected_output=deepcopy(source), quality_status="already_satisfied" if delivery["pass"] else "delivery_not_met",
+                     delivery_assessment=delivery)
+        value.pop("ready_after", None)
+        return journal.commit(value, "finished", {"reason": reason, "selected_kind": value["selected_kind"]})
     candidates = value["candidates"]
     for candidate in candidates:
         _asset(candidate["native"])
@@ -392,6 +456,13 @@ def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
                     else:
                         value["phase"] = "diagnose"
                     journal.commit(value, "started", {})
+                    if reference_retouch.enabled(spec) and value.get("intent"):
+                        value = deepcopy(journal.state)
+                        _freeze_reference(value, root)
+                        journal.commit(value, "reference_contract_frozen", {})
+                        outcome = value["intent"]["overall_status"]
+                        if outcome != "ready_to_edit":
+                            _finish(journal, spec, outcome)
                 elif phase == "diagnose":
                     context = {"available_tools": ["basic_statistics"], "regions": deepcopy(spec.get("regions", [])),
                                "available_evidence_refs": evidence_refs(state["inputs"])}
@@ -401,7 +472,7 @@ def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
                     value["artifacts"]["diagnosis"] = _put(root, "artifacts/diagnosis.json", result)
                     value["phase"] = "evidence"
                     journal.commit(value, "diagnosed", {})
-                    if not result["payload"]["findings"]:
+                    if not reference_retouch.enabled(spec) and not result["payload"]["findings"]:
                         _finish(journal, spec, "no_supported_target")
                 elif phase == "evidence":
                     diagnosis = _read_ref(root, state["artifacts"]["diagnosis"])["payload"]
@@ -417,12 +488,16 @@ def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
                     value = deepcopy(journal.state)
                     value["artifacts"]["composition"] = _put(root, "artifacts/composition.json", result)
                     value["intent"] = result["payload"]
+                    if reference_retouch.enabled(spec):
+                        _freeze_reference(value, root)
                     artifact = shared_intent_artifact(spec, value, value["intent"],
                                                      {"case_id": spec["case_id"], "composition": value["artifacts"]["composition"]},
                                                      {key: _initial_context(value, root)[key] for key in ("diagnosis", "evidence")})
                     value["artifacts"]["shared_intent"] = _put(root, "artifacts/shared_intent.json", artifact)
                     value["phase"] = "condition"
                     journal.commit(value, "intent_accepted", {"intent_sha256": digest(value["intent"])})
+                    if reference_retouch.enabled(spec) and value["intent"]["overall_status"] != "ready_to_edit":
+                        _finish(journal, spec, value["intent"]["overall_status"])
                 elif phase == "condition":
                     if not any(record["round"] == state["round"] for record in state["rounds"]):
                         value = deepcopy(state)
@@ -440,6 +515,10 @@ def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
                                     "intent": deepcopy(state["intent"]), "inputs": deepcopy(state["inputs"]),
                                     "canvas": deepcopy(state["canvas"]), "spatial": deepcopy(spec["spatial"]),
                                     "seed": spec["policy"]["seed_schedule"][state["round"]]}
+                        if reference_retouch.enabled(spec):
+                            _freeze_reference(state, root)
+                            original.update(workflow_contract=spec["workflow_contract"],
+                                reference_contract_sha256=digest(_read_ref(root, state["artifacts"]["reference_contract"])))
                         original["request_id"] = digest(original)
                         immutable_json(round_dir / "original_request.json", original)
                         request = dispatch.prepare_request(original, spec, round_dir)
@@ -547,11 +626,21 @@ def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
                     context = {"evaluation": deepcopy(spec.get("evaluation", {})), "regions": deepcopy(spec.get("regions", [])),
                                "geometry_valid": candidate["geometry_valid"],
                                "available_evidence_refs": evidence_refs(state["inputs"]) + ["candidate"]}
+                    if reference_retouch.enabled(spec):
+                        initial = _initial_context(state, root, spec.get("regions", []))
+                        context.update(reference_contract=_read_ref(root, state["artifacts"]["reference_contract"]),
+                                       evidence=initial["evidence"],
+                                       available_evidence_refs=initial["available_evidence_refs"] + ["candidate", "candidate_native"],
+                                       delivery_requirements=deepcopy(spec.get("delivery_requirements", {})),
+                                       delivery_assessment=_reference_delivery(candidate, spec, state["canvas"]))
                     request = _stage_request(spec, state, "verify", context, candidate)
                     result = _stage(journal, spec, config, request, stage_fn)
                     value = deepcopy(journal.state)
                     current = next(c for c in value["candidates"] if c["candidate_id"] == candidate["candidate_id"])
                     current["verification"] = result["payload"]
+                    if reference_retouch.enabled(spec):
+                        current["appearance_status"] = result["payload"]["verdict"]
+                        current["delivery_assessment"] = _reference_delivery(current, spec, state["canvas"])
                     current["accepted"] = _accepted(current, spec)
                     _get_round(value)["verification"] = _put(root, f"rounds/{state['round']:03d}/verification.json", result)
                     journal.commit(value, "verified", {"candidate_id": candidate["candidate_id"], "accepted": current["accepted"]})
@@ -585,6 +674,8 @@ def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
                                    verification=verification, available_evidence_refs=sorted(set(refs)),
                                    actionable_feedback_refs=[f"verification:{state['round']}:{issue['id']}" for issue in verification["issues"]
                                                              if issue["suggested_change"] and issue["kind"] not in {"uncertain", "execution_contract_violation"}])
+                    if reference_retouch.enabled(spec):
+                        context["reference_contract"] = _read_ref(root, state["artifacts"]["reference_contract"])
                     request = _stage_request(spec, state, "refine", context, candidate)
                     result = _stage(journal, spec, config, request, stage_fn)
                     value = deepcopy(journal.state)

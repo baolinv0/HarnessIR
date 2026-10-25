@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Reference Lab · 参考影调工作台</title>
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#stage-content">跳到阶段内容</a>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Reference Lab 首页"><span class="brand-mark">R<span>↗</span></span><span>REFERENCE <b>LAB</b><small>参考帧 Retouch 工作台</small></span></a>
+    <div class="header-context"><span class="eyebrow">ONE SOURCE / ONE REFERENCE</span><span id="provider-label">正在读取执行配置</span></div>
+    <button class="button primary" id="new-case"><span aria-hidden="true">＋</span> 新建图像对</button>
+  </header>
+  <div class="app-layout">
+    <aside class="sidebar" aria-label="案例与阶段">
+      <label class="field-label" for="case-select">当前案例</label>
+      <select id="case-select" aria-label="选择已有案例"><option value="">正在加载…</option></select>
+      <a class="button quiet wide" href="/experiments" id="experiment-link" style="grid-column:1/-1;text-align:center;text-decoration:none">实验对照 →</a>
+      <div class="sidebar-caption">REFERENCE → APPEARANCE</div>
+      <nav id="stage-nav" aria-label="流程阶段"></nav>
+      <div class="sidebar-bottom"><span class="dot"></span><span>保留 A 的内容<br>迁移 B 的可比外观</span></div>
+      <button class="button quiet wide" id="download-report" disabled>↓ 导出完整记录</button>
+    </aside>
+    <main id="main">
+      <div id="notice" class="notice hidden" role="status" aria-live="polite"></div>
+      <section class="workspace-heading">
+        <div><p class="eyebrow" id="case-id">REFERENCE RETOUCH / GPT IMAGE 2</p><h1 id="stage-heading">把参考看清楚，<br><em>再让外观发生改变。</em></h1><p id="stage-intro" class="intro">载入源图与参考图，逐步查看分析、证据与迁移的全过程。</p></div>
+        <div class="case-summary" id="case-summary"></div>
+      </section>
+      <section id="empty-state" class="empty-state">
+        <div class="empty-pair"><span>A</span><i>→</i><span>B</span></div><h2>从一对真实照片开始</h2><p>源图提供内容，参考图提供外观。每个迁移目标都能回到参考图上的观察与证据。</p><button class="button primary" id="empty-new-case">选择源图与参考图</button><small>尚无图像时，不生成分析或效果数据。</small>
+      </section>
+      <section id="photo-section" class="hidden" aria-label="源图与参考图">
+        <div class="photo-grid">
+          <article class="photo-card" id="source-card"><header><div><span class="role-badge source">A</span><span>源图<small>内容与几何锚点</small></span></div><button class="button mini quiet draw-toggle" data-role="source" aria-pressed="false">框选区域</button></header><div class="photo-canvas" data-role="source"><img id="source-image" alt="源图 A" draggable="false"><svg class="roi-overlay" id="source-overlay" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true"></svg><div class="draw-hint hidden">拖动框选 A 的独立区域</div></div><footer id="source-meta"></footer></article>
+          <article class="photo-card" id="reference-card"><header><div><span class="role-badge reference">B</span><span>参考图<small>可迁移的摄影外观</small></span></div><button class="button mini quiet draw-toggle" data-role="reference" aria-pressed="false">框选区域</button></header><div class="photo-canvas" data-role="reference"><img id="reference-image" alt="参考图 B" draggable="false"><svg class="roi-overlay" id="reference-overlay" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true"></svg><div class="draw-hint hidden">拖动框选 B 的独立区域</div></div><footer id="reference-meta"></footer></article>
+        </div>
+        <div class="image-toolbar"><span><span class="legend-line source"></span>A 保留内容 <span class="legend-line reference"></span>B 提供外观</span><button class="text-button" id="toggle-regions">查看／编辑独立区域对应</button><button class="text-button" id="inspect-images">放大检查</button></div>
+        <div id="region-editor" class="panel region-editor hidden"><div class="section-heading"><div><p class="eyebrow">REGION CORRESPONDENCE</p><h2>分别在 A、B 中框选同一语义区域</h2></div><span class="tag">两图坐标独立</span></div><p class="muted">同一位置不代表同一内容。先点击各图的“框选区域”，再分别拖动选择。</p><div class="region-form"><label>区域说明<input id="region-description" placeholder="如：面部中间调、同材质墙面" maxlength="180"></label><label>可比性<select id="region-comparability"><option value="unknown">尚未确认</option><option value="comparable">可比较</option><option value="conditional">条件可比较</option></select></label><button class="button" id="save-region">保存区域对</button><button class="button quiet" id="clear-selection">清空框选</button></div><div class="region-attributes" id="region-attributes"><label><input type="checkbox" value="brightness" checked>亮度</label><label><input type="checkbox" value="color" checked>颜色</label><label><input type="checkbox" value="tone" checked>影调</label><label><input type="checkbox" value="saturation" checked>彩度</label></div><div id="selection-readout" class="mono muted">A：未选择 · B：未选择</div><div id="region-list"></div></div>
+      </section>
+      <section id="stage-content" tabindex="-1" aria-live="polite"></section>
+      <footer class="workspace-footer"><span>REFERENCE LAB <b>01</b></span><span id="footer-status">真实输入 · 逐步执行 · 可追溯迁移</span></footer>
+    </main>
+  </div>
+  <aside id="trace-panel" class="trace-panel hidden" aria-label="参考证据使用链"><button class="icon-button close-trace" aria-label="关闭证据链">×</button><p class="eyebrow">REFERENCE USE / TRACE</p><h2 id="trace-title">参考如何被利用</h2><div id="trace-content"></div></aside>
+  <dialog id="new-dialog"><form id="new-form"><header class="dialog-header"><div><p class="eyebrow">NEW IMAGE PAIR</p><h2>建立参考图像对</h2></div><button type="button" class="icon-button dialog-close" aria-label="关闭">×</button></header><div class="upload-grid"><label class="upload-box"><span class="role-badge source">A</span><strong>选择源图</strong><small>内容、身份与构图来源</small><input id="source-file" type="file" accept="image/png,image/jpeg,image/webp" required><span class="file-name" id="source-file-name">PNG / JPEG / WebP</span></label><label class="upload-box"><span class="role-badge reference">B</span><strong>选择参考图</strong><small>亮度、颜色与影调参考</small><input id="reference-file" type="file" accept="image/png,image/jpeg,image/webp" required><span class="file-name" id="reference-file-name">PNG / JPEG / WebP</span></label></div><label>编辑意图<textarea id="brief" rows="3" required>参考 B 的摄影色彩、亮度与影调改善 A，保留 A 的人物身份、真实纹理、文字、构图及光照方向。</textarea></label><div class="dialog-actions"><button type="button" class="button quiet dialog-close">取消</button><button class="button primary" type="submit">创建并查看输入 →</button></div></form></dialog>
+  <dialog id="import-dialog"><form id="import-form"><header class="dialog-header"><div><p class="eyebrow">OBSERVATION IMPORT</p><h2 id="import-title">导入阶段结果</h2></div><button type="button" class="icon-button dialog-close" aria-label="关闭">×</button></header><p class="muted">先导出本阶段请求，交给能看图的分析 Agent；将实际结果粘贴在此。导入会记录来源，不冒充自动模型调用。</p><label>结果来源<select id="import-provenance"><option value="manual_agent">人工导入的 Agent 分析</option><option value="human">人工观察</option></select></label><label>JSON 结果<textarea id="import-json" rows="16" class="code" required spellcheck="false" placeholder="粘贴真实阶段输出的 JSON 对象"></textarea></label><input type="file" id="import-json-file" accept="application/json,.json"><div class="dialog-actions"><button type="button" class="button quiet dialog-close">取消</button><button type="submit" class="button primary">校验并导入</button></div></form></dialog>
+  <dialog id="candidate-dialog"><form id="candidate-form"><header class="dialog-header"><div><p class="eyebrow">CANDIDATE IMPORT</p><h2>导入真实编辑结果 C</h2></div><button type="button" class="icon-button dialog-close" aria-label="关闭">×</button></header><label>候选图片<input id="candidate-file" type="file" accept="image/png,image/jpeg,image/webp" required></label><label>实际观察到的执行模型<input id="candidate-model" placeholder="如 gpt-image-2；无法确认时填写 unknown" required></label><label>调用／来源说明<textarea id="candidate-note" rows="3" required placeholder="填写实际执行方式、可观察模型身份与输入；无法确认模型时请明确说明。"></textarea></label><label>本轮实际提交的提示词（可选）<textarea id="candidate-prompt" rows="5" class="code" placeholder="粘贴这次实际使用的完整提示词；未提供时标记为未核对。"></textarea></label><label class="checkbox-field"><input id="candidate-full-frame" type="checkbox"> 外部结果保留了源图完整构图；若分辨率不同，允许缩放到源图尺寸用于对比。</label><p class="muted">原生图片始终保留。缩放不增加真实细节，也不证明几何完全一致。unknown 只作为未确认型号的外部结果记录；导入后仍须逐目标验证。</p><div class="dialog-actions"><button type="button" class="button quiet dialog-close">取消</button><button class="button primary" type="submit">导入并进入验证</button></div></form></dialog>
+  <dialog id="inspect-dialog" class="inspect-dialog"><header class="dialog-header"><div><p class="eyebrow">FULL IMAGE INSPECTION</p><h2>独立画幅检查</h2></div><button class="icon-button dialog-close" aria-label="关闭">×</button></header><div id="inspect-content" class="inspect-grid"></div><p class="muted">两图可能未对齐；放大检查不意味着像素对应。</p></dialog>
+  <div id="busy-overlay" class="busy-overlay hidden" role="status" aria-live="assertive"><span class="spinner"></span><strong id="busy-message">正在执行…</strong><small>保留页面以接收实际运行结果</small></div>
+</body>
+</html>

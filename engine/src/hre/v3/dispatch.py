@@ -20,11 +20,15 @@ def request_binding(request: dict) -> str:
                if key not in {"mask_path"}}
     if request.get("spatial", {}).get("mask_path"):
         spatial["mask_sha256"] = file_sha256(Path(request["spatial"]["mask_path"]))
-    return digest({"profile_id": request["profile_id"], "task_mode": request["task_mode"],
+    binding = {"profile_id": request["profile_id"], "task_mode": request["task_mode"],
                    "strategy": request["strategy"], "brief": request["brief"], "intent": request.get("intent"),
                    "inputs": [{key: asset[key] for key in ("role", "sha256", "width", "height", "mode")}
                               for asset in request["inputs"]],
-                   "canvas": request["canvas"], "spatial": spatial})
+                   "canvas": request["canvas"], "spatial": spatial}
+    if "workflow_contract" in request:
+        binding.update(workflow_contract=request["workflow_contract"],
+                       reference_contract_sha256=request.get("reference_contract_sha256"))
+    return digest(binding)
 
 
 def _module(profile_id: str):
