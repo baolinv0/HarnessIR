@@ -1,0 +1,348 @@
+{
+  "document_type": "engineering_handoff_template_not_runtime_schema",
+  "version": "1.0",
+  "ready_to_run": false,
+  "implementation_mapping_required": true,
+  "note": "必须绑定真实文件、独立场景、任务类型、请求、ROI和模型版本后冻结；test编号为占位符。",
+  "baseline_commit": "86284d5d190614369c4e6c47c5ad8ed021c93a35",
+  "models": [
+    "qwen21",
+    "firered11",
+    "flux3_klein",
+    "fibo2_dev",
+    "moss_sft_edit"
+  ],
+  "image_seed_schedule": {
+    "DEV": [
+      0,
+      42
+    ],
+    "TEST": [
+      42
+    ],
+    "feedback_primary": [
+      42,
+      1042
+    ],
+    "feedback_optional_third": [
+      2042
+    ]
+  },
+  "main_settings": {
+    "color_adjust": false,
+    "gamma": false,
+    "source_only": true,
+    "single_pass_arms": [
+      "D",
+      "O",
+      "A"
+    ],
+    "feedback_arms": [
+      "S",
+      "F"
+    ],
+    "feedback_primary_candidates": 2
+  },
+  "images": [
+    {
+      "image_id": "night_0043",
+      "scene_id": null,
+      "split": "DEV",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": null,
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "night_0049",
+      "scene_id": null,
+      "split": "DEV",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": null,
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "dev_03",
+      "scene_id": null,
+      "split": "DEV",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": null,
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "dev_04",
+      "scene_id": null,
+      "split": "DEV",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": null,
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "dev_05",
+      "scene_id": null,
+      "split": "DEV",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": null,
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_01",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "blur",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_02",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "blur",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_03",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "blur",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_04",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "blur",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_05",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "blur",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_06",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "lowlight",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_07",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "lowlight",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_08",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "lowlight",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_09",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "lowlight",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_10",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "lowlight",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_11",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "noise_compression",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_12",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "noise_compression",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_13",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "noise_compression",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_14",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "noise_compression",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_15",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "noise_compression",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_16",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "mixed",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_17",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "mixed",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_18",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "mixed",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_19",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "mixed",
+      "tags": [],
+      "fixed_rois": []
+    },
+    {
+      "image_id": "test_20",
+      "scene_id": null,
+      "split": "TEST",
+      "source_path": null,
+      "source_sha256": null,
+      "original_task_types": null,
+      "restoration_request": null,
+      "primary_problem": "mixed",
+      "tags": [],
+      "fixed_rois": []
+    }
+  ]
+}
