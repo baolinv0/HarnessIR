@@ -109,7 +109,8 @@ def _normalise(manifest: dict, config: dict, base: Path, *, previous_manifest: d
 
 def _task(case: dict, model: str, arm: dict, seed: int) -> dict:
     fields = {key: deepcopy(case[key]) for key in (
-        "task_mode", "source", "reference", "brief", "geometry", "spatial", "regions", "evaluation", "colour_policy", "alpha_policy"
+        "task_mode", "source", "reference", "brief", "geometry", "spatial", "regions", "evaluation", "colour_policy", "alpha_policy",
+        "workflow_contract", "delivery_requirements"
     ) if key in case}
     return {"schema_version": "hre_task_v3", "case_id": f"{case['id']}_{model}_{arm['name']}_{seed}"[:128],
             "profile_id": model, "strategy": arm["strategy"], **fields,

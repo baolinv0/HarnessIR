@@ -131,6 +131,9 @@ def validate_intent(intent: dict, task_mode: str, *, revision: int | None = None
 
 
 def validate_payload(stage: str, payload: dict, request: dict) -> dict:
+    from . import reference_retouch
+    if reference_retouch.enabled(request):
+        return reference_retouch.validate_payload(stage, payload, request)
     require(stage in SCHEMAS, "stage_unknown", str(stage))
     _schema_check(SCHEMAS[stage], payload, "stage_payload_invalid")
     context = request.get("context", {})
@@ -234,6 +237,9 @@ def collect_basic_evidence(inputs: list[dict], *, requested: bool = True,
 
 
 def stage_instruction(request: dict) -> str:
+    from . import reference_retouch
+    if reference_retouch.enabled(request):
+        return reference_retouch.stage_instruction(request)
     stage = request["stage"]
     require(stage in SCHEMAS and request["task_mode"] in MODES, "stage_unknown", "Unknown stage or task")
     common = (
@@ -257,12 +263,20 @@ def stage_instruction(request: dict) -> str:
     return common + instructions[stage]
 
 
+def stage_template(request: dict) -> dict:
+    """Select an opt-in template without changing legacy request identities."""
+    from . import reference_retouch
+    selected = reference_retouch if reference_retouch.enabled(request) else None
+    return {"version": selected.TEMPLATE_VERSION if selected else TEMPLATE_VERSION,
+            "instruction": stage_instruction(request),
+            "response_schema": deepcopy((selected.SCHEMAS if selected else SCHEMAS)[request["stage"]])}
+
+
 def run_stage(request: dict, endpoint: dict) -> dict:
     """One actual VLM request; preserve returned text and provenance on errors."""
     stage = request["stage"]
-    instruction = stage_instruction(request)
-    schema = SCHEMAS[stage]
-    expected_template = {"version": TEMPLATE_VERSION, "instruction": instruction, "response_schema": schema}
+    expected_template = stage_template(request)
+    instruction, schema = expected_template["instruction"], expected_template["response_schema"]
     frozen_template = request.get("stage_template", expected_template)
     require(frozen_template == expected_template, "stage_template_changed",
             "Frozen stage instructions/schema differ from this implementation; restore its version or create a new case")
@@ -275,7 +289,7 @@ def run_stage(request: dict, endpoint: dict) -> dict:
         content.append(image_message(asset["path"]))
     observation = chat(endpoint, [{"role": "system", "content": instruction},
                                   {"role": "user", "content": content}], response_schema=schema)
-    observation = {**observation, "stage": stage, "template_version": TEMPLATE_VERSION,
+    observation = {**observation, "stage": stage, "template_version": expected_template["version"],
                    "template_sha256": digest(frozen_template),
                    "stage_request_id": request["request_id"],
                    "stage_request_sha256": digest(request)}

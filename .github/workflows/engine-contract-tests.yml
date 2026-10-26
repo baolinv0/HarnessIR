@@ -1,0 +1,32 @@
+name: Engine contracts
+
+on:
+  pull_request:
+  push:
+    branches:
+      - codex/reference-retouch-contract-20261026
+
+permissions:
+  contents: read
+
+jobs:
+  cpu-contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: engine/requirements-lock.txt
+      - run: python -m pip install -r engine/requirements-lock.txt
+      - run: python -m pip install --no-deps -e ./engine
+      - name: CPU contracts and legacy regression
+        run: python -m pytest engine/tests -q --durations=15 -o faulthandler_timeout=120
+      - name: Workbench JavaScript
+        run: |
+          node --check engine/src/hre/retouch/static/app.js
+          node --check engine/src/hre/retouch/static/experiments.js

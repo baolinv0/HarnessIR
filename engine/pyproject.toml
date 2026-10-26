@@ -14,10 +14,11 @@ test = ["pytest>=8"]
 
 [project.scripts]
 hre = "hre.cli:main"
+hre-retouch = "hre.retouch.__main__:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
 hre = ["resources/schemas/*.json", "resources/config/*.json", "resources/prompts/*.j2", "resources/v2/*.json", "resources/v2/prompts/*.j2", "resources/model_profiles/*.json"]
-
+"hre.retouch" = ["static/*.html", "static/*.js", "static/*.css", "templates/*.md"]

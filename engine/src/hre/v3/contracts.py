@@ -165,6 +165,8 @@ def normalise_spec(spec: dict) -> dict:
     require(isinstance(value["evaluation"], dict), "evaluation_invalid", "Freeze an evaluation contract object")
     if value.get("shared_intent"):
         require(value["strategy"] != "native", "native_intent_forbidden", "Native baseline cannot import a shared intent")
+    from .reference_retouch import validate_spec
+    validate_spec(value)
     return value
 
 
@@ -293,6 +295,13 @@ def validate_request(request: dict) -> None:
             "input_roles_invalid", "Input roles and order must match the task contract")
     require(request.get("strategy") in {"native", "shared", "model_aware"}, "strategy_invalid", "Unknown condition strategy")
     require((request.get("intent") is None) == (request["strategy"] == "native"), "intent_invalid", "Native has no intent; shared/model-aware require an intent")
+    if "workflow_contract" in request:
+        from .reference_retouch import validate_spec, validate_intent, frozen_contract
+        validate_spec(request)
+        intent = validate_intent(request["intent"], request["task_mode"])
+        require(intent["overall_status"] == "ready_to_edit", "reference_not_editable", "Do not compile a no-edit contract")
+        require(request.get("reference_contract_sha256") == digest(frozen_contract(intent)),
+                "reference_contract_changed", "Native request must bind its frozen evaluation contract")
     for key in ("width", "height"):
         require(type(request.get("canvas", {}).get(key)) is int and request["canvas"][key] > 0,
                 "canvas_invalid", "Explicit positive source canvas required")

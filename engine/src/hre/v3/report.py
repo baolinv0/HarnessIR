@@ -38,7 +38,9 @@ def _row(case_root: Path, output: Path, labels: dict | None = None) -> dict:
     selected = state.get("selected_output")
     candidates = []
     for candidate in state.get("candidates", []):
-        candidates.append({**{key: candidate.get(key) for key in ("candidate_id", "round", "provider_order", "geometry_valid", "delivery_status", "verification")},
+        candidates.append({**{key: candidate.get(key) for key in ("candidate_id", "round", "provider_order", "geometry_valid", "delivery_status", "verification", "appearance_status", "delivery_assessment")},
+                           "native_size": [candidate["native"]["width"], candidate["native"]["height"]],
+                           "delivered_size": [candidate["delivered"]["width"], candidate["delivered"]["height"]],
                            "native_image": _copy_image(candidate.get("native"), output),
                            "delivered_image": _copy_image(candidate.get("delivered"), output),
                            "native_sha256": (candidate.get("native") or {}).get("sha256"),
@@ -67,6 +69,18 @@ def _row(case_root: Path, output: Path, labels: dict | None = None) -> dict:
         if isinstance(seconds, (int, float)):
             elapsed[item["kind"]] = elapsed.get(item["kind"], 0.0) + seconds
     model = config["models"][spec["profile_id"]]
+    reference_workflow = None
+    if spec.get("workflow_contract") == "reference_retouch_v1":
+        reference_workflow = {"version": spec["workflow_contract"], "delivery_requirements": spec.get("delivery_requirements", {}),
+                              "compiled_conditions": [{"round": c["round"], "text": c["condition"].get("text"),
+                                  "condition_kind": c["condition"].get("condition_kind")} for c in conditions]}
+        for name in ("diagnosis", "evidence", "reference_contract"):
+            ref = state.get("artifacts", {}).get(name)
+            if ref:
+                path = (case_root / ref["path"]).resolve()
+                require(path.is_relative_to(case_root) and file_sha256(path) == ref["sha256"],
+                        "report_artifact_modified", "Reference workflow evidence changed")
+                reference_workflow[name] = read_json(path)
     return {"case_root": str(case_root), "case_id": spec["case_id"],
             "dataset_case_id": labels.get("dataset_case_id", spec["case_id"]),
             "profile_id": spec["profile_id"], "model_id": model["editor"]["model_id"],
@@ -76,6 +90,7 @@ def _row(case_root: Path, output: Path, labels: dict | None = None) -> dict:
             "task_mode": spec["task_mode"], "brief": spec["brief"], "regions": spec.get("regions", []),
             "policy": spec["policy"]["mode"], "status": state["status"], "success": state.get("success", False),
             "quality_status": state.get("quality_status", "not_evaluated"), "selected_kind": state.get("selected_kind"),
+            "delivery_assessment": state.get("delivery_assessment"),
             "terminal_reason": state.get("terminal_reason") or state.get("pause_reason"),
             "budget": state.get("budget", {}), "elapsed_seconds": elapsed,
             "source_image": _copy_image(state["inputs"][0], output),
@@ -84,6 +99,7 @@ def _row(case_root: Path, output: Path, labels: dict | None = None) -> dict:
             "selected_candidate_id": state.get("selected_candidate_id"),
             "geometry": spec["geometry"], "spatial": spec["spatial"], "alpha_policy": spec["alpha_policy"],
             "planning_origin": state.get("planning_origin"), "candidates": candidates, "observations": observations,
+            "reference_workflow": reference_workflow,
             "conditions": conditions, "task": spec, "runtime_config": config,
             "deviations": state.get("deviations", [])}
 
@@ -162,10 +178,13 @@ $('close').onclick=()=>$('zoom').close();
 function render(){const matching=rows.filter(r=>r.dataset_case_id===$('case').value&&r.arm===$('arm').value&&String(r.seed)===$('seed').value);const first=matching[0];
  $('brief').textContent=first?first.brief:'该组合没有可导出结果';$('inputs').innerHTML=first?`<div class="card"><h2>原始 source</h2>${image(first.source_image,'原始source')}</div>`+(first.reference_image?`<div class="card"><h2>外观 reference</h2>${image(first.reference_image,'参考')}</div>`:''):'';
  $('models').innerHTML=matching.map(r=>`<article class="card"><h2>${esc(r.profile_id)}</h2>${image(r.selected_image,r.profile_id)}<div class="body">
- <span class="tag ${r.quality_status==='accepted'?'':'bad'}">${esc(r.quality_status)}</span><span class="tag">${esc(r.selected_kind||r.status)}</span>
+ <span class="tag ${['accepted','already_satisfied'].includes(r.quality_status)?'':'bad'}">${esc(r.quality_status)}</span><span class="tag">${esc(r.selected_kind||r.status)}</span>
  <p class="small">${esc(r.compiler)} · ${esc(r.policy)} · 生成 ${r.budget.generations??0} · 编译调用 ${r.budget.compiler_calls??0}</p>
  ${r.selected_kind==='source_baseline'?'<p class="bad">当前展示原图基线；没有合格的模型交付图。</p>':''}
- <details><summary>全部候选与原生输出 (${r.candidates.length})</summary>${r.candidates.map(c=>`<p>轮次 ${c.round} · provider ${c.provider_order} · geometry=${esc(c.geometry_valid)}</p><div class="small">原生输出</div>${image(c.native_image,'原生输出')}<div class="small">交付输出</div>${image(c.delivered_image,'交付输出')}<pre>${esc(JSON.stringify(c.verification,null,2))}</pre>`).join('')}</details>
+ ${r.selected_kind==='source_already_satisfied'?'<p>参考目标已经满足，零次图像生成保留原图。</p>':''}
+ ${r.delivery_assessment?`<details><summary>原图交付门槛：${r.delivery_assessment.pass?'通过':'未通过'}</summary><pre>${esc(JSON.stringify(r.delivery_assessment,null,2))}</pre></details>`:''}
+ ${r.reference_workflow?`<details><summary>参考分析 → 证据 → 冻结目标 → 实际编辑条件</summary><pre>${esc(JSON.stringify(r.reference_workflow,null,2))}</pre></details>`:''}
+ <details><summary>全部候选与分项验收 (${r.candidates.length})</summary>${r.candidates.map(c=>`<p>轮次 ${c.round} · provider ${c.provider_order} · geometry=${esc(c.geometry_valid)}</p><div class="small">原生输出 ${esc(c.native_size?.join(' × '))}</div>${image(c.native_image,'原生输出')}<div class="small">交付输出 ${esc(c.delivered_size?.join(' × '))}</div>${image(c.delivered_image,'交付输出')}${c.delivery_assessment?`<p>外观：${esc(c.appearance_status)} · 交付条件：${c.delivery_assessment.pass?'通过':'未通过'}</p><pre>${esc(JSON.stringify(c.delivery_assessment,null,2))}</pre>`:''}<pre>${esc(JSON.stringify(c.verification,null,2))}</pre>`).join('')}</details>
  <details><summary>几何、预算与版本</summary><pre>${esc(JSON.stringify({revision:r.model_revision,geometry:r.geometry,spatial:r.spatial,budget:r.budget,seconds:r.elapsed_seconds,deviations:r.deviations,reason:r.terminal_reason},null,2))}</pre></details></div></article>`).join('');}
 function update(){const subset=rows.filter(r=>r.dataset_case_id===$('case').value);options('arm',subset.map(r=>r.arm));options('seed',subset.filter(r=>r.arm===$('arm').value).map(r=>r.seed));render();}
 options('case',rows.map(r=>r.dataset_case_id));$('case').onchange=update;$('arm').onchange=()=>{const sub=rows.filter(r=>r.dataset_case_id===$('case').value&&r.arm===$('arm').value);options('seed',sub.map(r=>r.seed));render();};$('seed').onchange=render;update();

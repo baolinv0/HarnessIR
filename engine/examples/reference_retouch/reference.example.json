@@ -1,0 +1,15 @@
+{
+  "schema_version": "hre_task_v3",
+  "workflow_contract": "reference_retouch_v1",
+  "case_id": "reference-retouch-example",
+  "task_mode": "reference_enhance",
+  "profile_id": "qwen21",
+  "strategy": "shared",
+  "brief": "Use B as the photographic appearance reference. Diagnose all relevant differences, transfer supported colour and tonal relationships to A, and preserve A's identity, expression, objects, readable text, viewpoint, framing and authentic visible details. Return the original A when the requested appearance is already satisfied.",
+  "source": {"path": "/replace/with/source-A.png"},
+  "reference": {"path": "/replace/with/reference-B.png"},
+  "geometry": {"policy": "pad", "grid": 32},
+  "spatial": {"mode": "full_frame"},
+  "delivery_requirements": {"require_native_source_resolution": true, "require_detail_pass": false},
+  "policy": {"mode": "feedback", "max_generations": 3, "seed_schedule": [0, 1, 2]}
+}

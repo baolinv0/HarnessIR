@@ -31,6 +31,8 @@
 
 ## &#x1F4CC; Quick Links
 
+- **[Reference Retouch: diagnosis, frozen targets and delivery acceptance](docs/reference_retouch/RUNBOOK.md)** — GPT Image workbench and opt-in integration with the original `hre models` runner; includes the actual single-case experiment and its limits.
+
 - **[Four-model implementation (Qwen / FireRed / FLUX / FIBO)](docs/four_model_v3/DESIGN_AND_COMPLETION.md)** — built-in native adapters, restoration/reference tasks and bounded feedback via `hre models`.
 - **[Four-model server runbook](docs/four_model_v3/RUNBOOK.md)** — local checkpoints, isolated workers, batch comparison and report export. Real-model validation is performed on the deployment server.
 
