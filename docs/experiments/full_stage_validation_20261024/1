@@ -1,0 +1,22 @@
+==============================================================================
+五阶段全量验证证据包（EVIDENCE）
+实验: full_stage_validation_20261024
+版本: v1.1 人审校准版（2026-10-27）
+规模: 4 case × 4 editor × N/I/G/M × 2 seed；498 completed runs；136 图；J 227 条
+
+核心结论（人审校准后）
+评审: vlm27 与人审一致率最高(66%)，vlm32 宽松偏差实锤（人类负样本12/12误判），vlm8 过严(41%)
+editor: 人审认可率 flux3 88% / qwen21 88% / fibo2 62% / firered11 12%（不推荐）
+策略: N ≈ M（62% vs 62%），模型适配增益未证实；I/G 臂待人审
+B2 探针: 换B冷移响应 8/8 机判通过
+瓶颈: firered11 保真失败+绿偏；全 editor 输出降采样(864-1536宽 vs 原图3000×4000)；诊断局部小差异感知不足
+
+sheet 索引
+lineage: 128 行主矩阵全谱系（每E单元的 D/P/C/E/J run_id 链）
+judge_review: 192 行真实集评审（vlm32全量 + vlm27/vlm8子集）
+compile_audit: 64 行编译审计（原生形态/大小/结构校验/意图覆盖proxy）
+image_review: 136 行出图明细（尺寸/耗时/J_star判定）
+human_vs_judges: 32 行人审 vs 三评审逐格对照（含人类证据备注）
+human_scoring: 32 行人审原始打分（overall/content/ref_direction/note）
+
+下一步: vlm27 重跑全量J；firered11 R臂归因；I/G臂人审补全；输出尺寸契约确认
