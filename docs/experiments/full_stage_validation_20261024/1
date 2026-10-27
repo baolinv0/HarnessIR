@@ -1,22 +1,100 @@
-==============================================================================
-五阶段全量验证证据包（EVIDENCE）
-实验: full_stage_validation_20261024
-版本: v1.1 人审校准版（2026-10-27）
+========================================================================
+五阶段全量验证证据包 EVIDENCE（精简版）
+========================================================================
+实验: full_stage_validation_20261024   版本: v1.1 人审校准版（2026-10-27）
 规模: 4 case × 4 editor × N/I/G/M × 2 seed；498 completed runs；136 图；J 227 条
 
 核心结论（人审校准后）
-评审: vlm27 与人审一致率最高(66%)，vlm32 宽松偏差实锤（人类负样本12/12误判），vlm8 过严(41%)
-editor: 人审认可率 flux3 88% / qwen21 88% / fibo2 62% / firered11 12%（不推荐）
-策略: N ≈ M（62% vs 62%），模型适配增益未证实；I/G 臂待人审
-B2 探针: 换B冷移响应 8/8 机判通过
-瓶颈: firered11 保真失败+绿偏；全 editor 输出降采样(864-1536宽 vs 原图3000×4000)；诊断局部小差异感知不足
+  评审: vlm27 与人审一致率最高(66%)；vlm32 宽松偏差实锤（人类负样本12/12误判improved）；vlm8 过严(41%)
+  editor: 人审认可率 flux3 88% / qwen21 88% / fibo2 62% / firered11 12%（不推荐）
+  策略: N ≈ M（62% vs 62%），模型适配增益未证实；I/G 臂待人审
+  B2探针: 换B冷移响应 8/8 机判通过
+  瓶颈: firered11 保真失败+绿偏；全editor输出降采样(864-1536宽 vs 原图3000×4000)；诊断局部小差异感知不足
+  下一步: vlm27 重跑全量J；firered11 R臂归因；I/G臂人审补全；输出尺寸契约确认
 
-sheet 索引
-lineage: 128 行主矩阵全谱系（每E单元的 D/P/C/E/J run_id 链）
-judge_review: 192 行真实集评审（vlm32全量 + vlm27/vlm8子集）
-compile_audit: 64 行编译审计（原生形态/大小/结构校验/意图覆盖proxy）
-image_review: 136 行出图明细（尺寸/耗时/J_star判定）
-human_vs_judges: 32 行人审 vs 三评审逐格对照（含人类证据备注）
-human_scoring: 32 行人审原始打分（overall/content/ref_direction/note）
+========================================================================
+1. 人审 vs 三评审 逐格对照（32行，N/M子集 seed42）
+========================================================================
+blind  case  editor     arm | 人overall/content/ref | 27B       32B       8B        | 人审备注
+B01  c04  qwen21     M   | improved /pass/improved  | improved  improved  unchanged | 整体亮度提升，但是没有分区域辨别，高光区域过曝，各个区域颜色不一致
+B02  c02  fibo2      M   | improved /pass/improved  | improved  improved  worse     | 没有分区域处理颜色，面部肤色发黄
+B03  c02  flux3      N   | improved /pass/improved  | improved  improved  unchanged | 没有分区域处理颜色，面部肤色发粉
+B04  c01  fibo2      N   | worse    /fail/improved  | worse     improved  worse     | 生成的图像与参考图像内容一致，得到的结果肤色发红，背景区域广告牌颜色完全是重新生成
+B05  c03  flux3      M   | uncertain/fail/uncertain | uncertain improved  improved  | 背景参考过了，偏绿严重，人脸增加了太多细节，整体对比读提升了，但是不保真，看上去怪怪的
+B06  c03  firered11  N   | worse    /fail/degraded  | uncertain improved  improved  | 完全不保真，亮度颜色完全改变，与参考图像没有相似之处
+B07  c03  qwen21     M   | worse    /pass/degraded  | improved  improved  unchanged | 学过了，背景太绿，人脸肤色与原图一致
+B08  c01  firered11  N   | worse    /pass/improved  | uncertain improved  worse     | 学习过了，亮度肤色太亮太黄
+B09  c04  flux3      M   | improved /pass/improved  | improved  improved  improved  | 
+B10  c02  qwen21     M   | improved /pass/improved  | improved  improved  unchanged | 肤色不一致，参考图像时黄色系，生成的图像更偏向原图，粉色
+B11  c01  flux3      N   | improved /pass/improved  | improved  improved  worse     | 肤色不一致，参考图像是黄色系，生成的图像更偏向原图，粉色，看上去优点红
+B12  c04  flux3      N   | improved /pass/improved  | improved  improved  improved  | 肤色不一致，参考图像时黄色系，生成的图像更偏向原图，粉色，高光优点过曝
+B13  c04  firered11  N   | worse    /fail/degraded  | uncertain improved  improved  | 完全不保真，生成的图像内容与参考图像一致
+B14  c02  fibo2      N   | improved /pass/improved  | improved  improved  unchanged | 肤色不一致，参考图像时黄色系，生成的图像太黄了
+B15  c03  fibo2      M   | improved /pass/degraded  | improved  improved  improved  | 参过图像暗，肤色优点黄，生成的图像太亮，肤色太黄
+B16  c01  qwen21     M   | improved /pass/improved  | improved  improved  improved  | 整体看上去还可以，但是细看对比度降低，高亮区域有点亮
+B17  c03  qwen21     N   | improved /pass/improved  | worse     unchanged unchanged | 没有分区域处理，只学到参考图像的偏暗，没有学习到前景亮度偏亮
+B18  c02  firered11  M   | improved /pass/degraded  | improved  improved  improved  | 太亮，过于清新的风格，有点假
+B19  c02  firered11  N   | worse    /pass/degraded  | uncertain improved  improved  | 完全没有朝参考图像换了一个风格
+B20  c03  firered11  M   | worse    /pass/degraded  | improved  improved  improved  | 偏绿偏亮，整体影调完全没有学习到
+B21  c04  fibo2      M   | worse    /fail/degraded  | improved  improved  worse     | 不保真，背景人物重新生成
+B22  c01  fibo2      M   | improved /pass/improved  | uncertain improved  improved  | 前景人物肤色偏黄，背景广告牌颜色重新生成
+B23  c01  firered11  M   | worse    /fail/degraded  | worse     improved  worse     | 结果人物与参考图一致，背景与参考图一致，但是背景广告牌颜色已经完全重新生成
+B24  c03  fibo2      N   | improved /pass/degraded  | improved  improved  improved  | 参考图偏暗，突出前景，生成的图像背景提亮，人物亮度不变
+B25  c02  flux3      M   | improved /pass/improved  | improved  improved  unchanged | 肤色偏红，参考图偏黄
+B26  c02  qwen21     N   | improved /pass/improved  | improved  improved  improved  | 简单的提亮，没有学习到颜色影调
+B27  c04  firered11  M   | worse    /fail/degraded  | improved  improved  improved  | 结果图内容与参考图一致，提亮，去黄
+B28  c01  flux3      M   | improved /pass/improved  | improved  improved  worse     | 肤色发红
+B29  c03  flux3      N   | improved /fail/improved  | improved  improved  improved  | 人脸生成太多的假象，肤色与参考图像不一致
+B30  c04  qwen21     N   | improved /pass/improved  | improved  improved  unchanged | 肤色背景与参考图像不一致
+B31  c04  fibo2      N   | worse    /fail/degraded  | improved  improved  improved  | 关系学反了，参考图像像原图像学习
+B32  c01  qwen21     N   | improved /pass/improved  | improved  improved  unchanged | 亮度提升，肤色发白
 
-下一步: vlm27 重跑全量J；firered11 R臂归因；I/G臂人审补全；输出尺寸契约确认
+========================================================================
+2. 评审聚合（N/M子集 seed42, n=32/评审）
+========================================================================
+judge   improved unchanged worse uncertain | 与人审一致率
+vlm27         23         0     3         6 | 66% (21/32)
+vlm32         31         1     0         0 | 59% (19/32)
+vlm8          16         9     7         0 | 41% (13/32)
+人审    20       0         11    1         | (基准)
+
+vlm32 全量 improved 网格（n=8/格；仅上限参考，人审证明其高估）
+臂   flux3 fibo2 qwen21 firered11
+N   8/8    8/8    7/8    8/8  
+I   8/8    8/8    8/8    8/8  
+G   7/8    8/8    8/8    8/8  
+M   8/8    8/8    8/8    8/8  
+
+========================================================================
+3. 出图聚合（image_review, 136张）
+========================================================================
+editor     n   均值耗时  总机时    输出尺寸
+flux3       34    21.8s    12.3min  880x1168
+fibo2       34    17.7s    10.1min  864x1152
+qwen21      34    59.6s    33.8min  1536x2048
+firered11   34   112.2s    63.6min  896x1184
+E总机时: 2.00 GPU·h（4车道并行）。原图A=3000×4000，四editor均降采样输出。
+
+========================================================================
+4. 编译审计聚合（compile_audit, 64份）
+========================================================================
+editor     n   原生形态             均大小   结构校验
+flux3       16 native_prompt文本        1343字符 意图关键词覆盖≈62%
+fibo2       16 VGL JSON               5671字符 —
+qwen21      16 rewritten+ratio        1071字符 parse_ok=True,ratio_follow=<image1>
+firered11   16 recaption文本             447字符 —
+qwen21 parse_ok 16/16；ratio_follow=<image1> ×16。C冻结一次供两seed复用。
+
+========================================================================
+5. 谱系说明（lineage, 128单元）
+========================================================================
+格式: case/editor/arm/seed → D/P/C/E/J 全链 run_id。短名样例（完整映射见 EVIDENCE.xlsx）:
+  c01/flux3/N/s42 → D-c01-32B, P-c01-32B, C-c01-flux3-N, E-c01-flux3-N-s42, J-c01-flux3-N-s42-32B
+
+========================================================================
+完整数据指针
+========================================================================
+  EVIDENCE.xlsx（7 sheet完整版）: Data/full_stage/serving/EVIDENCE.xlsx
+  原始CSV: lineage / judge_review / compile_audit / image_review / human_vs_judges / human_review_scoring_filled（同目录）
+  图版: matrix_c01..c04.jpg, vis_vlm27/32/8_panel.jpg, vis_judge_divergence.jpg（同目录）
+  报告: docs/experiments/full_stage_validation_20261024/REPORT.md
