@@ -65,6 +65,7 @@ def make_server(workbench,port=8766):
                     id,action=parts[2:]
                     if action=="step":value=workbench.step(id,req["stage"])
                     elif action=="regions":value=workbench.regions(id,req["regions"])
+                    elif action=="review":value=workbench.review_candidate(id,req["review"],req.get("provenance","human"))
                     elif action=="import":
                         provenance=req.get("provenance","manual_agent")
                         require(provenance in ("manual_agent","human"),"provenance_invalid","HTTP 导入只能标为 Agent 或人工观察，不能冒充真实接口调用")

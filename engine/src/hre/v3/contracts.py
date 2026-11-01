@@ -151,7 +151,7 @@ def normalise_spec(spec: dict) -> dict:
     require(isinstance(policy["seed_schedule"], list) and len(policy["seed_schedule"]) == policy["max_generations"]
             and all(type(seed) is int and 0 <= seed < 2**63 for seed in policy["seed_schedule"]),
             "seed_schedule_invalid", "Freeze one nonnegative 63-bit seed per allowed generation")
-    policy.setdefault("max_stage_calls", 3 + 2 * policy["max_generations"])
+    policy.setdefault("max_stage_calls", 3 + (4 if value.get("workflow_contract")=="reference_retouch_v2" else 2) * policy["max_generations"])
     policy.setdefault("max_compiler_calls", policy["max_generations"])
     for key in ("max_stage_calls", "max_compiler_calls"):
         require(type(policy[key]) is int and policy[key] >= 0, "budget_invalid", f"{key} must be a nonnegative integer")
@@ -165,7 +165,7 @@ def normalise_spec(spec: dict) -> dict:
     require(isinstance(value["evaluation"], dict), "evaluation_invalid", "Freeze an evaluation contract object")
     if value.get("shared_intent"):
         require(value["strategy"] != "native", "native_intent_forbidden", "Native baseline cannot import a shared intent")
-    from .reference_retouch import validate_spec
+    from .reference_selector import validate_spec
     validate_spec(value)
     return value
 
@@ -296,11 +296,12 @@ def validate_request(request: dict) -> None:
     require(request.get("strategy") in {"native", "shared", "model_aware"}, "strategy_invalid", "Unknown condition strategy")
     require((request.get("intent") is None) == (request["strategy"] == "native"), "intent_invalid", "Native has no intent; shared/model-aware require an intent")
     if "workflow_contract" in request:
-        from .reference_retouch import validate_spec, validate_intent, frozen_contract
-        validate_spec(request)
-        intent = validate_intent(request["intent"], request["task_mode"])
+        from .reference_selector import select
+        selected=select(request)
+        selected.validate_spec(request)
+        intent = selected.validate_intent(request["intent"], request["task_mode"])
         require(intent["overall_status"] == "ready_to_edit", "reference_not_editable", "Do not compile a no-edit contract")
-        require(request.get("reference_contract_sha256") == digest(frozen_contract(intent)),
+        require(request.get("reference_contract_sha256") == digest(selected.frozen_contract(intent)),
                 "reference_contract_changed", "Native request must bind its frozen evaluation contract")
     for key in ("width", "height"):
         require(type(request.get("canvas", {}).get(key)) is int and request["canvas"][key] > 0,

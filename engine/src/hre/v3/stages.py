@@ -131,9 +131,10 @@ def validate_intent(intent: dict, task_mode: str, *, revision: int | None = None
 
 
 def validate_payload(stage: str, payload: dict, request: dict) -> dict:
-    from . import reference_retouch
-    if reference_retouch.enabled(request):
-        return reference_retouch.validate_payload(stage, payload, request)
+    from .reference_selector import select
+    selected=select(request)
+    if selected:
+        return selected.validate_payload(stage, payload, request)
     require(stage in SCHEMAS, "stage_unknown", str(stage))
     _schema_check(SCHEMAS[stage], payload, "stage_payload_invalid")
     context = request.get("context", {})
@@ -237,9 +238,10 @@ def collect_basic_evidence(inputs: list[dict], *, requested: bool = True,
 
 
 def stage_instruction(request: dict) -> str:
-    from . import reference_retouch
-    if reference_retouch.enabled(request):
-        return reference_retouch.stage_instruction(request)
+    from .reference_selector import select
+    selected=select(request)
+    if selected:
+        return selected.stage_instruction(request)
     stage = request["stage"]
     require(stage in SCHEMAS and request["task_mode"] in MODES, "stage_unknown", "Unknown stage or task")
     common = (
@@ -265,8 +267,8 @@ def stage_instruction(request: dict) -> str:
 
 def stage_template(request: dict) -> dict:
     """Select an opt-in template without changing legacy request identities."""
-    from . import reference_retouch
-    selected = reference_retouch if reference_retouch.enabled(request) else None
+    from .reference_selector import select
+    selected = select(request)
     return {"version": selected.TEMPLATE_VERSION if selected else TEMPLATE_VERSION,
             "instruction": stage_instruction(request),
             "response_schema": deepcopy((selected.SCHEMAS if selected else SCHEMAS)[request["stage"]])}

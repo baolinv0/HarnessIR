@@ -237,6 +237,9 @@ def render_instruction(request: dict) -> str:
         require(isinstance(intent, dict), "intent_required", "Shared/model-aware compilation requires an accepted intent")
         for target in sorted(intent.get("targets", []), key=lambda item: item.get("priority", 999)):
             parts.append(f"Target [{target.get('id', '')}] in {target.get('region', 'whole image')}: {target['instruction']}")
+            if request.get("workflow_contract") == "reference_retouch_v2":
+                from ..reference_core.rendering import render_target_limits
+                parts.append(render_target_limits(target))
             if request.get("workflow_contract") == "reference_retouch_v1":
                 parts.append(f"Source observation: {target['source_observation']} Reference observation: {target['reference_observation']} "
                              f"Correspondence: {target['source_region']} / {target['reference_region']}. "
@@ -247,7 +250,7 @@ def render_instruction(request: dict) -> str:
             parts.append("Preserve: " + "; ".join(intent["protected_content"]))
         if intent.get("uncertainties"):
             parts.append("Uncertain details; do not guess: " + "; ".join(intent["uncertainties"]))
-        if request.get("workflow_contract") == "reference_retouch_v1" and intent.get("excluded_reference_traits"):
+        if request.get("workflow_contract") in {"reference_retouch_v1","reference_retouch_v2"} and intent.get("excluded_reference_traits"):
             parts.append("Exclude reference traits: " + "; ".join(intent["excluded_reference_traits"]))
     else:
         require(request.get("intent") is None, "native_intent_forbidden", "Native strategy cannot receive derived Harness intent")

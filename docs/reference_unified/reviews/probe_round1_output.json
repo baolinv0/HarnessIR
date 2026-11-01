@@ -1,0 +1,185 @@
+{
+  "conflicting_edit_ratings": {
+    "arm_id": "legacy_native_ab",
+    "evaluation_hash": "118c47001ff6f18d3b70200a5f664f8999eb8b9e75b3c74fc287475b4a3e6f05",
+    "model": "qwen21",
+    "pair_id": "pair1",
+    "repeat": 0,
+    "run_id": "pair1__qwen21__legacy_native_ab__0",
+    "task_hash": "9a7546094d39545ebd64a952bebcdadeb93428c9e99eb45f81af1014a6372303",
+    "task_path": "tasks/pair1__qwen21__legacy_native_ab__0.json",
+    "outcome_role": "G",
+    "task_success": true,
+    "effective_edit_success": true,
+    "in_task_denominator": true,
+    "in_edit_denominator": true,
+    "baseline_status": "needs_edit",
+    "baseline_conflict": false,
+    "delivery": {
+      "status": "pass",
+      "minimum_native_size": [
+        16,
+        16
+      ],
+      "native_size": [
+        16,
+        16
+      ],
+      "native_resolution": "pass",
+      "detail_preservation": "uncertain",
+      "detail_required": false,
+      "geometry": "pass",
+      "pass": true
+    },
+    "result_hash": "ccadc81ffc3d652b23de7d2ead8ebe271b1a1e358f539a22303e5e8f9b1c9659",
+    "rating_hashes": [
+      "6df4a062f39d300c74c4ffd9d1cc5306f3543ba4bdd575b6ac8e6f995844cc48",
+      "4c47d20b89a926eb56f023dd0311e83118cd2c8d2f10d2f493f6ea3b9a92d266"
+    ]
+  },
+  "detail_required": {
+    "arm_id": "legacy_native_ab",
+    "evaluation_hash": "8b80d9495b95954fa5d0bacbfa35e5911906b6713716dbe9a33d3ffecc3bb93e",
+    "model": "qwen21",
+    "pair_id": "pair1",
+    "repeat": 0,
+    "run_id": "pair1__qwen21__legacy_native_ab__0",
+    "task_hash": "8fba4f7ee997617c06eb426017f8062fb612c4433a0c66befb17694530d01f4a",
+    "task_path": "tasks/pair1__qwen21__legacy_native_ab__0.json",
+    "outcome_role": "G",
+    "task_success": null,
+    "effective_edit_success": null,
+    "in_task_denominator": true,
+    "in_edit_denominator": true,
+    "baseline_status": "needs_edit",
+    "baseline_conflict": false,
+    "delivery": {
+      "status": "uncertain",
+      "minimum_native_size": [
+        16,
+        16
+      ],
+      "native_size": [
+        16,
+        16
+      ],
+      "native_resolution": "pass",
+      "detail_preservation": "uncertain",
+      "detail_required": true,
+      "geometry": "pass",
+      "pass": false
+    },
+    "result_hash": "9d3676de31f91d97f19b05c27fe071fe45c2aed517d3e0a22c15332477813842",
+    "rating_hashes": [
+      "7111da6844c98c4f5a397f06e9f06922eab8c98e5a83466d7691b3e629794d28"
+    ]
+  },
+  "style_unresolved_conflict": {
+    "decision_id": "z1",
+    "evaluation_id": "j1",
+    "facts_id": "f1",
+    "predecessor": null,
+    "adjudication_id": null,
+    "verification_ref": {
+      "policy_id": "p1",
+      "policy_version": "v1",
+      "policy_hash": "be793cf05a2c7ff9febd050caa517e35841c4e6380fcf9401688a9f4195dfb69",
+      "rule_id": "rv1",
+      "rule_version": "v1",
+      "rule_hash": "091d9a3d1749370b0901557b4c5d0d25887f4cad96a6b79b4fdbdc160f9c0d35"
+    },
+    "sequence": 1,
+    "evaluation_hash": "3fe878c77e6e0167da1858db2c439bac1b00c821f794af4f194da71c242e8ce6",
+    "facts_hash": "73909d100afdf92bad49177a48cd26835d1c2d315c24e5c7f216c4bcb06f4799",
+    "evaluation_version": "q1",
+    "profile_hash": "8afaafc802ea273ea28d13bed61bf26edc123a8b5bd162a212138aa35247cb96",
+    "raw_candidate_hash": "7067dd9cc9d739c28fcdfe0e2a7657770a80539ac6b1a7f650228fa6afd90783",
+    "derived_hash": "485bde4958fb3757b8a446a5e346ca68cb04f5b2030e2a66502f87aed9f9b2f4",
+    "status": "accepted",
+    "acceptance_basis": "consistent",
+    "target_statuses": [
+      {
+        "target_id": "t1",
+        "priority": "critical",
+        "judge_type": "mixed",
+        "numeric": "achieved",
+        "visual": "achieved",
+        "effective": "achieved"
+      },
+      {
+        "target_id": "t2",
+        "priority": "critical",
+        "judge_type": "mixed",
+        "numeric": "achieved",
+        "visual": "achieved",
+        "effective": "achieved"
+      },
+      {
+        "target_id": "t3",
+        "priority": "critical",
+        "judge_type": "mixed",
+        "numeric": "achieved",
+        "visual": "achieved",
+        "effective": "achieved"
+      }
+    ],
+    "overall_style_statuses": {
+      "brightness": "achieved",
+      "color": "achieved",
+      "tone": "achieved"
+    },
+    "conflicts": [],
+    "content_facts": {
+      "geometry": {
+        "confidence": "high",
+        "severity": "none_observed"
+      },
+      "identity": {
+        "confidence": "high",
+        "severity": "none_observed"
+      },
+      "layout": {
+        "confidence": "high",
+        "severity": "none_observed"
+      },
+      "naturalness": {
+        "confidence": "high",
+        "severity": "none_observed"
+      },
+      "ocr": {
+        "confidence": "high",
+        "severity": "none_observed"
+      },
+      "texture": {
+        "confidence": "high",
+        "severity": "none_observed"
+      }
+    },
+    "spillover": [],
+    "adjudication_hash": null,
+    "pixel_supervision_screening_status": "not_certified",
+    "assets": [],
+    "unified_delivery_assessment": {
+      "status": "pass",
+      "minimum_native_size": [
+        4,
+        2
+      ],
+      "native_size": [
+        4,
+        2
+      ],
+      "native_resolution": "pass",
+      "detail_preservation": "uncertain",
+      "detail_required": false,
+      "geometry": "pass",
+      "pass": true
+    },
+    "unified_holistic_assessment": {
+      "status": "accepted",
+      "whole_image_hash": "b94c4ad4946a22571e0a69b4f85db47053a35596af5befdc19dd245e844ebd92",
+      "last_review_hash": "a66ac1cf948c2871ceb659b2ec32b0b1fd535a0887e156c2360d1c9d5098e233",
+      "aggregation": "none"
+    }
+  }
+}

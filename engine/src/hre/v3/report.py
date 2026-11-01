@@ -38,7 +38,10 @@ def _row(case_root: Path, output: Path, labels: dict | None = None) -> dict:
     selected = state.get("selected_output")
     candidates = []
     for candidate in state.get("candidates", []):
-        candidates.append({**{key: candidate.get(key) for key in ("candidate_id", "round", "provider_order", "geometry_valid", "delivery_status", "verification", "appearance_status", "delivery_assessment")},
+        keys=("candidate_id", "round", "provider_order", "geometry_valid", "delivery_status", "verification", "appearance_status", "delivery_assessment")
+        if spec.get("workflow_contract")=="reference_retouch_v2":
+            keys+=("effective_verification","verification_versions","feedback","native_content_size","whole_image_review")
+        candidates.append({**{key: candidate.get(key) for key in keys},
                            "native_size": [candidate["native"]["width"], candidate["native"]["height"]],
                            "delivered_size": [candidate["delivered"]["width"], candidate["delivered"]["height"]],
                            "native_image": _copy_image(candidate.get("native"), output),
@@ -70,11 +73,11 @@ def _row(case_root: Path, output: Path, labels: dict | None = None) -> dict:
             elapsed[item["kind"]] = elapsed.get(item["kind"], 0.0) + seconds
     model = config["models"][spec["profile_id"]]
     reference_workflow = None
-    if spec.get("workflow_contract") == "reference_retouch_v1":
+    if spec.get("workflow_contract") in {"reference_retouch_v1","reference_retouch_v2"}:
         reference_workflow = {"version": spec["workflow_contract"], "delivery_requirements": spec.get("delivery_requirements", {}),
                               "compiled_conditions": [{"round": c["round"], "text": c["condition"].get("text"),
                                   "condition_kind": c["condition"].get("condition_kind")} for c in conditions]}
-        for name in ("diagnosis", "evidence", "reference_contract"):
+        for name in ("diagnosis", "evidence", "evidence_review", "reference_contract"):
             ref = state.get("artifacts", {}).get(name)
             if ref:
                 path = (case_root / ref["path"]).resolve()

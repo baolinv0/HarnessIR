@@ -1,0 +1,35 @@
+{
+  "candidate_sha": "7eaec58e97ac03bbe4a117d4692a0863e758e49a",
+  "fixture_kind": "synthetic local protocol evidence only",
+  "study_confidence": {
+    "before": "unknown",
+    "conflict_fields": [
+      "confidence"
+    ],
+    "after": "true_after_explicit_adjudication"
+  },
+  "study_independence": {
+    "before": "unknown",
+    "conflict_fields": [
+      "independence"
+    ],
+    "after": "true_after_explicit_adjudication"
+  },
+  "holistic_low_confidence": "needs_user_review",
+  "holistic_same_model": "needs_user_review",
+  "holistic_qualified": "accepted",
+  "stale_detail_selection": "Native-detail evidence changed; append a new exact-predecessor verification decision before selection",
+  "style_detail": {
+    "missing": "uncertain",
+    "qualified": "accepted",
+    "newer_unknown": "delivery_not_met",
+    "original_holistic_bytes_preserved": true
+  },
+  "current_review_accept": {
+    "before": "paused",
+    "after": "completed",
+    "success": true,
+    "image_calls": 1,
+    "budgets_unchanged": true
+  }
+}

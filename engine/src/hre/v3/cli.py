@@ -38,6 +38,13 @@ def add_models_parser(groups):
     parser.add_argument("--result", type=Path)
     parser.add_argument("--evidence", required=True, help="Concrete observation supporting this decision")
     parser.add_argument("--operation-id")
+    parser = commands.add_parser("review-import",help="Append a bound same-candidate verification without generation")
+    parser.add_argument("--case-root",type=Path,required=True)
+    parser.add_argument("--review",type=Path,required=True)
+    for name,field in (("evidence-review-import","review"),("condition-audit-import","audit")):
+        parser=commands.add_parser(name,help="Import an actual bound review and retain prior observations")
+        parser.add_argument("--case-root",type=Path,required=True)
+        parser.add_argument("--"+field,type=Path,required=True)
     parser = commands.add_parser("batch", help="Execute or resume a frozen model/arm/seed comparison matrix")
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--config", type=Path, required=True)
@@ -97,6 +104,13 @@ def dispatch_models(args):
         from .runner import reconcile
         return reconcile(args.case_root, args.decision, result_path=args.result,
                          evidence=args.evidence, operation_id=args.operation_id)
+    if action == "review-import":
+        from .runner import import_candidate_review
+        return import_candidate_review(args.case_root,read_json(args.review))
+    if action in {"evidence-review-import","condition-audit-import"}:
+        from .runner import import_planning_review
+        return import_planning_review(args.case_root,read_json(args.review if action=="evidence-review-import" else args.audit),
+                                     kind="evidence" if action=="evidence-review-import" else "condition")
     if action in {"run", "resume", "prepare"}:
         from .runner import run_case
         result = run_case(args.case_root, max_steps=args.max_steps,

@@ -31,6 +31,8 @@
 
 ## &#x1F4CC; Quick Links
 
+- **[Unified reference workflow](docs/reference_unified/RUNBOOK.md)** — versioned retouch contracts, audited A/B/C evidence, whole-image-first review, delivery preflight and frozen study/report commands. [Implementation contract](docs/reference_unified/CONTRACT.md).
+
 - **[Reference Retouch: diagnosis, frozen targets and delivery acceptance](docs/reference_retouch/RUNBOOK.md)** — GPT Image workbench and opt-in integration with the original `hre models` runner; includes the actual single-case experiment and its limits.
 
 - **[Four-model implementation (Qwen / FireRed / FLUX / FIBO)](docs/four_model_v3/DESIGN_AND_COMPLETION.md)** — built-in native adapters, restoration/reference tasks and bounded feedback via `hre models`.
