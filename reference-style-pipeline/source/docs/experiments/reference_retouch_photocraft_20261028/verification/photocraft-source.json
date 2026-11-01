@@ -1,0 +1,15 @@
+{
+  "commit": "b1794c6e0608ccfc887213dcf58398977c5cb75e",
+  "source_only": true,
+  "build_ran": false,
+  "runtime_ran": false,
+  "files": {
+    "crates/doc/src/lib.rs": "6ec9bc67e3c25ec486ee57046198be04260a29d3",
+    "crates/doc/src/adjust.rs": "e197236a4aa920e644736f5473808522ae17a0c6",
+    "crates/raster/src/lib.rs": "f3778ccbe56cce8b65c8e3fdd96aa4717dabe1d8",
+    "crates/compose/src/lib.rs": "4786bc1912910b5940a8c4e05f6cc5f9e623980d",
+    "crates/compose/src/adjust.rs": "cd907e9cfa561a5397873a23b88851d6afe5fe64",
+    "crates/engine/src/adjust_params.rs": "69fc2d76f31707de2266f8ef524431bf7d23294d",
+    "crates/automation/src/headless.rs": "6722c5c00b733513f4ee4650123f4546e6495913"
+  }
+}

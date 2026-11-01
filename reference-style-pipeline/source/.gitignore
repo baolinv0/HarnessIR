@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Run outputs
+runs/
+*.log
+
+# Model weights (download separately; see README "Configuration")
+checkpoints/
+*.pt
+*.pth
+*.onnx
+*.safetensors
+
+# Local configuration
+.env
+*.local.json
+
+# Reference enhancement controller local data
+.work/
+.pytest_cache/
+engine/build/
+engine/dist/
+Data/ref_enhance_cases/
+
+# Local Rust build products
+engine/photocraft_worker/target/

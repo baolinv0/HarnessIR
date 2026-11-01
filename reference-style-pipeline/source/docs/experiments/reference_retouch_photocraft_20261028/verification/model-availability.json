@@ -1,0 +1,8 @@
+{
+  "ultralytics_installed": false,
+  "torch_installed": false,
+  "sam3_checkpoint_in_repo": [],
+  "configured_local_vlm": false,
+  "common_loopback_ports_8000_8080_11434_listening": false,
+  "note": "No configured real model endpoint/checkpoint supplied; no model download attempted. Port checks do not prove absence on other ports."
+}

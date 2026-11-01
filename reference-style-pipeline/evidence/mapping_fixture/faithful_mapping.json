@@ -1,0 +1,291 @@
+{
+  "version": "v1",
+  "report_id": "ab_report_e665c65e38a340c59b16445c79a01c55",
+  "diagnosis_record_id": "response_5fd0965a3ce74953b5250ff9b548b46a",
+  "targets": [
+    {
+      "target_id": "t1",
+      "measurement_id": null,
+      "visual_region_id": "g0",
+      "visual_dimension": "tone",
+      "visual_direction": "match_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "全画面联合调整影调、亮度、色彩关系，整体向B清晰明亮且暖冷分明的呈现靠近；保持A场景内容、人物身份、表情、姿态、几何布局、镜框、发型、文字和物体相对位置最大一致。只改颜色、亮度、影调；保持原始A为结构基准。",
+        "strength": null,
+        "relation": null
+      }
+    },
+    {
+      "target_id": "t2",
+      "measurement_id": null,
+      "visual_region_id": "g0",
+      "visual_dimension": "color",
+      "visual_direction": "match_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "全画面联合调整影调、亮度、色彩关系，整体向B清晰明亮且暖冷分明的呈现靠近；保持A场景内容、人物身份、表情、姿态、几何布局、镜框、发型、文字和物体相对位置最大一致。只改颜色、亮度、影调；保持原始A为结构基准。",
+        "strength": null,
+        "relation": null
+      }
+    },
+    {
+      "target_id": "t3",
+      "measurement_id": null,
+      "visual_region_id": "g0",
+      "visual_dimension": "brightness",
+      "visual_direction": "match_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "全画面联合调整影调、亮度、色彩关系，整体向B清晰明亮且暖冷分明的呈现靠近；保持A场景内容、人物身份、表情、姿态、几何布局、镜框、发型、文字和物体相对位置最大一致。只改颜色、亮度、影调；保持原始A为结构基准。",
+        "strength": null,
+        "relation": null
+      }
+    },
+    {
+      "target_id": "t4",
+      "measurement_id": null,
+      "visual_region_id": "r1",
+      "visual_dimension": "tone",
+      "visual_direction": "increase_toward_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "整脸作为一个单元，明显提亮并由冷灰向B的暖桃色/自然肤色靠近，保留面部结构和原有明暗层次，不分额头/脸颊等细影调区域。",
+        "strength": null,
+        "relation": null
+      }
+    },
+    {
+      "target_id": "t5",
+      "measurement_id": null,
+      "visual_region_id": "r3",
+      "visual_dimension": "tone",
+      "visual_direction": "increase_toward_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "整个可见颈部皮肤与人脸协调提亮、增暖，维持脸与颈部接近但不强制完全同值。",
+        "strength": null,
+        "relation": null
+      }
+    },
+    {
+      "target_id": "t6",
+      "measurement_id": null,
+      "visual_region_id": "r2",
+      "visual_dimension": "color",
+      "visual_direction": "match_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "头发适度提亮、减弱蓝紫冷偏，靠近B自然深棕；仍明显深于脸，不重画纹理或改变发型。",
+        "strength": null,
+        "relation": null
+      }
+    },
+    {
+      "target_id": "t7",
+      "measurement_id": null,
+      "visual_region_id": "r4",
+      "visual_dimension": "tone",
+      "visual_direction": "match_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "衣服保留深色、只做温和相应色彩/亮度变化；不应用人脸提亮幅度。肩带保持自身棕色身份，不全体染肤色。",
+        "strength": null,
+        "relation": null
+      }
+    },
+    {
+      "target_id": "t8",
+      "measurement_id": null,
+      "visual_region_id": "r5",
+      "visual_dimension": "color",
+      "visual_direction": "match_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "可见黄色柜体提升亮度和橙黄鲜艳感，去除暗橄榄色调，靠近B；不把柜体橙黄迁移到人脸或青顶。",
+        "strength": null,
+        "relation": null
+      }
+    },
+    {
+      "target_id": "t9",
+      "measurement_id": null,
+      "visual_region_id": "r6",
+      "visual_dimension": "color",
+      "visual_direction": "match_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "青色顶板适度提亮、向B更清亮偏绿青靠近，保持青色材料特征；不做全局暖肤色染色。",
+        "strength": null,
+        "relation": null
+      }
+    },
+    {
+      "target_id": "t10",
+      "measurement_id": null,
+      "visual_region_id": "r7",
+      "visual_dimension": "tone",
+      "visual_direction": "match_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "保持白色灯箱为最亮主要区域，暖白倾向和高光过渡靠近B，提亮幅度小于人脸/柜体；不在已有近白端点上强推亮度。",
+        "strength": null,
+        "relation": null
+      }
+    },
+    {
+      "target_id": "t11",
+      "measurement_id": null,
+      "visual_region_id": null,
+      "visual_dimension": "brightness",
+      "visual_direction": "match_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "面部与颈部同步但非数值强制一致",
+        "strength": null,
+        "relation": {
+          "relation_id": "l2",
+          "left_region_id": "r1",
+          "right_region_id": "r3"
+        }
+      }
+    },
+    {
+      "target_id": "t12",
+      "measurement_id": null,
+      "visual_region_id": null,
+      "visual_dimension": "brightness",
+      "visual_direction": "match_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "脸应明显亮于头发，并比A更拉开可见亮度层次。",
+        "strength": null,
+        "relation": {
+          "relation_id": "l1",
+          "left_region_id": "r1",
+          "right_region_id": "r2"
+        }
+      }
+    },
+    {
+      "target_id": "t13",
+      "measurement_id": null,
+      "visual_region_id": null,
+      "visual_dimension": "brightness",
+      "visual_direction": "match_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "黄色柜体略亮于脸",
+        "strength": null,
+        "relation": {
+          "relation_id": "l3",
+          "left_region_id": "r1",
+          "right_region_id": "r5"
+        }
+      }
+    },
+    {
+      "target_id": "t14",
+      "measurement_id": null,
+      "visual_region_id": null,
+      "visual_dimension": "brightness",
+      "visual_direction": "match_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "青色顶板更亮于黄色柜体",
+        "strength": null,
+        "relation": {
+          "relation_id": "l4",
+          "left_region_id": "r5",
+          "right_region_id": "r6"
+        }
+      }
+    },
+    {
+      "target_id": "t15",
+      "measurement_id": null,
+      "visual_region_id": null,
+      "visual_dimension": "brightness",
+      "visual_direction": "match_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "灯箱最亮",
+        "strength": null,
+        "relation": {
+          "relation_id": "l8",
+          "left_region_id": "r7",
+          "right_region_id": "r6"
+        }
+      }
+    },
+    {
+      "target_id": "t16",
+      "measurement_id": null,
+      "visual_region_id": null,
+      "visual_dimension": "tone",
+      "visual_direction": "match_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "相对A，脸/柜体应比灯箱获得更大的影调提升，避免高光压倒主体。",
+        "strength": null,
+        "relation": {
+          "relation_id": "l5",
+          "left_region_id": "r7",
+          "right_region_id": "r1"
+        }
+      }
+    },
+    {
+      "target_id": "t17",
+      "measurement_id": null,
+      "visual_region_id": null,
+      "visual_dimension": "tone",
+      "visual_direction": "match_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "相对A，脸/柜体应比灯箱获得更大的影调提升，避免高光压倒主体。",
+        "strength": null,
+        "relation": {
+          "relation_id": "l9",
+          "left_region_id": "r5",
+          "right_region_id": "r7"
+        }
+      }
+    },
+    {
+      "target_id": "t18",
+      "measurement_id": null,
+      "visual_region_id": null,
+      "visual_dimension": "color",
+      "visual_direction": "match_B",
+      "judge_type": "visual",
+      "priority": "critical",
+      "visual_goal": {
+        "instruction": "柜体暖橙黄与顶板冷绿青之间的色彩区别应更清楚，而不是给整图施加同一肤色/暖色。",
+        "strength": null,
+        "relation": {
+          "relation_id": "l6",
+          "left_region_id": "r5",
+          "right_region_id": "r6"
+        }
+      }
+    }
+  ]
+}

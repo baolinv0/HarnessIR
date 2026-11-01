@@ -1,0 +1,298 @@
+FFFFFFFFFFFF                                                             [100%]
+=================================== FAILURES ===================================
+_____________ test_unconfirmed_candidate_never_delivered[content] ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-33/test_unconfirmed_candidate_nev0')
+missing = 'content'
+
+    @pytest.mark.parametrize('missing',['content','naturalness','protection','native'])
+    def test_unconfirmed_candidate_never_delivered(tmp_path,missing):
+        a,b,pairs,p,ca,cb,proposal,c,plan=fixture((96,128));p['limits']['outer']=1
+        class Review(FakeReviewer):
+            def __call__(self,*args):
+                r=super().__call__(*args)
+                if missing=='protection':r['preservation_checks'][0]['status']='uncertain'
+                elif missing=='native':r['native_inspected']=False
+                else:r[missing]='uncertain'
+                return r
+        r=ToolWorkflow(FakeBackend(),FakePlanner(proposal,plan),Review(),p).run(a,b,ca,cb,pairs,{},tmp_path)
+>       assert r['output']=='original_A',r
+E       AssertionError: {'timings_seconds': {'measurement': 0.019851893004670274, 'planning': 8.095299563137814e-05, 'review': 1.9954000890720....08473428500292357, ...}, 'route': 'reference_tool_retouch_v1', 'status': 'improved_incomplete', 'success': False, ...}
+E       assert 'candidate-1-1.png' == 'original_A'
+E         
+E         - original_A
+E         + candidate-1-1.png
+
+/tmp/test_review_findings.py:17: AssertionError
+___________ test_unconfirmed_candidate_never_delivered[naturalness] ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-33/test_unconfirmed_candidate_nev1')
+missing = 'naturalness'
+
+    @pytest.mark.parametrize('missing',['content','naturalness','protection','native'])
+    def test_unconfirmed_candidate_never_delivered(tmp_path,missing):
+        a,b,pairs,p,ca,cb,proposal,c,plan=fixture((96,128));p['limits']['outer']=1
+        class Review(FakeReviewer):
+            def __call__(self,*args):
+                r=super().__call__(*args)
+                if missing=='protection':r['preservation_checks'][0]['status']='uncertain'
+                elif missing=='native':r['native_inspected']=False
+                else:r[missing]='uncertain'
+                return r
+        r=ToolWorkflow(FakeBackend(),FakePlanner(proposal,plan),Review(),p).run(a,b,ca,cb,pairs,{},tmp_path)
+>       assert r['output']=='original_A',r
+E       AssertionError: {'timings_seconds': {'measurement': 0.020578121999278665, 'planning': 0.0002888910021283664, 'review': 5.2887000492773...060249736001424026, ...}, 'route': 'reference_tool_retouch_v1', 'status': 'improved_incomplete', 'success': False, ...}
+E       assert 'candidate-1-1.png' == 'original_A'
+E         
+E         - original_A
+E         + candidate-1-1.png
+
+/tmp/test_review_findings.py:17: AssertionError
+____________ test_unconfirmed_candidate_never_delivered[protection] ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-33/test_unconfirmed_candidate_nev2')
+missing = 'protection'
+
+    @pytest.mark.parametrize('missing',['content','naturalness','protection','native'])
+    def test_unconfirmed_candidate_never_delivered(tmp_path,missing):
+        a,b,pairs,p,ca,cb,proposal,c,plan=fixture((96,128));p['limits']['outer']=1
+        class Review(FakeReviewer):
+            def __call__(self,*args):
+                r=super().__call__(*args)
+                if missing=='protection':r['preservation_checks'][0]['status']='uncertain'
+                elif missing=='native':r['native_inspected']=False
+                else:r[missing]='uncertain'
+                return r
+        r=ToolWorkflow(FakeBackend(),FakePlanner(proposal,plan),Review(),p).run(a,b,ca,cb,pairs,{},tmp_path)
+>       assert r['output']=='original_A',r
+E       AssertionError: {'timings_seconds': {'measurement': 0.015228737996949349, 'planning': 0.00010540700168348849, 'review': 1.422600325895....06920641699980479, ...}, 'route': 'reference_tool_retouch_v1', 'status': 'improved_incomplete', 'success': False, ...}
+E       assert 'candidate-1-1.png' == 'original_A'
+E         
+E         - original_A
+E         + candidate-1-1.png
+
+/tmp/test_review_findings.py:17: AssertionError
+______________ test_unconfirmed_candidate_never_delivered[native] ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-33/test_unconfirmed_candidate_nev3')
+missing = 'native'
+
+    @pytest.mark.parametrize('missing',['content','naturalness','protection','native'])
+    def test_unconfirmed_candidate_never_delivered(tmp_path,missing):
+        a,b,pairs,p,ca,cb,proposal,c,plan=fixture((96,128));p['limits']['outer']=1
+        class Review(FakeReviewer):
+            def __call__(self,*args):
+                r=super().__call__(*args)
+                if missing=='protection':r['preservation_checks'][0]['status']='uncertain'
+                elif missing=='native':r['native_inspected']=False
+                else:r[missing]='uncertain'
+                return r
+        r=ToolWorkflow(FakeBackend(),FakePlanner(proposal,plan),Review(),p).run(a,b,ca,cb,pairs,{},tmp_path)
+>       assert r['output']=='original_A',r
+E       AssertionError: {'timings_seconds': {'measurement': 0.01436190000094939, 'planning': 5.443700501928106e-05, 'review': 1.35770023916848....06188581299647922, ...}, 'route': 'reference_tool_retouch_v1', 'status': 'improved_incomplete', 'success': False, ...}
+E       assert 'candidate-1-1.png' == 'original_A'
+E         
+E         - original_A
+E         + candidate-1-1.png
+
+/tmp/test_review_findings.py:17: AssertionError
+________ test_perceptual_failure_reaches_budgeted_native_review[False] _________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-33/test_perceptual_failure_reache0')
+mixed = False
+
+    @pytest.mark.parametrize('mixed',[False,True])
+    def test_perceptual_failure_reaches_budgeted_native_review(tmp_path,mixed):
+        a,b,pairs,p,ca,cb,proposal,c,plan=fixture((96,128));b=a.copy();p['limits']['outer']=1
+        target=deepcopy(proposal['targets'][0]);target.update(id='appearance',kind='perceptual',metric=None,tolerance_id=None,direction=None,description='source looks too flat; test judgment only')
+        proposal['targets']=([proposal['targets'][0]] if mixed else [])+[target]
+        plan['operations'][0]['target_ids']=['appearance']
+        class Review(FakeReviewer):
+            def __init__(self):super().__init__();self.n=0
+            def __call__(self,*args):
+                self.n+=1;r=super().__call__(*args)
+                if self.n==1:
+                    for t in r['target_results']:
+                        if t['id']=='appearance':t.update(status='unmet',observation='test-only perceptual difference')
+                return r
+        r=ToolWorkflow(FakeBackend(),FakePlanner(proposal,plan),Review(),p).run(a,b,ca,cb,pairs,{},tmp_path)
+>       assert r['budget']['native']>0 and r['output']!='original_A',r
+E       AssertionError: {'timings_seconds': {'measurement': 0.013296741999511141, 'planning': 9.524300548946485e-05, 'review': 2.0060004317201...0.1182295519975014, ...}, 'route': 'reference_tool_retouch_v1', 'status': 'no_safe_improvement', 'success': False, ...}
+E       assert (0 > 0)
+
+/tmp/test_review_findings.py:34: AssertionError
+_________ test_perceptual_failure_reaches_budgeted_native_review[True] _________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-33/test_perceptual_failure_reache1')
+mixed = True
+
+    @pytest.mark.parametrize('mixed',[False,True])
+    def test_perceptual_failure_reaches_budgeted_native_review(tmp_path,mixed):
+        a,b,pairs,p,ca,cb,proposal,c,plan=fixture((96,128));b=a.copy();p['limits']['outer']=1
+        target=deepcopy(proposal['targets'][0]);target.update(id='appearance',kind='perceptual',metric=None,tolerance_id=None,direction=None,description='source looks too flat; test judgment only')
+        proposal['targets']=([proposal['targets'][0]] if mixed else [])+[target]
+        plan['operations'][0]['target_ids']=['appearance']
+        class Review(FakeReviewer):
+            def __init__(self):super().__init__();self.n=0
+            def __call__(self,*args):
+                self.n+=1;r=super().__call__(*args)
+                if self.n==1:
+                    for t in r['target_results']:
+                        if t['id']=='appearance':t.update(status='unmet',observation='test-only perceptual difference')
+                return r
+        r=ToolWorkflow(FakeBackend(),FakePlanner(proposal,plan),Review(),p).run(a,b,ca,cb,pairs,{},tmp_path)
+>       assert r['budget']['native']>0 and r['output']!='original_A',r
+E       AssertionError: {'timings_seconds': {'measurement': 0.03225291899434524, 'planning': 7.070499850669876e-05, 'review': 1.84449963853694....08003209700109437, ...}, 'route': 'reference_tool_retouch_v1', 'status': 'no_safe_improvement', 'success': False, ...}
+E       assert (0 > 0)
+
+/tmp/test_review_findings.py:34: AssertionError
+____________ test_narrow_legal_bounds_evaluate_nonidentity[bounds0] ____________
+
+bounds = (0.0, 0.02)
+
+    @pytest.mark.parametrize('bounds',[(0.,.02),(-.02,0.),(-.001,.02)])
+    def test_narrow_legal_bounds_evaluate_nonidentity(bounds):
+        from dataclasses import asdict
+        from hre.tool_retouch.planner import validate_plan
+        from hre.tool_retouch.contracts import compile_contract
+        from hre.tool_retouch.evidence import extract
+        from hre.tool_retouch.solver import solve,Budget
+        a,b,pairs,p,ca,cb,proposal,c,plan=fixture()
+        chosen=bounds[1] if bounds[1]>0 else bounds[0];b=a*2**chosen;p['tolerances']['Y']=.000001
+        c=compile_contract(proposal,extract(a,b,pairs),pairs,asdict(ca),asdict(cb),p)
+        plan['operations'][0]['parameters']['ev'].update(lower=bounds[0],upper=bounds[1],suggested=chosen,min_step=.015625)
+        validate_plan(plan,c.data,{})
+        best,ranked,trace=solve(a,plan,c,{'face':pairs[0]['supports']['a']},{},FakeBackend(),Budget(p['limits']))
+>       assert trace['preview_renders']>1 and best.values!=(0.,),trace
+E       AssertionError: {'stop': 'minimum_steps', 'preview_renders': 1, 'candidates': [{'key': '92c95fddbbdf1b6b5ac5627cc8e7c9a8247e9bc85b7069...s': True, 'reasons': [], 'new_white_clip': 0.0, 'new_black_clip': 0.0, ...}, ...}], 'baseline_loss': 2247.207467334006}
+E       assert (1 > 1)
+
+/tmp/test_review_findings.py:49: AssertionError
+____________ test_narrow_legal_bounds_evaluate_nonidentity[bounds1] ____________
+
+bounds = (-0.02, 0.0)
+
+    @pytest.mark.parametrize('bounds',[(0.,.02),(-.02,0.),(-.001,.02)])
+    def test_narrow_legal_bounds_evaluate_nonidentity(bounds):
+        from dataclasses import asdict
+        from hre.tool_retouch.planner import validate_plan
+        from hre.tool_retouch.contracts import compile_contract
+        from hre.tool_retouch.evidence import extract
+        from hre.tool_retouch.solver import solve,Budget
+        a,b,pairs,p,ca,cb,proposal,c,plan=fixture()
+        chosen=bounds[1] if bounds[1]>0 else bounds[0];b=a*2**chosen;p['tolerances']['Y']=.000001
+        c=compile_contract(proposal,extract(a,b,pairs),pairs,asdict(ca),asdict(cb),p)
+        plan['operations'][0]['parameters']['ev'].update(lower=bounds[0],upper=bounds[1],suggested=chosen,min_step=.015625)
+        validate_plan(plan,c.data,{})
+        best,ranked,trace=solve(a,plan,c,{'face':pairs[0]['supports']['a']},{},FakeBackend(),Budget(p['limits']))
+>       assert trace['preview_renders']>1 and best.values!=(0.,),trace
+E       AssertionError: {'stop': 'minimum_steps', 'preview_renders': 1, 'candidates': [{'key': '80a595bc92d07cfed1d3e990509bfebabfcb49f25c7983...': True, 'reasons': [], 'new_white_clip': 0.0, 'new_black_clip': 0.0, ...}, ...}], 'baseline_loss': 2181.9130345957506}
+E       assert (1 > 1)
+
+/tmp/test_review_findings.py:49: AssertionError
+____________ test_narrow_legal_bounds_evaluate_nonidentity[bounds2] ____________
+
+bounds = (-0.001, 0.02)
+
+    @pytest.mark.parametrize('bounds',[(0.,.02),(-.02,0.),(-.001,.02)])
+    def test_narrow_legal_bounds_evaluate_nonidentity(bounds):
+        from dataclasses import asdict
+        from hre.tool_retouch.planner import validate_plan
+        from hre.tool_retouch.contracts import compile_contract
+        from hre.tool_retouch.evidence import extract
+        from hre.tool_retouch.solver import solve,Budget
+        a,b,pairs,p,ca,cb,proposal,c,plan=fixture()
+        chosen=bounds[1] if bounds[1]>0 else bounds[0];b=a*2**chosen;p['tolerances']['Y']=.000001
+        c=compile_contract(proposal,extract(a,b,pairs),pairs,asdict(ca),asdict(cb),p)
+        plan['operations'][0]['parameters']['ev'].update(lower=bounds[0],upper=bounds[1],suggested=chosen,min_step=.015625)
+        validate_plan(plan,c.data,{})
+        best,ranked,trace=solve(a,plan,c,{'face':pairs[0]['supports']['a']},{},FakeBackend(),Budget(p['limits']))
+>       assert trace['preview_renders']>1 and best.values!=(0.,),trace
+E       AssertionError: {'stop': 'minimum_steps', 'preview_renders': 1, 'candidates': [{'key': '11c44a872c1662e8b4295bb25f0dd5fbe378162379f5a1...s': True, 'reasons': [], 'new_white_clip': 0.0, 'new_black_clip': 0.0, ...}, ...}], 'baseline_loss': 2247.207467334006}
+E       assert (1 > 1)
+
+/tmp/test_review_findings.py:49: AssertionError
+______________ test_unused_mask_does_not_change_global_acceptance ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-33/test_unused_mask_does_not_chan0')
+
+    def test_unused_mask_does_not_change_global_acceptance(tmp_path):
+        import numpy as np
+        a,b,pairs,p,ca,cb,proposal,c,plan=fixture((96,128));a[:,:64]=.2;a[:,64:]=.6;b=a*1.2;p['limits']['outer']=1
+        mask=np.zeros(a.shape[:2]);mask[:,64:]=1
+        results=[]
+        for name,masks in [('none',{}),('unused',{'unused':mask})]:
+            results.append(ToolWorkflow(FakeBackend(),FakePlanner(proposal,plan),FakeReviewer(),p).run(a,b,ca,cb,pairs,masks,tmp_path/name))
+>       assert results[0]['status']==results[1]['status']=='accepted',[(r['status'],r.get('reason')) for r in results]
+E       AssertionError: [('accepted', None), ('no_safe_improvement', 'native/replay budget exhausted')]
+E       assert 'accepted' == 'no_safe_improvement'
+E         
+E         - no_safe_improvement
+E         + accepted
+
+/tmp/test_review_findings.py:58: AssertionError
+_____________ test_delivery_failure_has_specific_evidence[export] ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-33/test_delivery_failure_has_spec0')
+fault = 'export'
+
+    @pytest.mark.parametrize('fault',['export','replay'])
+    def test_delivery_failure_has_specific_evidence(tmp_path,fault):
+        import json
+        class Broken(FakeBackend):
+            def export_native(self,path,image):
+                image=image.copy()
+                if fault=='export':image[:10]=1.
+                return super().export_native(path,image)
+            def replay(self,*args):
+                if fault=='replay':return {'pass':False,'max_error':.2,'tolerance':0.,'pixel_sha256':'observed-test-hash'}
+                return super().replay(*args)
+        a,b,pairs,p,ca,cb,proposal,c,plan=fixture((96,128));p['limits']['outer']=1
+        r=ToolWorkflow(Broken(),FakePlanner(proposal,plan),FakeReviewer(),p).run(a,b,ca,cb,pairs,{},tmp_path)
+        rows=[json.loads(x.read_text()) for x in (tmp_path/'trace').glob('*.json')]
+>       if fault=='export':assert any(x['stage']=='exported_native_acceptance' and x['output']['checks']['pass'] is False for x in rows)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert False
+E        +  where False = any(<generator object test_delivery_failure_has_specific_evidence.<locals>.<genexpr> at 0x7fe829c9cd40>)
+
+/tmp/test_review_findings.py:74: AssertionError
+_____________ test_delivery_failure_has_specific_evidence[replay] ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-33/test_delivery_failure_has_spec1')
+fault = 'replay'
+
+    @pytest.mark.parametrize('fault',['export','replay'])
+    def test_delivery_failure_has_specific_evidence(tmp_path,fault):
+        import json
+        class Broken(FakeBackend):
+            def export_native(self,path,image):
+                image=image.copy()
+                if fault=='export':image[:10]=1.
+                return super().export_native(path,image)
+            def replay(self,*args):
+                if fault=='replay':return {'pass':False,'max_error':.2,'tolerance':0.,'pixel_sha256':'observed-test-hash'}
+                return super().replay(*args)
+        a,b,pairs,p,ca,cb,proposal,c,plan=fixture((96,128));p['limits']['outer']=1
+        r=ToolWorkflow(Broken(),FakePlanner(proposal,plan),FakeReviewer(),p).run(a,b,ca,cb,pairs,{},tmp_path)
+        rows=[json.loads(x.read_text()) for x in (tmp_path/'trace').glob('*.json')]
+        if fault=='export':assert any(x['stage']=='exported_native_acceptance' and x['output']['checks']['pass'] is False for x in rows)
+>       else:assert any(x['stage']=='replay' and x['output'].get('max_error')==.2 for x in rows)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert False
+E        +  where False = any(<generator object test_delivery_failure_has_specific_evidence.<locals>.<genexpr> at 0x7fe829c08ba0>)
+
+/tmp/test_review_findings.py:75: AssertionError
+=========================== short test summary info ============================
+FAILED ../../tmp/test_review_findings.py::test_unconfirmed_candidate_never_delivered[content]
+FAILED ../../tmp/test_review_findings.py::test_unconfirmed_candidate_never_delivered[naturalness]
+FAILED ../../tmp/test_review_findings.py::test_unconfirmed_candidate_never_delivered[protection]
+FAILED ../../tmp/test_review_findings.py::test_unconfirmed_candidate_never_delivered[native]
+FAILED ../../tmp/test_review_findings.py::test_perceptual_failure_reaches_budgeted_native_review[False]
+FAILED ../../tmp/test_review_findings.py::test_perceptual_failure_reaches_budgeted_native_review[True]
+FAILED ../../tmp/test_review_findings.py::test_narrow_legal_bounds_evaluate_nonidentity[bounds0]
+FAILED ../../tmp/test_review_findings.py::test_narrow_legal_bounds_evaluate_nonidentity[bounds1]
+FAILED ../../tmp/test_review_findings.py::test_narrow_legal_bounds_evaluate_nonidentity[bounds2]
+FAILED ../../tmp/test_review_findings.py::test_unused_mask_does_not_change_global_acceptance
+FAILED ../../tmp/test_review_findings.py::test_delivery_failure_has_specific_evidence[export]
+FAILED ../../tmp/test_review_findings.py::test_delivery_failure_has_specific_evidence[replay]
+12 failed in 2.56s

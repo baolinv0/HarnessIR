@@ -1,0 +1,100 @@
+{
+  "case_id": "SYNTHETIC-only",
+  "source": {
+    "path": "A.png",
+    "sha256": "f46c34e11add33f1e31dcb3f7e0fcac8cfa85d8500bb9ab3db5d27037e82b3a5",
+    "assume_srgb": false
+  },
+  "reference": {
+    "path": "B.png",
+    "sha256": "ba698e5a04a535d739d67294b4e423bda2b7dfd21fe1f66f51af249138cb1862",
+    "assume_srgb": false
+  },
+  "masks": {},
+  "regions": [],
+  "edit_masks": {
+    "wall_edit": {
+      "source_mask": "region:wall",
+      "feather_native": 8,
+      "density": 1,
+      "luminance_range": null
+    }
+  },
+  "support_policy": {
+    "edge": 1,
+    "min_pixels": 32,
+    "min_coverage": 0.4
+  },
+  "policy": {
+    "tolerances": {
+      "synthetic_Y_only": 0.003
+    },
+    "per_round_preview": 40,
+    "preview_side": 768,
+    "limits": {
+      "preview": 120,
+      "native": 3,
+      "replay": 3,
+      "vlm": 8,
+      "outer": 3
+    },
+    "identity_tolerance": 3.0518043793392844e-05,
+    "outside_tolerance": 3.0518043793392844e-05,
+    "max_new_clip": 0.001,
+    "detail_ratio": [
+      0.5,
+      2.0
+    ],
+    "max_edge_jump": 0.04,
+    "regularization": 0.001,
+    "improvement_epsilon": 1e-07,
+    "replay_tolerance": 0.0
+  },
+  "backend": {
+    "executable": "/path/to/approved/harnessir-photocraft-worker",
+    "sha256": "REPLACE_WITH_BUILT_BINARY_SHA256",
+    "timeout": 120
+  },
+  "planner": {
+    "mode": "files"
+  },
+  "reviewer": {
+    "mode": "files"
+  },
+  "provenance": {
+    "source_chain": "synthetic sRGB ramp",
+    "reference_chain": "synthetic display RGB multiplier 1.12",
+    "capture_interval_seconds": null,
+    "limitations": [
+      "not photographed",
+      "not S26 prediction/iPhone experiment"
+    ],
+    "split": "development"
+  },
+  "segmentation": {
+    "checkpoint": "/path/to/already-provisioned/sam3_semantic.pt",
+    "checkpoint_sha256": "REPLACE_WITH_LOCAL_CHECKPOINT_SHA256",
+    "labels": [
+      "wall",
+      "person",
+      "sky"
+    ],
+    "conf": 0.15,
+    "iou": 0.7,
+    "imgsz": 1024,
+    "timeout": 300,
+    "producer_version": "REPLACE_WITH_INSTALLED_ULTRALYTICS_VERSION",
+    "regions": [
+      {
+        "id": "wall",
+        "a_label": "wall",
+        "b_label": "wall",
+        "semantic": "same wall under comparable illumination",
+        "comparability": "partially_comparable",
+        "reasons": [
+          "Replace with actual correspondence assessment; matching label alone is insufficient."
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+.F                                                                       [100%]
+=================================== FAILURES ===================================
+_________ test_unknown_best_safe_effect_is_not_a_lower_perceptual_rank _________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-47/test_unknown_best_safe_effect_0')
+
+    def test_unknown_best_safe_effect_is_not_a_lower_perceptual_rank(tmp_path):
+        a,b,pairs,p,ca,cb,proposal,c,plan=fixture();p['limits'].update(outer=2,native=2,replay=2)
+        target=deepcopy(proposal['targets'][0]);target.update(id='appearance',kind='perceptual',metric=None,tolerance_id=None,direction=None)
+        proposal['targets'].append(target)
+        class Planner(FakePlanner):
+            def __call__(self,stage,context,images):
+                r=super().__call__(stage,context,images)
+                if stage=='plan':r['feedback_ids']=[f['id'] for f in context['feedback']]
+                return r
+        class Review(FakeReviewer):
+            def __init__(self):super().__init__();self.calls=0
+            def __call__(self,*args):
+                r=super().__call__(*args);self.calls+=1
+                for t in r['target_results']:
+                    if t['id']=='appearance':t['status']='uncertain' if self.calls==1 else 'unmet'
+                return r
+        review=Review();r=ToolWorkflow(FakeBackend(),Planner(proposal,plan),review,p).run(a,b,ca,cb,pairs,{},tmp_path)
+        assert review.calls==2 and r['status']=='improved_incomplete',r
+>       assert r['output']=='candidate-1-1.png',r
+E       AssertionError: {'timings_seconds': {'measurement': 0.0022169329968164675, 'planning': 8.048699965002015e-05, 'review': 2.315300662303....06535714399797143, ...}, 'route': 'reference_tool_retouch_v1', 'status': 'improved_incomplete', 'success': False, ...}
+E       assert 'candidate-2-2.png' == 'candidate-1-1.png'
+E         
+E         - candidate-1-1.png
+E         ?           ^ ^
+E         + candidate-2-2.png
+E         ?           ^ ^
+
+engine/tests/tool_retouch/test_review_regressions.py:180: AssertionError
+=========================== short test summary info ============================
+FAILED engine/tests/tool_retouch/test_review_regressions.py::test_unknown_best_safe_effect_is_not_a_lower_perceptual_rank
+1 failed, 1 passed, 18 deselected in 0.58s

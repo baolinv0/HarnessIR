@@ -1,0 +1,9 @@
+{
+  "sample_id": "camera_rgb_A01_new",
+  "provider": "current_chat_offline",
+  "purpose": "reference_style",
+  "inputs": [
+    {"role": "A", "path": "../private_data/A01/A_srgb8.png", "source_kind": "camera_rgb", "encoding": "srgb", "encoding_basis": "REPLACE with actual verified ICC conversion manifest reference", "base_model_version": null, "display_assumption": null},
+    {"role": "B", "path": "../private_data/A01/B_srgb8.png", "source_kind": "camera_rgb", "encoding": "srgb", "encoding_basis": "REPLACE with actual verified ICC conversion manifest reference", "base_model_version": null, "display_assumption": null}
+  ]
+}

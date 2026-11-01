@@ -1,0 +1,50 @@
+harnessir-photocraft-worker v0.1.0 (/workspace/HarnessIR/engine/photocraft_worker)
+├── photocraft-compose v0.16.0 (https://github.com/storytold/photocraft?rev=b1794c6e0608ccfc887213dcf58398977c5cb75e#b1794c6e)
+│   ├── photocraft-color v0.16.0 (https://github.com/storytold/photocraft?rev=b1794c6e0608ccfc887213dcf58398977c5cb75e#b1794c6e)
+│   │   ├── photocraft-cms v0.16.0 (https://github.com/storytold/photocraft?rev=b1794c6e0608ccfc887213dcf58398977c5cb75e#b1794c6e)
+│   │   │   └── rayon v1.12.0
+│   │   │       ├── either v1.19.0
+│   │   │       └── rayon-core v1.13.0
+│   │   │           ├── crossbeam-deque v0.8.8
+│   │   │           │   ├── crossbeam-epoch v0.9.21
+│   │   │           │   │   └── crossbeam-utils v0.8.23
+│   │   │           │   └── crossbeam-utils v0.8.23
+│   │   │           └── crossbeam-utils v0.8.23
+│   │   └── serde v1.0.229
+│   │       ├── serde_core v1.0.229
+│   │       └── serde_derive v1.0.229 (proc-macro)
+│   │           ├── proc-macro2 v1.0.107
+│   │           │   └── unicode-ident v1.0.27
+│   │           ├── quote v1.0.47
+│   │           │   └── proc-macro2 v1.0.107 (*)
+│   │           └── syn v3.0.9
+│   │               ├── proc-macro2 v1.0.107 (*)
+│   │               ├── quote v1.0.47 (*)
+│   │               └── unicode-ident v1.0.27
+│   ├── photocraft-doc v0.16.0 (https://github.com/storytold/photocraft?rev=b1794c6e0608ccfc887213dcf58398977c5cb75e#b1794c6e)
+│   │   ├── photocraft-color v0.16.0 (https://github.com/storytold/photocraft?rev=b1794c6e0608ccfc887213dcf58398977c5cb75e#b1794c6e) (*)
+│   │   ├── photocraft-geom v0.16.0 (https://github.com/storytold/photocraft?rev=b1794c6e0608ccfc887213dcf58398977c5cb75e#b1794c6e)
+│   │   │   └── serde v1.0.229 (*)
+│   │   ├── photocraft-raster v0.16.0 (https://github.com/storytold/photocraft?rev=b1794c6e0608ccfc887213dcf58398977c5cb75e#b1794c6e)
+│   │   │   ├── photocraft-color v0.16.0 (https://github.com/storytold/photocraft?rev=b1794c6e0608ccfc887213dcf58398977c5cb75e#b1794c6e) (*)
+│   │   │   ├── photocraft-geom v0.16.0 (https://github.com/storytold/photocraft?rev=b1794c6e0608ccfc887213dcf58398977c5cb75e#b1794c6e) (*)
+│   │   │   ├── rayon v1.12.0 (*)
+│   │   │   └── serde v1.0.229 (*)
+│   │   ├── serde v1.0.229 (*)
+│   │   └── serde_json v1.0.154
+│   │       ├── itoa v1.0.18
+│   │       ├── memchr v2.8.3
+│   │       ├── serde_core v1.0.229
+│   │       └── zmij v1.0.23
+│   ├── photocraft-geom v0.16.0 (https://github.com/storytold/photocraft?rev=b1794c6e0608ccfc887213dcf58398977c5cb75e#b1794c6e) (*)
+│   ├── photocraft-raster v0.16.0 (https://github.com/storytold/photocraft?rev=b1794c6e0608ccfc887213dcf58398977c5cb75e#b1794c6e) (*)
+│   ├── photocraft-vector v0.16.0 (https://github.com/storytold/photocraft?rev=b1794c6e0608ccfc887213dcf58398977c5cb75e#b1794c6e)
+│   │   ├── photocraft-color v0.16.0 (https://github.com/storytold/photocraft?rev=b1794c6e0608ccfc887213dcf58398977c5cb75e#b1794c6e) (*)
+│   │   ├── photocraft-doc v0.16.0 (https://github.com/storytold/photocraft?rev=b1794c6e0608ccfc887213dcf58398977c5cb75e#b1794c6e) (*)
+│   │   ├── photocraft-geom v0.16.0 (https://github.com/storytold/photocraft?rev=b1794c6e0608ccfc887213dcf58398977c5cb75e#b1794c6e) (*)
+│   │   ├── photocraft-raster v0.16.0 (https://github.com/storytold/photocraft?rev=b1794c6e0608ccfc887213dcf58398977c5cb75e#b1794c6e) (*)
+│   │   └── rayon v1.12.0 (*)
+│   └── rayon v1.12.0 (*)
+├── photocraft-doc v0.16.0 (https://github.com/storytold/photocraft?rev=b1794c6e0608ccfc887213dcf58398977c5cb75e#b1794c6e) (*)
+├── serde v1.0.229 (*)
+└── serde_json v1.0.154 (*)

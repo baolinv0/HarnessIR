@@ -1,0 +1,28 @@
+{
+  "rust": "1.95.0 (59807616e 2026-04-14)",
+  "photocraft_commit": "b1794c6e0608ccfc887213dcf58398977c5cb75e",
+  "worker_sha256": "2c87bc8bfb9a5a69388afebbbb82ff1875e566b03ca8599768803f2b88ae0f74",
+  "worker_bytes": 2869248,
+  "cargo_lock_sha256": "a339f9ff3f2bd91edc174721858ddd17de106455d966bfac8d7c2cc0c9a2817f",
+  "cpu_only": true,
+  "probe_pass": true,
+  "probe_count": 20,
+  "real_vlm": false,
+  "real_sam3": false,
+  "real_photo_effect": false,
+  "source_test_commit": "c0a201a4e22eeba0c206352d9c3778b62fd1a638",
+  "authorization": "user explicit permission 2026-10-29 00:40:41 UTC",
+  "toolchain_installation": {
+    "rustup": "/workspace/toolchains/rustup",
+    "cargo": "/workspace/toolchains/cargo",
+    "profile": "minimal",
+    "admin": false,
+    "system_packages_installed": false
+  },
+  "limitations": [
+    "synthetic CPU sRGB only",
+    "no actual VLM or SAM3",
+    "no real photo style validation",
+    "identity preserves pixels within U16 tolerance, not exact original bytes"
+  ]
+}

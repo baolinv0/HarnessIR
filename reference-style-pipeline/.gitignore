@@ -1,0 +1,22 @@
+# Never commit private inputs, outputs, masks or environment material.
+private_data/
+local_runs/
+local_models/
+.venv/
+__pycache__/
+*.py[cod]
+.env
+*.local.json
+*.npy
+*.npz
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.heic
+*.mpo
+*.pt
+*.pth
+*.tflite
+*.onnx
+*.safetensors

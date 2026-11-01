@@ -1,0 +1,45 @@
+diff --git a/engine/src/hre/tool_retouch/workflow.py b/engine/src/hre/tool_retouch/workflow.py
+index 501bba0..6ceb96d 100644
+--- a/engine/src/hre/tool_retouch/workflow.py
++++ b/engine/src/hre/tool_retouch/workflow.py
+@@ -93,7 +93,7 @@ class ToolWorkflow:
+             supports={p['id']:p['supports']['a'] for p in pairs if p['comparability']!='not_comparable'}
+             baseline=target_results(a,contract,supports);base_loss=objective(baseline,contract)
+             perceptual_ids={t['id'] for t in contract.data['targets'] if t['kind'] in ('perceptual','protection')}
+-            visual_anchor=None;feedback=[]
++            visual_anchor=None;baseline_visual=None;feedback=[]  # Latest feedback is not the promotion baseline.
+             def pending_visual(review):
+                 return {t['id'] for t in (review or {}).get('target_results',[]) if t['id'] in perceptual_ids and t['status'] in ('partial','unmet')}
+             def numeric_preserved(rows):
+@@ -101,14 +101,15 @@ class ToolWorkflow:
+                 return all(r['kind'] in ('perceptual','protection') or not r['mandatory'] or r['status']!='achieved' or current.get(r['id'],{}).get('status')=='achieved' for r in baseline)
+             def visual_progress(review,previous):
+                 if not previous:return False
+-                scores={'uncertain':0,'unmet':1,'partial':2,'achieved':3}
++                scores={'unmet':1,'partial':2,'achieved':3}
+                 old={r['id']:r for r in previous['target_results']};now={r['id']:r for r in review['target_results']}
++                if any(old[k]['status']=='uncertain' or now[k]['status']=='uncertain' for k in perceptual_ids):return False
+                 return bool(perceptual_ids) and all(scores[now[k]['status']]>=scores[old[k]['status']] for k in perceptual_ids) and any(scores[now[k]['status']]>scores[old[k]['status']] for k in perceptual_ids)
+ 
+             if all(r['residual'] in (None,0.) for r in baseline):
+                 v=call(self.reviewer,'verify',visual_context(contract,a,b,a),views(a,b,a,pairs))
+                 validate_visual(v,contract,a,b,a)
+-                visual_anchor=v
++                visual_anchor=v;baseline_visual=v
+                 feedback=[{'id':'baseline-visual','targets':v['target_results'],'notes':v['notes'],'preservation_checks':v['preservation_checks'],'content':v['content'],'naturalness':v['naturalness'],'native_inspected':v['native_inspected']}]
+                 journal.record('baseline_visual_feedback',{'source':'original_A'},feedback,source=provider_source(self.reviewer),change='保留原图视觉未满足项；图像未改变',impact='作为预算内感知候选的真实依据')
+                 if accepted(baseline,v):
+@@ -197,7 +198,12 @@ class ToolWorkflow:
+                     events.append({'native_candidate':delivery})
+                     feedback.append({'id':f'visual-{round_id}-{budget.used["native"]}','targets':visual['target_results'],'notes':visual['notes'],'preservation_checks':visual['preservation_checks']})
+                     journal.record('feedback',{'round':round_id},feedback,change='保存实际逐目标/保护反馈与剩余问题；图像未改变',impact='决定终止或触发下一轮有界修订')
+-                    progress=visual_progress(visual,visual_anchor)
++                    promotion_reference=best_safe['visual'] if best_safe else baseline_visual
++                    progress=visual_progress(visual,promotion_reference)
++                    previous_judgments={r['id']:r['status'] for r in (promotion_reference or {}).get('target_results',[])}
++                    current_judgments={r['id']:r['status'] for r in visual['target_results']}
++                    transitions=[{'id':k,'from':previous_judgments[k],'to':current_judgments[k]} for k in sorted(perceptual_ids&previous_judgments.keys()) if previous_judgments[k]!=current_judgments[k]]
++                    journal.record('perceptual_comparison',{'reference':best_safe['file'] if best_safe else 'original_A','candidate':filename}, {'quality_improved':progress,'unknown_resolutions':[t for t in transitions if t['from']=='uncertain' and t['to']!='uncertain'],'known_quality_changes':[t for t in transitions if 'uncertain' not in (t['from'],t['to'])]},change='单列未知状态消解与已知质量变化；未知不是更低效果等级',impact='只有相对固定原图/最佳安全基准的进步可用于感知晋升')
+                     visual_anchor=visual
+                     if not safe_visual(visual):
+                         result['unconfirmed_safety']=True

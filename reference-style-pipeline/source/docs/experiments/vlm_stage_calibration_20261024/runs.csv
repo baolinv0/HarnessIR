@@ -1,0 +1,1 @@
+run_id,attempt_id,block,stage,case_id,split,arm,model_revision,seed,source_run_ids,candidate_id,status,strict_json_ok,unfenced_json_ok,schema_ok,finish_reason,latency_s,prompt_tokens,completion_tokens,reasoning_tokens,final_tokens,reasoning_chars,content_chars,request_path,response_path,result_path,error

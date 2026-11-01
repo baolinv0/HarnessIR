@@ -1,0 +1,102 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+________ test_visual_recovery_to_original_is_not_an_improvement[False] _________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-44/test_visual_recovery_to_origin0')
+unsafe_middle = False
+
+    @pytest.mark.parametrize('unsafe_middle',[False,True])
+    def test_visual_recovery_to_original_is_not_an_improvement(tmp_path,unsafe_middle):
+        a,b,pairs,p,ca,cb,proposal,c,plan=fixture();b=a.copy();p['limits'].update(outer=2,native=2,replay=2)
+        proposal['targets'][0].update(kind='perceptual',metric=None,tolerance_id=None,direction=None)
+        class Planner(FakePlanner):
+            def __call__(self,stage,context,images):
+                r=super().__call__(stage,context,images)
+                if stage=='plan':r['feedback_ids']=[f['id'] for f in context['feedback']]
+                return r
+        class Review(FakeReviewer):
+            def __init__(self):super().__init__();self.calls=0
+            def __call__(self,*args):
+                r=super().__call__(*args);self.calls+=1
+                r['target_results'][0]['status']='unmet' if self.calls==2 else 'partial'
+                if self.calls==2 and unsafe_middle:r['content']='uncertain'
+                return r
+        review=Review()
+        r=ToolWorkflow(FakeBackend(),Planner(proposal,plan),review,p).run(a,b,ca,cb,pairs,{},tmp_path)
+        assert review.calls==3,r
+>       assert r['output']=='original_A' and r['status']=='no_safe_improvement',r
+E       AssertionError: {'timings_seconds': {'measurement': 0.004304178000893444, 'planning': 7.657300011487678e-05, 'review': 0.0002586240007....05784891099756351, ...}, 'route': 'reference_tool_retouch_v1', 'status': 'improved_incomplete', 'success': False, ...}
+E       assert ('candidate-2-2.png' == 'original_A'
+E         
+E         - original_A
+E         + candidate-2-2.png)
+
+engine/tests/tool_retouch/test_review_regressions.py:128: AssertionError
+_________ test_visual_recovery_to_original_is_not_an_improvement[True] _________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-44/test_visual_recovery_to_origin1')
+unsafe_middle = True
+
+    @pytest.mark.parametrize('unsafe_middle',[False,True])
+    def test_visual_recovery_to_original_is_not_an_improvement(tmp_path,unsafe_middle):
+        a,b,pairs,p,ca,cb,proposal,c,plan=fixture();b=a.copy();p['limits'].update(outer=2,native=2,replay=2)
+        proposal['targets'][0].update(kind='perceptual',metric=None,tolerance_id=None,direction=None)
+        class Planner(FakePlanner):
+            def __call__(self,stage,context,images):
+                r=super().__call__(stage,context,images)
+                if stage=='plan':r['feedback_ids']=[f['id'] for f in context['feedback']]
+                return r
+        class Review(FakeReviewer):
+            def __init__(self):super().__init__();self.calls=0
+            def __call__(self,*args):
+                r=super().__call__(*args);self.calls+=1
+                r['target_results'][0]['status']='unmet' if self.calls==2 else 'partial'
+                if self.calls==2 and unsafe_middle:r['content']='uncertain'
+                return r
+        review=Review()
+        r=ToolWorkflow(FakeBackend(),Planner(proposal,plan),review,p).run(a,b,ca,cb,pairs,{},tmp_path)
+        assert review.calls==3,r
+>       assert r['output']=='original_A' and r['status']=='no_safe_improvement',r
+E       AssertionError: {'timings_seconds': {'measurement': 0.002319829996849876, 'planning': 8.729700493859127e-05, 'review': 2.8702997951768....02385414000309538, ...}, 'route': 'reference_tool_retouch_v1', 'status': 'improved_incomplete', 'success': False, ...}
+E       assert ('candidate-1-2.png' == 'original_A'
+E         
+E         - original_A
+E         + candidate-1-2.png)
+
+engine/tests/tool_retouch/test_review_regressions.py:128: AssertionError
+_________ test_unsafe_candidate_cannot_lower_existing_best_safe_anchor _________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-44/test_unsafe_candidate_cannot_l0')
+
+    def test_unsafe_candidate_cannot_lower_existing_best_safe_anchor(tmp_path):
+        a,b,pairs,p,ca,cb,proposal,c,plan=fixture();b=a.copy();p['limits']['outer']=2
+        proposal['targets'][0].update(kind='perceptual',metric=None,tolerance_id=None,direction=None)
+        class Planner(FakePlanner):
+            def __call__(self,stage,context,images):
+                r=super().__call__(stage,context,images)
+                if stage=='plan':r['feedback_ids']=[f['id'] for f in context['feedback']]
+                return r
+        class Review(FakeReviewer):
+            def __init__(self):super().__init__();self.calls=0
+            def __call__(self,*args):
+                r=super().__call__(*args);self.calls+=1
+                r['target_results'][0]['status']={1:'unmet',2:'partial',3:'unmet',4:'partial'}[self.calls]
+                if self.calls==3:r['content']='uncertain'
+                return r
+        review=Review();r=ToolWorkflow(FakeBackend(),Planner(proposal,plan),review,p).run(a,b,ca,cb,pairs,{},tmp_path)
+        assert review.calls==4 and r['status']=='improved_incomplete',r
+>       assert r['output']=='candidate-1-1.png',r
+E       AssertionError: {'timings_seconds': {'measurement': 0.002791684994008392, 'planning': 7.320600707316771e-05, 'review': 3.8504993426613....05634746099531185, ...}, 'route': 'reference_tool_retouch_v1', 'status': 'improved_incomplete', 'success': False, ...}
+E       assert 'candidate-2-3.png' == 'candidate-1-1.png'
+E         
+E         - candidate-1-1.png
+E         ?           ^ ^
+E         + candidate-2-3.png
+E         ?           ^ ^
+
+engine/tests/tool_retouch/test_review_regressions.py:147: AssertionError
+=========================== short test summary info ============================
+FAILED engine/tests/tool_retouch/test_review_regressions.py::test_visual_recovery_to_original_is_not_an_improvement[False]
+FAILED engine/tests/tool_retouch/test_review_regressions.py::test_visual_recovery_to_original_is_not_an_improvement[True]
+FAILED engine/tests/tool_retouch/test_review_regressions.py::test_unsafe_candidate_cannot_lower_existing_best_safe_anchor
+3 failed, 15 deselected in 0.86s

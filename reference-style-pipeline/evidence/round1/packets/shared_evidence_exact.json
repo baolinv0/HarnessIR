@@ -1,0 +1,977 @@
+{
+  "input_roles": {
+    "A": "content and spatial structure source",
+    "B": "style reference"
+  },
+  "alignment": "unaligned; semantic correspondences only",
+  "source_domain": "camera_rgb; not Base output",
+  "encoding": "both audited canonical RGB8 sRGB; original P3 converted before these measurements",
+  "numeric_interpretation": "descriptive only, all supports visual_direction_only; no calibrated gains, matching thresholds or pixel correspondences",
+  "statistics": "q50 only, original AB medians and seven signed relations; no added quantiles",
+  "regions": [
+    {
+      "region_id": "g0",
+      "name": "全图（混合场景）",
+      "semantic_class": "global",
+      "source": "full_frame",
+      "eligibility": "visual_direction_only",
+      "coverage": {
+        "A": {
+          "pixels": 7016576,
+          "denominator": 7016576,
+          "fraction": 1.0,
+          "bbox": [
+            0,
+            0,
+            2296,
+            3056
+          ]
+        },
+        "B": {
+          "pixels": 7151808,
+          "denominator": 7151808,
+          "fraction": 1.0,
+          "bbox": [
+            0,
+            0,
+            2316,
+            3088
+          ]
+        }
+      }
+    },
+    {
+      "region_id": "r1",
+      "name": "全脸（类别含五官/镜片，非纯皮肤）",
+      "semantic_class": "face",
+      "source": "MediaPipe coarse category",
+      "eligibility": "visual_direction_only",
+      "coverage": {
+        "A": {
+          "bbox": [
+            842,
+            1587,
+            957,
+            1042
+          ],
+          "denominator": 7016576,
+          "fraction": 0.1050418323695204,
+          "pixels": 737034,
+          "status": "available"
+        },
+        "B": {
+          "bbox": [
+            957,
+            1500,
+            962,
+            1095
+          ],
+          "denominator": 7151808,
+          "fraction": 0.10948154648446938,
+          "pixels": 782991,
+          "status": "available"
+        }
+      }
+    },
+    {
+      "region_id": "r2",
+      "name": "完整头发",
+      "semantic_class": "hair",
+      "source": "MediaPipe coarse category",
+      "eligibility": "visual_direction_only",
+      "coverage": {
+        "A": {
+          "bbox": [
+            736,
+            1318,
+            1151,
+            1454
+          ],
+          "denominator": 7016576,
+          "fraction": 0.060281111470894065,
+          "pixels": 422967,
+          "status": "available"
+        },
+        "B": {
+          "bbox": [
+            818,
+            1199,
+            1211,
+            1533
+          ],
+          "denominator": 7151808,
+          "fraction": 0.06723139099931094,
+          "pixels": 480826,
+          "status": "available"
+        }
+      }
+    },
+    {
+      "region_id": "r3",
+      "name": "可见颈部/身体裸露皮肤",
+      "semantic_class": "exposed_skin",
+      "source": "MediaPipe coarse category",
+      "eligibility": "visual_direction_only",
+      "coverage": {
+        "A": {
+          "bbox": [
+            820,
+            2480,
+            907,
+            576
+          ],
+          "denominator": 7016576,
+          "fraction": 0.046419934737398985,
+          "pixels": 325709,
+          "status": "available"
+        },
+        "B": {
+          "bbox": [
+            972,
+            2477,
+            906,
+            519
+          ],
+          "denominator": 7151808,
+          "fraction": 0.04105996693423537,
+          "pixels": 293653,
+          "status": "available"
+        }
+      }
+    },
+    {
+      "region_id": "r4",
+      "name": "衣服（类别包含肩带）",
+      "semantic_class": "clothing",
+      "source": "MediaPipe coarse category",
+      "eligibility": "visual_direction_only",
+      "coverage": {
+        "A": {
+          "bbox": [
+            0,
+            2818,
+            1936,
+            238
+          ],
+          "denominator": 7016576,
+          "fraction": 0.022820959966798622,
+          "pixels": 160125,
+          "status": "available"
+        },
+        "B": {
+          "bbox": [
+            125,
+            2765,
+            2191,
+            323
+          ],
+          "denominator": 7151808,
+          "fraction": 0.05603226484827333,
+          "pixels": 400732,
+          "status": "available"
+        }
+      }
+    },
+    {
+      "region_id": "r5",
+      "name": "可见柜体材料",
+      "semantic_class": "other_whole_material",
+      "source": "model-authored coarse manual_annotation, not ground truth",
+      "eligibility": "visual_direction_only",
+      "coverage": {
+        "A": {
+          "bbox": [
+            0,
+            514,
+            2296,
+            2542
+          ],
+          "denominator": 7016576,
+          "fraction": 0.3127263212142219,
+          "pixels": 2194268,
+          "status": "uncertain"
+        },
+        "B": {
+          "bbox": [
+            0,
+            452,
+            2316,
+            2636
+          ],
+          "denominator": 7151808,
+          "fraction": 0.3162927472325879,
+          "pixels": 2262065,
+          "status": "uncertain"
+        }
+      }
+    },
+    {
+      "region_id": "r6",
+      "name": "可见顶板材料",
+      "semantic_class": "other_whole_material",
+      "source": "model-authored coarse manual_annotation, not ground truth",
+      "eligibility": "visual_direction_only",
+      "coverage": {
+        "A": {
+          "bbox": [
+            0,
+            0,
+            2296,
+            670
+          ],
+          "denominator": 7016576,
+          "fraction": 0.19356463893500192,
+          "pixels": 1358161,
+          "status": "uncertain"
+        },
+        "B": {
+          "bbox": [
+            0,
+            0,
+            2316,
+            479
+          ],
+          "denominator": 7151808,
+          "fraction": 0.1505848591013629,
+          "pixels": 1076954,
+          "status": "uncertain"
+        }
+      }
+    },
+    {
+      "region_id": "r7",
+      "name": "主要灯箱整体",
+      "semantic_class": "other_whole_object",
+      "source": "model-authored coarse manual_annotation, not ground truth",
+      "eligibility": "visual_direction_only",
+      "coverage": {
+        "A": {
+          "bbox": [
+            133,
+            620,
+            2163,
+            899
+          ],
+          "denominator": 7016576,
+          "fraction": 0.21670370277468667,
+          "pixels": 1520518,
+          "status": "uncertain"
+        },
+        "B": {
+          "bbox": [
+            220,
+            549,
+            2096,
+            779
+          ],
+          "denominator": 7151808,
+          "fraction": 0.21750933470249761,
+          "pixels": 1555585,
+          "status": "uncertain"
+        }
+      }
+    }
+  ],
+  "measurements": [
+    {
+      "measurement_id": "m3",
+      "subject_id": "g0",
+      "kind": "distribution",
+      "metric": "linear_Y",
+      "statistic": "q50",
+      "A": 0.14618054444257522,
+      "B": 0.34257554161808346,
+      "delta_B_minus_A": 0.19639499717550823,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m10",
+      "subject_id": "g0",
+      "kind": "distribution",
+      "metric": "L_star",
+      "statistic": "q50",
+      "A": 45.10796509546651,
+      "B": 65.16664113767288,
+      "delta_B_minus_A": 20.058676042206372,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m17",
+      "subject_id": "g0",
+      "kind": "distribution",
+      "metric": "a_star",
+      "statistic": "q50",
+      "A": 1.9725949747566585,
+      "B": 9.245643467211572,
+      "delta_B_minus_A": 7.2730484924549135,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m24",
+      "subject_id": "g0",
+      "kind": "distribution",
+      "metric": "b_star",
+      "statistic": "q50",
+      "A": 6.38764570126682e-06,
+      "B": 11.094302650306819,
+      "delta_B_minus_A": 11.094296262661118,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m31",
+      "subject_id": "g0",
+      "kind": "distribution",
+      "metric": "chroma",
+      "statistic": "q50",
+      "A": 16.369141450490773,
+      "B": 22.305915495095082,
+      "delta_B_minus_A": 5.936774044604309,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m38",
+      "subject_id": "r1",
+      "kind": "distribution",
+      "metric": "linear_Y",
+      "statistic": "q50",
+      "A": 0.07709183758195402,
+      "B": 0.21770326735890716,
+      "delta_B_minus_A": 0.14061142977695312,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m45",
+      "subject_id": "r1",
+      "kind": "distribution",
+      "metric": "L_star",
+      "statistic": "q50",
+      "A": 33.37062627431688,
+      "B": 53.78435066025682,
+      "delta_B_minus_A": 20.413724385939943,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m52",
+      "subject_id": "r1",
+      "kind": "distribution",
+      "metric": "a_star",
+      "statistic": "q50",
+      "A": 7.564768293790575,
+      "B": 14.816980273584301,
+      "delta_B_minus_A": 7.252211979793726,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m59",
+      "subject_id": "r1",
+      "kind": "distribution",
+      "metric": "b_star",
+      "statistic": "q50",
+      "A": 0.9243029410610504,
+      "B": 16.873898542432986,
+      "delta_B_minus_A": 15.949595601371936,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m66",
+      "subject_id": "r1",
+      "kind": "distribution",
+      "metric": "chroma",
+      "statistic": "q50",
+      "A": 9.217237879736372,
+      "B": 22.791215428775427,
+      "delta_B_minus_A": 13.573977549039055,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m73",
+      "subject_id": "r2",
+      "kind": "distribution",
+      "metric": "linear_Y",
+      "statistic": "q50",
+      "A": 0.03463782763356642,
+      "B": 0.06629088383529766,
+      "delta_B_minus_A": 0.03165305620173124,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m80",
+      "subject_id": "r2",
+      "kind": "distribution",
+      "metric": "L_star",
+      "statistic": "q50",
+      "A": 21.812941150414325,
+      "B": 30.947541910206965,
+      "delta_B_minus_A": 9.13460075979264,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m87",
+      "subject_id": "r2",
+      "kind": "distribution",
+      "metric": "a_star",
+      "statistic": "q50",
+      "A": 6.22618938450839,
+      "B": 9.26236943065753,
+      "delta_B_minus_A": 3.0361800461491404,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m94",
+      "subject_id": "r2",
+      "kind": "distribution",
+      "metric": "b_star",
+      "statistic": "q50",
+      "A": -7.771649532205199,
+      "B": 5.3020202751481555,
+      "delta_B_minus_A": 13.073669807353355,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m101",
+      "subject_id": "r2",
+      "kind": "distribution",
+      "metric": "chroma",
+      "statistic": "q50",
+      "A": 10.425741054651697,
+      "B": 10.579794597186726,
+      "delta_B_minus_A": 0.15405354253502956,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m108",
+      "subject_id": "r3",
+      "kind": "distribution",
+      "metric": "linear_Y",
+      "statistic": "q50",
+      "A": 0.07136868277837646,
+      "B": 0.1977526393434446,
+      "delta_B_minus_A": 0.12638395656506812,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m115",
+      "subject_id": "r3",
+      "kind": "distribution",
+      "metric": "L_star",
+      "statistic": "q50",
+      "A": 32.11698658237574,
+      "B": 51.58390834027085,
+      "delta_B_minus_A": 19.466921757895115,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m122",
+      "subject_id": "r3",
+      "kind": "distribution",
+      "metric": "a_star",
+      "statistic": "q50",
+      "A": 6.2896851350401075,
+      "B": 14.273810737990999,
+      "delta_B_minus_A": 7.984125602950892,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m129",
+      "subject_id": "r3",
+      "kind": "distribution",
+      "metric": "b_star",
+      "statistic": "q50",
+      "A": 6.150702005208397,
+      "B": 22.28704265357806,
+      "delta_B_minus_A": 16.13634064836966,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m136",
+      "subject_id": "r3",
+      "kind": "distribution",
+      "metric": "chroma",
+      "statistic": "q50",
+      "A": 9.060236234219216,
+      "B": 26.51383157791563,
+      "delta_B_minus_A": 17.453595343696414,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m143",
+      "subject_id": "r4",
+      "kind": "distribution",
+      "metric": "linear_Y",
+      "statistic": "q50",
+      "A": 0.041751833056271406,
+      "B": 0.04783315610744273,
+      "delta_B_minus_A": 0.006081323051171324,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m150",
+      "subject_id": "r4",
+      "kind": "distribution",
+      "metric": "L_star",
+      "statistic": "q50",
+      "A": 24.243024774935108,
+      "B": 26.108428073585813,
+      "delta_B_minus_A": 1.8654032986507048,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m157",
+      "subject_id": "r4",
+      "kind": "distribution",
+      "metric": "a_star",
+      "statistic": "q50",
+      "A": 3.1987754270869084,
+      "B": 3.758779632968584,
+      "delta_B_minus_A": 0.5600042058816754,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m164",
+      "subject_id": "r4",
+      "kind": "distribution",
+      "metric": "b_star",
+      "statistic": "q50",
+      "A": -9.183254547468934,
+      "B": -5.439882573040144,
+      "delta_B_minus_A": 3.74337197442879,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m171",
+      "subject_id": "r4",
+      "kind": "distribution",
+      "metric": "chroma",
+      "statistic": "q50",
+      "A": 12.109964590512082,
+      "B": 7.479559800817949,
+      "delta_B_minus_A": -4.630404789694133,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m178",
+      "subject_id": "r5",
+      "kind": "distribution",
+      "metric": "linear_Y",
+      "statistic": "q50",
+      "A": 0.10015156034904875,
+      "B": 0.24348690581133203,
+      "delta_B_minus_A": 0.14333534546228327,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m185",
+      "subject_id": "r5",
+      "kind": "distribution",
+      "metric": "L_star",
+      "statistic": "q50",
+      "A": 37.8705208817797,
+      "B": 56.43767725880022,
+      "delta_B_minus_A": 18.567156377020524,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m192",
+      "subject_id": "r5",
+      "kind": "distribution",
+      "metric": "a_star",
+      "statistic": "q50",
+      "A": 4.029124190417899,
+      "B": 17.93401013699708,
+      "delta_B_minus_A": 13.904885946579181,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m199",
+      "subject_id": "r5",
+      "kind": "distribution",
+      "metric": "b_star",
+      "statistic": "q50",
+      "A": 27.255669133836257,
+      "B": 56.0432802755659,
+      "delta_B_minus_A": 28.78761114172964,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m206",
+      "subject_id": "r5",
+      "kind": "distribution",
+      "metric": "chroma",
+      "statistic": "q50",
+      "A": 27.663243028284775,
+      "B": 59.69998176168318,
+      "delta_B_minus_A": 32.03673873339841,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m213",
+      "subject_id": "r6",
+      "kind": "distribution",
+      "metric": "linear_Y",
+      "statistic": "q50",
+      "A": 0.35725992787660066,
+      "B": 0.5235435204524841,
+      "delta_B_minus_A": 0.16628359257588343,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m220",
+      "subject_id": "r6",
+      "kind": "distribution",
+      "metric": "L_star",
+      "statistic": "q50",
+      "A": 66.30851525790919,
+      "B": 77.49081822226428,
+      "delta_B_minus_A": 11.182302964355088,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m227",
+      "subject_id": "r6",
+      "kind": "distribution",
+      "metric": "a_star",
+      "statistic": "q50",
+      "A": -18.81737470724376,
+      "B": -22.149321852199034,
+      "delta_B_minus_A": -3.331947144955272,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m234",
+      "subject_id": "r6",
+      "kind": "distribution",
+      "metric": "b_star",
+      "statistic": "q50",
+      "A": -6.763444487737691,
+      "B": 0.20400073481654513,
+      "delta_B_minus_A": 6.967445222554236,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m241",
+      "subject_id": "r6",
+      "kind": "distribution",
+      "metric": "chroma",
+      "statistic": "q50",
+      "A": 20.11326266720113,
+      "B": 22.213016321091203,
+      "delta_B_minus_A": 2.0997536538900725,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m248",
+      "subject_id": "r7",
+      "kind": "distribution",
+      "metric": "linear_Y",
+      "statistic": "q50",
+      "A": 0.8529531747383224,
+      "B": 0.936954458917077,
+      "delta_B_minus_A": 0.08400128417875452,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m255",
+      "subject_id": "r7",
+      "kind": "distribution",
+      "metric": "L_star",
+      "statistic": "q50",
+      "A": 94.01005607304286,
+      "B": 97.50935221631484,
+      "delta_B_minus_A": 3.4992961432719767,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m262",
+      "subject_id": "r7",
+      "kind": "distribution",
+      "metric": "a_star",
+      "statistic": "q50",
+      "A": -1.5868846958699834e-05,
+      "B": 1.3109999125916483,
+      "delta_B_minus_A": 1.311015781438607,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m269",
+      "subject_id": "r7",
+      "kind": "distribution",
+      "metric": "b_star",
+      "statistic": "q50",
+      "A": -2.060607769897582,
+      "B": 3.3427242001349944,
+      "delta_B_minus_A": 5.403331970032577,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m276",
+      "subject_id": "r7",
+      "kind": "distribution",
+      "metric": "chroma",
+      "statistic": "q50",
+      "A": 3.121535181554642,
+      "B": 3.358524520732721,
+      "delta_B_minus_A": 0.23698933917807885,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": null
+    },
+    {
+      "measurement_id": "m281",
+      "subject_id": "l1",
+      "kind": "relation",
+      "metric": "L_star",
+      "statistic": "q50",
+      "A": 11.557685123902552,
+      "B": 22.836808750049855,
+      "delta_B_minus_A": 11.279123626147303,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": {
+        "A": {
+          "left": 33.37062627431688,
+          "right": 21.812941150414325
+        },
+        "B": {
+          "left": 53.78435066025682,
+          "right": 30.947541910206965
+        }
+      },
+      "left_region_id": "r1",
+      "right_region_id": "r2"
+    },
+    {
+      "measurement_id": "m282",
+      "subject_id": "l2",
+      "kind": "relation",
+      "metric": "L_star",
+      "statistic": "q50",
+      "A": 1.2536396919411388,
+      "B": 2.2004423199859673,
+      "delta_B_minus_A": 0.9468026280448285,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": {
+        "A": {
+          "left": 33.37062627431688,
+          "right": 32.11698658237574
+        },
+        "B": {
+          "left": 53.78435066025682,
+          "right": 51.58390834027085
+        }
+      },
+      "left_region_id": "r1",
+      "right_region_id": "r3"
+    },
+    {
+      "measurement_id": "m283",
+      "subject_id": "l3",
+      "kind": "relation",
+      "metric": "L_star",
+      "statistic": "q50",
+      "A": -4.499894607462821,
+      "B": -2.6533265985434014,
+      "delta_B_minus_A": 1.8465680089194194,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": {
+        "A": {
+          "left": 33.37062627431688,
+          "right": 37.8705208817797
+        },
+        "B": {
+          "left": 53.78435066025682,
+          "right": 56.43767725880022
+        }
+      },
+      "left_region_id": "r1",
+      "right_region_id": "r5"
+    },
+    {
+      "measurement_id": "m284",
+      "subject_id": "l4",
+      "kind": "relation",
+      "metric": "L_star",
+      "statistic": "q50",
+      "A": -28.437994376129495,
+      "B": -21.05314096346406,
+      "delta_B_minus_A": 7.384853412665436,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": {
+        "A": {
+          "left": 37.8705208817797,
+          "right": 66.30851525790919
+        },
+        "B": {
+          "left": 56.43767725880022,
+          "right": 77.49081822226428
+        }
+      },
+      "left_region_id": "r5",
+      "right_region_id": "r6"
+    },
+    {
+      "measurement_id": "m285",
+      "subject_id": "l5",
+      "kind": "relation",
+      "metric": "linear_Y",
+      "statistic": "q50",
+      "A": 0.7758613371563684,
+      "B": 0.7192511915581699,
+      "delta_B_minus_A": -0.05661014559819855,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": {
+        "A": {
+          "left": 0.8529531747383224,
+          "right": 0.07709183758195402
+        },
+        "B": {
+          "left": 0.936954458917077,
+          "right": 0.21770326735890716
+        }
+      },
+      "left_region_id": "r7",
+      "right_region_id": "r1"
+    },
+    {
+      "measurement_id": "m286",
+      "subject_id": "l6",
+      "kind": "relation",
+      "metric": "b_star",
+      "statistic": "q50",
+      "A": 34.01911362157395,
+      "B": 55.83927954074935,
+      "delta_B_minus_A": 21.820165919175402,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": {
+        "A": {
+          "left": 27.255669133836257,
+          "right": -6.763444487737691
+        },
+        "B": {
+          "left": 56.0432802755659,
+          "right": 0.20400073481654513
+        }
+      },
+      "left_region_id": "r5",
+      "right_region_id": "r6"
+    },
+    {
+      "measurement_id": "m287",
+      "subject_id": "l7",
+      "kind": "relation",
+      "metric": "chroma",
+      "statistic": "q50",
+      "A": 7.5499803610836445,
+      "B": 37.48696544059198,
+      "delta_B_minus_A": 29.936985079508336,
+      "eligibility": "visual_direction_only",
+      "support_snapshot_hash": "e5730b2097dd12d42819c84de767e44ab4aab80f053c41fd59dcb06118daf25f",
+      "operands": {
+        "A": {
+          "left": 27.663243028284775,
+          "right": 20.11326266720113
+        },
+        "B": {
+          "left": 59.69998176168318,
+          "right": 22.213016321091203
+        }
+      },
+      "left_region_id": "r5",
+      "right_region_id": "r6"
+    }
+  ],
+  "missing_evidence": [
+    "relative_depth",
+    "OCR",
+    "independent_face_detector"
+  ],
+  "limitations": [
+    "A/B subject framing, pose, visible proportions and illumination differ; whole-frame statistics mix materials",
+    "Face mask includes features and lens interiors; clothing mask includes strap; hair boundaries coarse",
+    "Manual material polygons have uncertain boundary/coverage; no calibrated per-material accuracy",
+    "Mask arrays and old localization guides are not provided in this reconstructed packet; retained original numeric records are not a new inference",
+    "Numbers describe the fixed audited input pair, not a prescribed edit magnitude"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "low_light": {
+    "changes": ["exposure", "contrast"],
+    "instruction": "Lift exposure in underexposed regions and improve midtone visibility so existing structures and textures are easier to see. Retain tonal separation around existing bright light sources."
+  },
+  "denoise": {
+    "changes": ["noise"],
+    "instruction": "Reduce visible luminance noise and colored speckles while retaining source-supported edges and natural surface texture."
+  },
+  "deblur": {
+    "changes": ["sharpness"],
+    "instruction": "Reduce motion or defocus blur that impairs the target content, improving source-supported edge definition and natural edge transitions. Retain intentional depth-of-field blur outside the target."
+  },
+  "dehaze": {
+    "changes": ["haze", "exposure", "contrast", "color"],
+    "instruction": "Reduce the obscuring haze veil and improve visibility and local contrast in the affected regions. Retain natural depth-dependent atmospheric perspective and plausible lighting colors."
+  },
+  "derain": {
+    "changes": ["rain_streaks"],
+    "instruction": "Remove visible rain streaks that obscure the scene while preserving object boundaries, wet-surface reflections and the existing lighting."
+  },
+  "desnow": {
+    "changes": ["snowflakes"],
+    "instruction": "Remove falling snowflakes that obscure scene content while retaining snow already lying on surfaces and the original weather illumination."
+  },
+  "deblock": {
+    "changes": ["compression"],
+    "instruction": "Reduce JPEG block boundaries, ringing and mosquito artifacts while keeping real contours and source-supported texture."
+  },
+  "super_resolution": {
+    "changes": ["resolution", "sharpness"],
+    "instruction": "Improve source-supported fine detail and edge definition at the externally configured output resolution, preserving the field of view and original composition."
+  },
+  "color_cast": {
+    "changes": ["color"],
+    "instruction": "Correct the unwanted color cast on intended neutral surfaces while preserving meaningful colored illumination and natural relative object colors."
+  },
+  "highlight_recovery": {
+    "changes": ["exposure", "contrast"],
+    "instruction": "Reduce excessive brightness in the targeted highlights and improve tonal separation where image signal remains. Keep fully clipped regions smooth rather than inventing missing scene details."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "protocol_id": "replace-with-frozen-development-protocol",
+  "split": "development",
+  "seed": 20261028,
+  "development_case_ids": ["case-01"],
+  "baseline": {
+    "model": "REPLACE_ACTUAL_STRONG_BASELINE",
+    "version": "REPLACE_OBSERVED_VERSION",
+    "prompt_sha256": "REPLACE_FROZEN_PROMPT_HASH",
+    "seed": 0,
+    "configuration_sha256": "REPLACE_FROZEN_CONFIGURATION_HASH"
+  },
+  "original_user_goal": "保留 A 的内容、身份、文字、几何与构图，向 B 的摄影颜色、影调和区域关系合理靠近，保持自然协调。",
+  "cases": [{
+    "case_id": "case-01",
+    "tool_run": "runs/case-01",
+    "source_sha256": "REPLACE_A_FILE_HASH",
+    "reference_sha256": "REPLACE_B_FILE_HASH",
+    "G": {
+      "status": "not_run",
+      "path": null,
+      "sha256": null,
+      "source_sha256": "REPLACE_A_FILE_HASH",
+      "reference_sha256": "REPLACE_B_FILE_HASH",
+      "baseline_configuration_sha256": "REPLACE_FROZEN_CONFIGURATION_HASH"
+    }
+  }]
+}

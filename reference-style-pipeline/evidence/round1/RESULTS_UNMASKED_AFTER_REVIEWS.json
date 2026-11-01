@@ -1,0 +1,134 @@
+{
+  "scale": "five axes, 0/1/2; coarse descriptive scores, no significance or image-quality inference",
+  "runs": [
+    {
+      "run_id": "run_018",
+      "arm_unmasked_after_reviews": "D0",
+      "reviewer_one_axes": [
+        1,
+        2,
+        2,
+        2,
+        2
+      ],
+      "reviewer_one_total": 9,
+      "reviewer_two_axes": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "reviewer_two_total": 10
+    },
+    {
+      "run_id": "run_063",
+      "arm_unmasked_after_reviews": "D1",
+      "reviewer_one_axes": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "reviewer_one_total": 10,
+      "reviewer_two_axes": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "reviewer_two_total": 10
+    },
+    {
+      "run_id": "run_027",
+      "arm_unmasked_after_reviews": "D1",
+      "reviewer_one_axes": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "reviewer_one_total": 10,
+      "reviewer_two_axes": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "reviewer_two_total": 10
+    },
+    {
+      "run_id": "run_081",
+      "arm_unmasked_after_reviews": "D0",
+      "reviewer_one_axes": [
+        1,
+        2,
+        2,
+        2,
+        2
+      ],
+      "reviewer_one_total": 9,
+      "reviewer_two_axes": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "reviewer_two_total": 10
+    },
+    {
+      "run_id": "run_046",
+      "arm_unmasked_after_reviews": "D0",
+      "reviewer_one_axes": [
+        2,
+        1,
+        2,
+        2,
+        2
+      ],
+      "reviewer_one_total": 9,
+      "reviewer_two_axes": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "reviewer_two_total": 10
+    },
+    {
+      "run_id": "run_092",
+      "arm_unmasked_after_reviews": "D1",
+      "reviewer_one_axes": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "reviewer_one_total": 10,
+      "reviewer_two_axes": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "reviewer_two_total": 10
+    }
+  ],
+  "no_critical_wrong_action_or_content_permission": "both reviewers report none",
+  "reviews_sha256": {
+    "reference_oracle.md": "b4d83ece171b0970dceb0f28e8b846f7b4f456f4703e178b58e1ea011cc8307f",
+    "reviewer_one.json": "d6372de2034cbe0670b2910866c2a6c70acd8b0260deba2ab596c23e8b8c7d7c",
+    "reviewer_one.md": "41eb96e5f72065988e941c3ca4a143116149700601e83e45fa14d8e246ece89e",
+    "reviewer_two.json": "2585da4018e868b1115c6984859095f2d5e7f8059a06713c65268fd3f358992f",
+    "reviewer_two.md": "6f6e074310ee2ae4226c997cc2324e5dfc518a25d0a2736aeaadd248f3a01649",
+    "reviewer_two_preread.md": "8fe5c315a9d8d6832640a060f90086770827e9d7903f97b89aa708d4e61598a9"
+  }
+}

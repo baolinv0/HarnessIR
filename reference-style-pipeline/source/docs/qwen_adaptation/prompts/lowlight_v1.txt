@@ -1,0 +1,11 @@
+Restore the provided low-light photograph to a naturally exposed, clear nighttime photograph.
+
+**Primary edit — brightness recovery:** Significantly improve visibility in underexposed regions. Brighten dark roads, building facades, and other shadowed surfaces so that their existing structures and textures become clearly visible. Improve midtone exposure and local contrast. The result must show a noticeable improvement in visibility compared with the input.
+
+**Secondary edit — image quality:** Reduce visible noise and color blotches in dark regions while retaining natural surface textures, edges, and fine structures. Restore natural color separation in poorly illuminated areas.
+
+**Highlight handling:** Retain the appearance and relative intensity of existing streetlights, windows, and other light sources. Keep luminous highlights controlled while improving the visibility of surrounding darker areas.
+
+**Scene preservation:** Preserve the original objects, geometry, composition, viewpoint, and photographic identity. Retain believable nighttime illumination, with illuminated areas brighter than unilluminated surroundings.
+
+**Desired result:** A clearly brighter, cleaner, more legible nighttime photograph with natural contrast, recognizable scene content, and improved shadow visibility.

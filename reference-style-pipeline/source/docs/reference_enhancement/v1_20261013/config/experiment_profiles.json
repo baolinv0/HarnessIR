@@ -1,0 +1,460 @@
+{
+  "schema_version": "ref_enhance_v1",
+  "config_version": "experiment_profiles_v1_20261013",
+  "status": "design_only_not_run",
+  "task": "pair_specific_reference_guided_rendering_enhancement",
+  "reference_is_pixel_ground_truth": false,
+  "common": {
+    "canonical_color_space": "sRGB",
+    "canonical_format": "PNG",
+    "input_assets": [
+      "prediction",
+      "reference"
+    ],
+    "preserve_original_files": true,
+    "require_original_and_canonical_sha256": true,
+    "require_baseline_provenance": true,
+    "require_pre_enrollment_comparability_annotation": true,
+    "reject_example_placeholders": true,
+    "format_repair_limit": 1,
+    "format_repair_may_reinspect_images": false,
+    "max_generations": 3,
+    "executor_inputs": [
+      "frozen_prediction_A",
+      "frozen_reference_B",
+      "current_edit_prompt"
+    ],
+    "executor_previous_candidate_allowed": false,
+    "executor_tool_visualization_allowed": false,
+    "output_normalization": {
+      "mode": "strict",
+      "preserve_raw_generated_file": true,
+      "warp_allowed": false,
+      "crop_allowed": false,
+      "post_generation_color_adjustment_allowed": false,
+      "optional_aspect_preserving_resize": {
+        "enabled": false,
+        "requires_new_config_version_after_R1": true,
+        "must_apply_identically_to_all_generation_arms": true,
+        "max_relative_aspect_ratio_error": 0.005,
+        "require_exact_aspect_cross_product": true,
+        "reject_small_aspect_mismatch_instead_of_warp": true
+      }
+    },
+    "generation_accounting": {
+      "count_first_submission": true,
+      "count_failed_submissions": true,
+      "count_manual_regenerations": true,
+      "count_known_backend_regenerations": true,
+      "count_submitted_but_timed_out_requests": true,
+      "uncertain_submission_action": "reserve_one_budget_slot_and_pause_for_reconciliation",
+      "text_only_stage_is_generation": false,
+      "attempt_counter_resets_budget": false,
+      "unknown_internal_sampling_claim": "observable_submission_budget_only",
+      "backend_regeneration_count_status_values": [
+        "known",
+        "unknown"
+      ],
+      "required_counters": [
+        "observed_generation_submissions",
+        "known_backend_regenerations",
+        "uncertain_submission_reservations",
+        "accounted_generations",
+        "backend_regeneration_count_status"
+      ],
+      "over_budget_action": "record_protocol_violation_and_exclude_extra_candidates_from_selection"
+    },
+    "selector": {
+      "selector_version": "earliest_accepted_then_earliest_usable_v1",
+      "candidate_order": [
+        "round_ascending"
+      ],
+      "accept_requirements": {
+        "geometry": "pass",
+        "style_alignment": "improved",
+        "content_preservation": "pass",
+        "critical_defects_empty": true,
+        "minimum_confidence": 0.7,
+        "reference_pre_enrollment_usable": true
+      },
+      "usable_requirements": {
+        "geometry": "pass",
+        "content_preservation": "pass",
+        "critical_defects_empty": true,
+        "minimum_confidence": 0.7
+      },
+      "accepted_output_action": "select_earliest_accepted_success_true",
+      "no_accepted_with_usable_action": "select_earliest_usable_review_required_success_false",
+      "no_usable_action": "fallback_prediction_A_success_false",
+      "rank_by_confidence": false,
+      "rank_by_no_reference_score": false,
+      "shared_across_generation_arms": true,
+      "final_evaluator_role": false
+    },
+    "shared_early_stop_reasons": [
+      "duplicate_output",
+      "reference_unusable",
+      "unrecoverable_execution_error",
+      "budget_accounting_unresolved",
+      "budget_exhausted"
+    ],
+    "duplicate_policy": "same_generated_bytes_sha256_stop_immediately",
+    "reference_replacement_policy": "new_case_revision_no_silent_replacement",
+    "unobserved_model_version": "unknown",
+    "unobserved_model_seed": "unknown",
+    "unobserved_session_id": null,
+    "multiple_outputs_policy": "first_complete_provider_order_is_only_candidate_others_audit_and_account_if_known",
+    "stats_metric": {
+      "metric_version": "display_stats_v1",
+      "input": "canonical_8bit_sRGB_D65",
+      "mean_luma": "mean(0.2126*Rprime+0.7152*Gprime+0.0722*Bprime), channels divided by 255; display proxy not physical luminance",
+      "shadow_fraction": "fraction Yprime<0.10",
+      "highlight_fraction": "fraction Yprime>0.95",
+      "mean_lab": "CIELAB from IEC sRGB inverse transfer and XYZ D65, white point (0.95047,1,1.08883), arithmetic mean in ROI",
+      "mean_saturation": "HSV (maxRGB-minRGB)/maxRGB, black=0, arithmetic mean",
+      "quantile_method": "linear; optional diagnostic percentiles 5,50,95 not a quality metric",
+      "roi_rasterization": "canonical coordinates; polygon odd-even pixel-center rule; bbox half-open; validity mask intersection",
+      "empty_roi": "unavailable, never zero error",
+      "preprocessing_parameters_are_cache_keyed": true
+    }
+  },
+  "profiles": {
+    "baseline": {
+      "mode": "baseline",
+      "enabled": true,
+      "max_generations": 0,
+      "stages": [],
+      "output": "prediction_A",
+      "terminal_reason": "baseline_only",
+      "success": false,
+      "fallback": false,
+      "final_joint_success_by_definition": false
+    },
+    "direct_ref": {
+      "mode": "single_pass",
+      "enabled": true,
+      "max_generations": 1,
+      "stages": [
+        "execute",
+        "verify"
+      ],
+      "edit_prompt_policy": "frozen_direct_ref_prompt_v1",
+      "adaptive_prompt_changes": false,
+      "selector_ref": "common.selector",
+      "stop_on_accept": true
+    },
+    "agent_single": {
+      "mode": "single_pass",
+      "enabled": true,
+      "max_generations": 1,
+      "stages": [
+        "diagnose",
+        "compose",
+        "execute",
+        "verify"
+      ],
+      "evidence_policy": "diagnosis_planned_only",
+      "adaptive_prompt_changes": false,
+      "refinement_enabled": false,
+      "selector_ref": "common.selector",
+      "stop_on_accept": true
+    },
+    "agent_adaptive": {
+      "mode": "adaptive",
+      "enabled": true,
+      "max_generations": 3,
+      "stages": [
+        "diagnose",
+        "compose",
+        "execute",
+        "verify",
+        "refine"
+      ],
+      "evidence_policy": "diagnosis_planned_only",
+      "adaptive_prompt_changes": true,
+      "refinement_enabled": true,
+      "each_generation_starts_from": [
+        "prediction_A",
+        "reference_B"
+      ],
+      "selector_ref": "common.selector",
+      "stop_on_accept": true
+    },
+    "direct_best_of_3": {
+      "mode": "fixed_prompt_best_of_k",
+      "enabled": true,
+      "max_generations": 3,
+      "requested_generations": 3,
+      "stages": [
+        "execute",
+        "verify"
+      ],
+      "edit_prompt_policy": "frozen_direct_ref_prompt_v1",
+      "same_edit_prompt_as": "direct_ref",
+      "independent_generation_sessions": true,
+      "adaptive_prompt_changes": false,
+      "refinement_enabled": false,
+      "verifier_feedback_to_executor_allowed": false,
+      "selector_ref": "common.selector",
+      "stop_on_accept": false,
+      "run_full_budget_unless_shared_early_stop": true,
+      "normal_completion_terminal_reason": "fixed_k_complete",
+      "completion_with_earlier_accepted_success": true,
+      "no_accepted_budget_completion_terminal_reason": "fixed_k_complete",
+      "duplicate_with_earlier_accepted_success": true
+    },
+    "color_curve_dev_frozen": {
+      "mode": "deterministic_color_curve_baseline",
+      "enabled": false,
+      "recommended_before_formal_claims": true,
+      "enable_only_after_dev_freeze": true,
+      "max_generations": 0,
+      "allowed_operations": [
+        "exposure",
+        "white_balance",
+        "saturation",
+        "monotonic_tone_curve"
+      ],
+      "reference_statistics_policy": "preannotated_comparable_same_semantic_regions_only",
+      "algorithm_version": null,
+      "algorithm_config_sha256": null,
+      "per_test_case_manual_tuning_allowed": false,
+      "no_comparable_roi_action": "record_failure_and_fallback_A",
+      "postprocess_other_arms_allowed": false
+    }
+  },
+  "comparisons": {
+    "primary": {
+      "id": "single_pass_agent_instruction_gain",
+      "treatment": "agent_single",
+      "control": "direct_ref",
+      "metric": "final_joint_success",
+      "budget_cap_each": 1,
+      "estimator": "mean_paired_scene_group_difference"
+    },
+    "secondary": {
+      "id": "adaptive_vs_fixed_prompt_sampling",
+      "treatment": "agent_adaptive",
+      "control": "direct_best_of_3",
+      "metric": "final_joint_success",
+      "budget_cap_each": 3,
+      "estimator": "mean_paired_scene_group_difference",
+      "report_actual_call_and_total_cost_difference": true
+    },
+    "supporting": [
+      "all_arms_vs_baseline",
+      "generative_arms_vs_color_curve_when_dev_frozen",
+      "same_budget_prefix_cost_curves_descriptive_only"
+    ],
+    "forbidden_gain_claim": "agent_adaptive_vs_direct_ref_as_agent_strategy_gain"
+  },
+  "data_protocol": {
+    "split_group_key": "scene_group_id",
+    "split_seed": 20261013,
+    "pilot_cases_never_become_formal_test": true,
+    "primary_strata": [
+      "outdoor_even_daylight",
+      "backlit_high_dynamic_range",
+      "indoor_daylight",
+      "indoor_artificial_mixed",
+      "night_lowlight"
+    ],
+    "stratum_assignment_priority": [
+      "night_lowlight",
+      "indoor_artificial_mixed",
+      "backlit_high_dynamic_range",
+      "indoor_daylight",
+      "outdoor_even_daylight"
+    ],
+    "cross_cutting_tags": [
+      "human_skin",
+      "readable_text",
+      "fine_texture",
+      "sky_vegetation",
+      "motion_occlusion"
+    ],
+    "pilot": {
+      "pairs": 12,
+      "target_independent_scene_groups": 12,
+      "stratum_quotas_in_primary_strata_order": [
+        3,
+        3,
+        2,
+        2,
+        2
+      ],
+      "minimum_human_skin_pairs": 4,
+      "minimum_readable_text_pairs": 4
+    },
+    "formal_recommendation": {
+      "minimum_test_pairs": 60,
+      "target_independent_test_scene_groups": 60,
+      "minimum_pairs_per_primary_stratum": 12,
+      "minimum_additional_dev_pairs": 12,
+      "minimum_additional_validation_pairs": 12,
+      "guarantees_statistical_power": false
+    },
+    "pre_enrollment_exclusions": [
+      "different_scene",
+      "no_sufficient_comparable_semantic_regions",
+      "all_target_attributes_confounded_by_lighting_or_time_change",
+      "unexplained_hdr_heic_or_color_profile",
+      "missing_required_input_or_provenance",
+      "unresolved_cross_split_near_duplicate"
+    ],
+    "exclusion_applies_to_all_arms": true,
+    "post_enrollment_reference_unusable_policy": "retain_ITT_and_report_all_arm_consistent_sensitivity_analysis",
+    "test_artifacts_allowed_for_training_or_tuning": false
+  },
+  "final_evaluation": {
+    "rubric_version": "independent_final_rubric_v1_20261013",
+    "blind_order_seed": 20261014,
+    "blind_method_identity": true,
+    "randomize_A_B_panel_positions_keep_role_labels": true,
+    "randomize_candidate_order": true,
+    "process_verifier_outputs_visible": false,
+    "agent_prompts_visible": false,
+    "minimum_independent_raters": 2,
+    "disagreement_adjudication": "third_independent_rater_else_uncertain",
+    "style_anchor": "reference_B_comparable_attributes_only",
+    "style_gain_baseline": "prediction_A",
+    "content_anchor": "prediction_A",
+    "style_labels": [
+      "improved",
+      "unchanged",
+      "worse",
+      "uncertain"
+    ],
+    "content_labels": [
+      "pass",
+      "fail",
+      "uncertain"
+    ],
+    "preference_labels": [
+      "X",
+      "Y",
+      "tie",
+      "uncertain",
+      "abstain"
+    ],
+    "joint_success_requirements": {
+      "style_direction": "improved",
+      "content_preservation": "pass",
+      "critical_defects_empty": true
+    },
+    "workflow_confidence_used_as_final_quality_threshold": false,
+    "freeze_ratings_before_unblinding": true,
+    "ITT_failure_uncertain_abstention_missing_joint_success_value": 0
+  },
+  "analysis": {
+    "primary_denominator": "all_enrolled_planned_case_arm_records_ITT",
+    "primary_weighting": "scene_group_equal_weight",
+    "bootstrap_unit": "paired_scene_group_all_arms_and_cases_together",
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 20261015,
+    "confidence_level": 0.95,
+    "interval_method": "percentile_cluster_bootstrap",
+    "wilson_interval_allowed_only_for": "independent_binary_units_one_adjudicated_pair_per_scene_group",
+    "wilson_not_allowed_for": [
+      "paired_differences",
+      "multiple_attempts_per_case",
+      "multiple_pairs_per_group",
+      "multiclass_preferences"
+    ],
+    "report_counts": [
+      "n_pairs",
+      "n_groups",
+      "n_raters",
+      "n_valid",
+      "denominator"
+    ],
+    "nonaligned_reference_pixel_metrics_as_quality_allowed": false,
+    "forbidden_reference_quality_metrics": [
+      "PSNR",
+      "SSIM",
+      "LPIPS"
+    ],
+    "global_histogram_success_metric_allowed": false,
+    "conditional_ROI_statistics_role": "auxiliary_only",
+    "missing_cost_value": null,
+    "unknown_model_version_or_seed_value": "unknown"
+  },
+  "gates": {
+    "thresholds_are_engineering_heuristics_not_scientific_proof": true,
+    "R0": {
+      "expected_generation_submissions": 0,
+      "protocol_fixture_checks_required": 12
+    },
+    "R1": {
+      "real_pairs": 1,
+      "required_observed_capabilities": [
+        "file_read_write",
+        "session_dispatch",
+        "two_image_edit",
+        "output_persistence"
+      ],
+      "requires_manual_recovery_evidence": true,
+      "single_pair_quality_proves_general_effectiveness": false
+    },
+    "R2_GO": {
+      "protocol_violations": 0,
+      "required_record_completeness": 1.0,
+      "minimum_valid_generated_candidate_cases_each_agent_arm": 11,
+      "maximum_agent_single_critical_content_defect_cases": 1,
+      "minimum_agent_single_joint_success_cases": 7,
+      "minimum_agent_single_minus_direct_ref_success_cases": 2,
+      "if_retry_gain_is_claimed_minimum_adaptive_joint_success_cases": 8,
+      "if_retry_gain_is_claimed_minimum_adaptive_minus_direct_best_of_3_success_cases": 1
+    },
+    "R2_PROBE": {
+      "reference_unjudgeable_cases_at_least": 3,
+      "selector_final_evaluation_success_disagreement_cases_at_least": 3,
+      "otherwise_safe_but_effect_below_GO": true
+    },
+    "R2_STOP": {
+      "any_identity_budget_color_conversion_or_split_leakage_violation": true,
+      "critical_content_defect_cases_either_agent_arm_at_least": 3,
+      "agent_single_joint_success_below_direct_ref_by_at_least_cases": 3
+    },
+    "priority": "STOP first; then GO if all applicable requirements pass; else PROBE"
+  },
+  "required_generation_log_fields": [
+    "schema_version",
+    "case_id",
+    "case_revision",
+    "state_revision_issued",
+    "arm_id",
+    "round",
+    "attempt",
+    "request_sha256",
+    "config_sha256",
+    "prompt_version",
+    "submission_time",
+    "completion_time",
+    "status",
+    "error_type",
+    "ui_model_name",
+    "model_version",
+    "model_seed",
+    "session_id",
+    "operator",
+    "manual_steps",
+    "generation_budget_charge",
+    "output_assets"
+  ],
+  "required_cost_report_fields": [
+    "generation_cap",
+    "observed_generation_submissions",
+    "known_backend_regenerations",
+    "backend_regeneration_count_status",
+    "accounted_generations",
+    "text_or_vision_stage_calls",
+    "failures_and_regenerations",
+    "wall_seconds",
+    "manual_active_minutes",
+    "observed_billed_cost",
+    "currency",
+    "subscription_cost_allocation_method",
+    "cost_unknown_fraction"
+  ]
+}

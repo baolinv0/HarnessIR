@@ -1,0 +1,40 @@
+{
+  "actual_generation_count": null,
+  "provider_order": null,
+  "executor_observation": {
+    "kind": "hre_executor_observation_v2",
+    "schema_version": "ref_enhance_v2",
+    "executor": {
+      "executor_id": "chatgpt-desktop-manual",
+      "model_display_name": "REPLACE_WITH_OBSERVED_MODEL_NAME",
+      "model_exact_version": null,
+      "transport": "desktop_manual",
+      "pipeline_version": "manual-v2",
+      "adapter_version": "manual-files-v2",
+      "settings": {}
+    },
+    "request_sha256": "REPLACE_WITH_ACTUAL_REQUEST_SHA256",
+    "prompt_sha256": "REPLACE_WITH_EDITOR_EDIT_PROMPT_BYTES_SHA256",
+    "input_sha256": {
+      "A": "REPLACE_WITH_CANONICAL_A_SHA256",
+      "B": "REPLACE_WITH_CANONICAL_B_SHA256"
+    },
+    "output_sha256": "REPLACE_WITH_RAW_DOWNLOADED_C_SHA256",
+    "actual_generation_count": null,
+    "observer": "REPLACE_WITH_ACTUAL_OBSERVER_ID",
+    "observed_at": "REPLACE_WITH_OBSERVED_ZONED_ISO_TIME",
+    "steps": [
+      "REPLACE_WITH_ACTUALLY_OBSERVED_EXECUTOR_SETTINGS_INPUTS_AND_FIRST_COMPLETE_OUTPUT"
+    ]
+  },
+  "model_observed": {
+    "ui_model_name": "REPLACE_WITH_OBSERVED_MODEL_NAME",
+    "exact_model_version": null,
+    "seed": null,
+    "observed_at": "REPLACE_WITH_OBSERVED_ZONED_ISO_TIME",
+    "transport": "desktop_manual",
+    "operator_steps": [
+      "REPLACE_WITH_OBSERVED_HANDOFF_AND_FIRST_COMPLETE_DOWNLOAD_STEPS"
+    ]
+  }
+}

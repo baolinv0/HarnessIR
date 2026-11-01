@@ -1,0 +1,26 @@
+{
+  "code_commit": "c0a201a4e22eeba0c206352d9c3778b62fd1a638",
+  "full": {
+    "command": "PYTHONPATH=engine/src:/tmp/harness-test-deps python -m pytest engine/tests -q",
+    "passed": 445,
+    "failed": 0,
+    "warnings": 4,
+    "seconds": 460.16
+  },
+  "targeted": {
+    "command": "PYTHONPATH=engine/src:/tmp/harness-test-deps python -m pytest engine/tests/tool_retouch -q",
+    "passed": 48,
+    "failed": 0,
+    "seconds": 5.92
+  },
+  "source_and_test_changes_during_testing": false,
+  "subsequent_changes": "report, logs and example config only",
+  "real_sam3_run": false,
+  "real_photocraft_build_or_run": true,
+  "real_vlm_run": false,
+  "real_backend_tests": 4,
+  "probe_checks": 20,
+  "test_environment": {
+    "HRE_TEST_PHOTOCRAFT_WORKER": "/workspace/HarnessIR/engine/photocraft_worker/target/release/harnessir-photocraft-worker"
+  }
+}

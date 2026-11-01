@@ -1,0 +1,89 @@
+........................................................................ [ 17%]
+........................................................................ [ 35%]
+........................................................................ [ 52%]
+..........F............................................................. [ 70%]
+......F.....F.FFF....................................................... [ 88%]
+.................................................                        [100%]
+=================================== FAILURES ===================================
+__________ test_v2_panel_shows_unprobed_mask_without_enabling_control __________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-2/test_v2_panel_shows_unprobed_m0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc573199b20>
+
+    def test_v2_panel_shows_unprobed_mask_without_enabling_control(tmp_path,monkeypatch):
+        from hre.reference_contracts import create_reference_case
+>       from streamlit.testing.v1 import AppTest
+E       ModuleNotFoundError: No module named 'streamlit'
+
+engine/tests/test_hre_reference_ui.py:8: ModuleNotFoundError
+______________ test_streamlit_renders_real_case_and_pause_resume _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-2/test_streamlit_renders_real_ca0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc573a0cfe0>
+
+    def test_streamlit_renders_real_case_and_pause_resume(tmp_path,monkeypatch):
+>       from streamlit.testing.v1 import AppTest
+E       ModuleNotFoundError: No module named 'streamlit'
+
+engine/tests/test_hre_ui.py:17: ModuleNotFoundError
+_______ test_streamlit_analysis_displays_task_without_candidate_controls _______
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-2/test_streamlit_analysis_displa0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc5705b4cb0>
+
+    def test_streamlit_analysis_displays_task_without_candidate_controls(tmp_path,monkeypatch):
+>       from streamlit.testing.v1 import AppTest
+E       ModuleNotFoundError: No module named 'streamlit'
+
+engine/tests/test_hre_ui.py:49: ModuleNotFoundError
+___ test_streamlit_execution_exposes_extra_uploads_and_explicit_order_table ____
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-2/test_streamlit_execution_expos0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc5705b6f30>
+
+    def test_streamlit_execution_exposes_extra_uploads_and_explicit_order_table(tmp_path,monkeypatch):
+>       from streamlit.testing.v1 import AppTest
+E       ModuleNotFoundError: No module named 'streamlit'
+
+engine/tests/test_hre_ui.py:76: ModuleNotFoundError
+_ test_streamlit_explicit_new_generation_retry_after_failure_or_confirmed_release[True] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-2/test_streamlit_explicit_new_ge0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc5705b7080>
+failed = True
+
+    @pytest.mark.parametrize('failed',[True,False])
+    def test_streamlit_explicit_new_generation_retry_after_failure_or_confirmed_release(tmp_path,monkeypatch,failed):
+>       from streamlit.testing.v1 import AppTest
+E       ModuleNotFoundError: No module named 'streamlit'
+
+engine/tests/test_hre_ui.py:87: ModuleNotFoundError
+_ test_streamlit_explicit_new_generation_retry_after_failure_or_confirmed_release[False] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-2/test_streamlit_explicit_new_ge1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc5705b75f0>
+failed = False
+
+    @pytest.mark.parametrize('failed',[True,False])
+    def test_streamlit_explicit_new_generation_retry_after_failure_or_confirmed_release(tmp_path,monkeypatch,failed):
+>       from streamlit.testing.v1 import AppTest
+E       ModuleNotFoundError: No module named 'streamlit'
+
+engine/tests/test_hre_ui.py:87: ModuleNotFoundError
+=============================== warnings summary ===============================
+../../opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/anyio/pytest_plugin.py:14
+  /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/anyio/pytest_plugin.py:14: PytestRemovedIn10Warning: _pytest.python.CallSpec2 has been renamed to CallSpec.
+  The CallSpec2 alias will be removed in pytest 10.
+  Update imports to use CallSpec instead.
+  See https://docs.pytest.org/en/stable/deprecations.html#callspec2-renamed
+    from _pytest.python import CallSpec2
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED engine/tests/test_hre_reference_ui.py::test_v2_panel_shows_unprobed_mask_without_enabling_control
+FAILED engine/tests/test_hre_ui.py::test_streamlit_renders_real_case_and_pause_resume
+FAILED engine/tests/test_hre_ui.py::test_streamlit_analysis_displays_task_without_candidate_controls
+FAILED engine/tests/test_hre_ui.py::test_streamlit_execution_exposes_extra_uploads_and_explicit_order_table
+FAILED engine/tests/test_hre_ui.py::test_streamlit_explicit_new_generation_retry_after_failure_or_confirmed_release[True]
+FAILED engine/tests/test_hre_ui.py::test_streamlit_explicit_new_generation_retry_after_failure_or_confirmed_release[False]
+6 failed, 403 passed, 1 skipped, 1 warning in 385.40s (0:06:25)

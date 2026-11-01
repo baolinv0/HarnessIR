@@ -1,0 +1,12 @@
+{
+  "code_commit": "41bec3058b74bd20ec29e0747c0231308009105a",
+  "command": "HRE_TEST_PHOTOCRAFT_WORKER=<verified actual worker> PYTHONPATH=engine/src:/tmp/harness-test-deps python -m pytest engine/tests/tool_retouch engine/tests/test_hre_cli.py -q",
+  "passed": 79,
+  "failed": 0,
+  "seconds": 63.13,
+  "scope": "tool_retouch + existing hre CLI regression; not full engine/tests",
+  "real_photocraft_enabled": true,
+  "actual_chat_visual_replies": false,
+  "mediapipe_installed_or_run": false,
+  "source_changed_during_test": false
+}

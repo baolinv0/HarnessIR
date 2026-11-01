@@ -1,0 +1,28 @@
+{
+  "source_files_verified": 364,
+  "functional_code_matches_frozen_snapshot": true,
+  "documentation_redaction_count": 2,
+  "redacted_text_records_verified": 68,
+  "author_reference_style_tests": {
+    "passed": 175,
+    "seconds": 38.443
+  },
+  "independent_reference_style_tests": {
+    "passed": 175,
+    "seconds": 37.353
+  },
+  "independent_review": "PASS",
+  "reference_style_cli_help": "PASS",
+  "whole_upstream_pytest_suite": "NOT_RUN",
+  "new_image_generation": "NOT_RUN",
+  "data_originals_metadata_hash_checks": 6,
+  "private_photos_masks_models_included": false,
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "Pillow": "13.0.0",
+    "pydantic": "2.13.4",
+    "jsonschema": "4.26.0",
+    "referencing": "0.37.0"
+  }
+}

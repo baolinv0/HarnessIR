@@ -1,0 +1,111 @@
+{
+  "scope": "Private Camera0717 filename/hash inventory, no service IDs and no image files included. A01/B01 actually tested; A07/B07 and A19/B19 available metadata/hash verified only, not new-pipeline outcomes.",
+  "private_location_name": "10.29 Google Drive / Camera0717 (confirm exact folder in your account)",
+  "source_kind": "camera_rgb",
+  "base_model_output_provenance": false,
+  "pairs_pixel_aligned": false,
+  "files": [
+    {
+      "label": "A01",
+      "private_relative_path": "S26/20260625_165113_AI_PHOTO_FRONT_DAY_HDR.jpg",
+      "sha256": "be21c8219a7ad4f0e93487a35398db8f1361213e3d454396215d6aab35c08c19",
+      "bytes": 1046436,
+      "format": "JPEG",
+      "native_size": [
+        3056,
+        2296
+      ],
+      "frame_count": 1,
+      "orientation": 8,
+      "icc_sha256": "d77bd8c4008f1813dca5e67762872667734f796a188b52123db65fd5fda262a9",
+      "icc_description": "DCI-P3 D65 Gamut with sRGB Transfer",
+      "byte_and_metadata_reverified_for_handoff": true,
+      "new_reference_style_experiment_run": true
+    },
+    {
+      "label": "B01",
+      "private_relative_path": "iP17/1.jpg",
+      "sha256": "c89ab833b417b4474ced099853a007582a208867f76c4e293d45853870c091e6",
+      "bytes": 2083964,
+      "format": "MPO",
+      "native_size": [
+        2316,
+        3088
+      ],
+      "frame_count": 8,
+      "orientation": 1,
+      "icc_sha256": "0ff6958f98684c61f6bbdce1368ddeaf3873baf84545baba482e920d92a914c0",
+      "icc_description": "Display P3",
+      "byte_and_metadata_reverified_for_handoff": true,
+      "new_reference_style_experiment_run": true
+    },
+    {
+      "label": "A07",
+      "private_relative_path": "S26/20260625_170358_AI_PHOTO_FRONT_DAY_HDR.jpg",
+      "sha256": "ebee84ed9e12d8c345a8360d1ed78c5232e3fdb23a094127a00673dd66a8ba66",
+      "bytes": 1296881,
+      "format": "JPEG",
+      "native_size": [
+        3056,
+        2296
+      ],
+      "frame_count": 1,
+      "orientation": 8,
+      "icc_sha256": "d77bd8c4008f1813dca5e67762872667734f796a188b52123db65fd5fda262a9",
+      "icc_description": "DCI-P3 D65 Gamut with sRGB Transfer",
+      "byte_and_metadata_reverified_for_handoff": true,
+      "new_reference_style_experiment_run": false
+    },
+    {
+      "label": "B07",
+      "private_relative_path": "iP17/7.jpg",
+      "sha256": "2b0165f3e02142c8f5726c9da1ff68ca3b15c2eeafa2ee5d8600e78abfc8ba36",
+      "bytes": 2111034,
+      "format": "MPO",
+      "native_size": [
+        2316,
+        3088
+      ],
+      "frame_count": 8,
+      "orientation": 1,
+      "icc_sha256": "0ff6958f98684c61f6bbdce1368ddeaf3873baf84545baba482e920d92a914c0",
+      "icc_description": "Display P3",
+      "byte_and_metadata_reverified_for_handoff": true,
+      "new_reference_style_experiment_run": false
+    },
+    {
+      "label": "A19",
+      "private_relative_path": "S26/20260625_185324_AI_PHOTO_FRONT_LOWLIGHT_HDR.jpg",
+      "sha256": "9e4ed792242b2295b24ffd2fd0eb45b9b055fe97cb55a385bb526c739649f264",
+      "bytes": 1747235,
+      "format": "JPEG",
+      "native_size": [
+        3056,
+        2296
+      ],
+      "frame_count": 1,
+      "orientation": 8,
+      "icc_sha256": "d77bd8c4008f1813dca5e67762872667734f796a188b52123db65fd5fda262a9",
+      "icc_description": "DCI-P3 D65 Gamut with sRGB Transfer",
+      "byte_and_metadata_reverified_for_handoff": true,
+      "new_reference_style_experiment_run": false
+    },
+    {
+      "label": "B19",
+      "private_relative_path": "iP17/19.jpg",
+      "sha256": "1155468a00eef3e6bc3d950cc035fd2d4715923b5dc0d974426c4b2d438dbccf",
+      "bytes": 1207820,
+      "format": "MPO",
+      "native_size": [
+        2316,
+        3088
+      ],
+      "frame_count": 2,
+      "orientation": 1,
+      "icc_sha256": "0ff6958f98684c61f6bbdce1368ddeaf3873baf84545baba482e920d92a914c0",
+      "icc_description": "Display P3",
+      "byte_and_metadata_reverified_for_handoff": true,
+      "new_reference_style_experiment_run": false
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{% set direct_prompt -%}
+Edit attached Image A, the original Neural ISP prediction. Image B is an unaligned same-scene iPhone 17 rendering reference only. Improve A's brightness, white balance, color richness, tonal separation and local detail toward B where the scene regions and lighting are comparable. Make visible, natural rendering improvements. Preserve A's composition, object geometry, identities and exact existing text. Do not copy B's objects or textures, move the camera, or reproduce differences caused by viewpoint, lighting, occlusion or time. Retain A as the content source throughout.
+{%- endset %}
+{
+  "image_bindings": {{ image_bindings | tojson }},
+  "edit_prompt": {{ direct_prompt | tojson }}
+}

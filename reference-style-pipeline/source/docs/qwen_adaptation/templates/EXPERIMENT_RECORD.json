@@ -1,0 +1,77 @@
+{
+  "is_template": true,
+  "schema_version": "experiment-record/0.1",
+  "experiment_id": null,
+  "status": "NOT_RUN",
+  "report_date": null,
+  "run_started_at": null,
+  "timezone": null,
+  "issue_ids": [],
+  "hypothesis": null,
+  "falsification_condition": null,
+  "code": {
+    "repository": "baolinv0/HarnessIR",
+    "commit": null,
+    "dirty_patch_sha256": null
+  },
+  "executor": {
+    "model_id": null,
+    "revision": null,
+    "weights_sha256": null,
+    "backend_version": null,
+    "precision": null
+  },
+  "data": {
+    "manifest_sha256": null,
+    "split": null,
+    "sample_ids": [],
+    "input_sha256": {},
+    "roi_definition_sha256": null,
+    "measurement_color_space": null,
+    "measurement_formula": null
+  },
+  "prompt": {
+    "variant_id": null,
+    "adapter_version": null,
+    "template_sha256": null,
+    "original_user_request": null,
+    "raw_prompt_sha256": null,
+    "final_prompt_sha256": null,
+    "intent": null,
+    "diagnosis_sha256": null,
+    "extractor_model_revision": null,
+    "server_rewrite_enabled": null,
+    "rewrite_parse_ok": null
+  },
+  "execution": {
+    "seeds": [],
+    "steps": null,
+    "guidance": null,
+    "negative_prompt": null,
+    "resize_pad_crop": null,
+    "requested_size": null,
+    "actual_size": null,
+    "task_types": [],
+    "color_adjust_mode": null,
+    "redo": false,
+    "candidate_budget": 1
+  },
+  "outputs": {
+    "raw_model_outputs": [],
+    "geometry_outputs": [],
+    "postprocess_outputs": [],
+    "sha256": {}
+  },
+  "evaluation": {
+    "frozen_criteria_sha256": null,
+    "primary_metric": null,
+    "fidelity_constraints": null,
+    "per_image_results": [],
+    "confidence_interval": null,
+    "failure_rate": null,
+    "cost": null
+  },
+  "conclusion": null,
+  "limitations": [],
+  "next_action": null
+}

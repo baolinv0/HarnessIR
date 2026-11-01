@@ -1,0 +1,51 @@
+{
+  "scope": "public technical reference, images not included",
+  "source_kind": "camera_rgb",
+  "base_model_output": false,
+  "target_icc_sha256": "ce307a089eca5a63e415744432365a0a4593fd49e282abd1cf69a239078f6b19",
+  "conversion": {
+    "library": "Pillow ImageCms backed by LittleCMS",
+    "Pillow": "13.0.0",
+    "LittleCMS": "2.19",
+    "numpy": "2.3.5",
+    "JPEG_library_version": "6.2",
+    "function": "ImageCms.profileToProfile",
+    "rendering_intent": 0,
+    "rendering_intent_name": "PERCEPTUAL",
+    "flags": 0,
+    "black_point_compensation": false,
+    "intent_reason": "Explicitly matches the historical RGB8 code path defaults; not a claim that perceptual intent supplies an ideal gamut-mapping policy.",
+    "in_place": false,
+    "output_mode": "RGB",
+    "target_icc_sha256": "ce307a089eca5a63e415744432365a0a4593fd49e282abd1cf69a239078f6b19",
+    "target_icc_description": "sRGB built-in",
+    "source_encoding_assumptions": null,
+    "EXIF_output_policy": "No EXIF copied into normalized PNG; orientation is already baked into pixels. Original EXIF is preserved in unmodified source files, linked by full-file and EXIF hashes."
+  },
+  "inputs": {
+    "A": {
+      "original_sha256": "be21c8219a7ad4f0e93487a35398db8f1361213e3d454396215d6aab35c08c19",
+      "original_orientation": 8,
+      "frame_policy": "primary_frame_0_SDR_no_HDR_composition",
+      "canonical_filename": "A_srgb8.png",
+      "canonical_sha256": "45fde436c1dded521d1bd7e3fccd48b413fbae9ea5eb03ca1573a36e990f0568",
+      "canonical_pixel_sha256": "d4f6f36b58de9c3ff7f0869349b1c99b9b55c30d61640494eb710818f6808005",
+      "canonical_size": [
+        2296,
+        3056
+      ]
+    },
+    "B": {
+      "original_sha256": "c89ab833b417b4474ced099853a007582a208867f76c4e293d45853870c091e6",
+      "original_orientation": 1,
+      "frame_policy": "primary_frame_0_SDR_no_HDR_composition",
+      "canonical_filename": "B_srgb8.png",
+      "canonical_sha256": "9e7d4adec9ada04f100314598500583ae24ffb72c148f91ad69296e49cf1f374",
+      "canonical_pixel_sha256": "533022838493aa557be0696c9a008f00a0db64fa149b2801ba2e0bff585be2e9",
+      "canonical_size": [
+        2316,
+        3088
+      ]
+    }
+  }
+}

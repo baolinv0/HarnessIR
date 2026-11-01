@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "results": [
+    {
+      "id": "result_74",
+      "report_sha256": "f089fb34126cbf0ad7c2e8e18dc13ae8c7e6e16c71a55cf3f9315cd9906d578d",
+      "native_size": [
+        1087,
+        1446
+      ],
+      "distributions_verified": 40,
+      "measurement_rows_verified": 287,
+      "numeric_status": "exploratory_assumption_only"
+    },
+    {
+      "id": "result_31",
+      "report_sha256": "6b8dd3baa2b1f8b7eae6a150bbfa4052e0767256bde632cc9b8a80950de1122d",
+      "native_size": [
+        1087,
+        1446
+      ],
+      "distributions_verified": 40,
+      "measurement_rows_verified": 287,
+      "numeric_status": "exploratory_assumption_only"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "commit": "9073086bd86cff3062eab65bcbc32da6e4fd2114",
+  "files": {
+    "engine/src/hre/v3/reference_retouch.py": "3037e9593afd6f1ced5033aa10656fd59989a321",
+    "engine/src/hre/v3/common.py": "6a6474fd319eb057a11eb61c6d70a3aa484c0ea3",
+    "engine/src/hre/v3/runner.py": "4b9f8066b2b4abc641b11a544eca1ca2d545ce77",
+    "engine/src/hre/retouch/contracts.py": "be2d48ae2acd3043242db9d3607079e6dce749a2",
+    "engine/src/hre/retouch/workflow.py": "81bcd0f87992d7179da49221654ecd7a307abb31"
+  },
+  "method": "read-only git show; code review, not runtime evaluation"
+}

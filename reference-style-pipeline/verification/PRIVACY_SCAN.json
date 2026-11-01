@@ -1,0 +1,11 @@
+{
+  "scope": "packaged tree; no actual photos/crops/masks/model weights/credentials/service IDs; public upstream scholarly attribution retained",
+  "forbidden_asset_files": 0,
+  "private_identifier_pattern_flags": 0,
+  "icc_files_are_profiles_not_photos": true,
+  "not_a_general_DLP_guarantee": true,
+  "source_documentation_redactions": [
+    "IMPLEMENTATION_REPORT.md",
+    "docs/experiments/reference_retouch_photocraft_20261028/verification/camera0717-pilot-inputs.json"
+  ]
+}

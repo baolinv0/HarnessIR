@@ -1,0 +1,18 @@
+diff --git a/engine/src/hre/tool_retouch/workflow.py b/engine/src/hre/tool_retouch/workflow.py
+index cbd9aad..6ceb96d 100644
+--- a/engine/src/hre/tool_retouch/workflow.py
++++ b/engine/src/hre/tool_retouch/workflow.py
+@@ -198,7 +198,12 @@ class ToolWorkflow:
+                     events.append({'native_candidate':delivery})
+                     feedback.append({'id':f'visual-{round_id}-{budget.used["native"]}','targets':visual['target_results'],'notes':visual['notes'],'preservation_checks':visual['preservation_checks']})
+                     journal.record('feedback',{'round':round_id},feedback,change='保存实际逐目标/保护反馈与剩余问题；图像未改变',impact='决定终止或触发下一轮有界修订')
+-                    progress=visual_progress(visual,best_safe['visual'] if best_safe else baseline_visual)
++                    promotion_reference=best_safe['visual'] if best_safe else baseline_visual
++                    progress=visual_progress(visual,promotion_reference)
++                    previous_judgments={r['id']:r['status'] for r in (promotion_reference or {}).get('target_results',[])}
++                    current_judgments={r['id']:r['status'] for r in visual['target_results']}
++                    transitions=[{'id':k,'from':previous_judgments[k],'to':current_judgments[k]} for k in sorted(perceptual_ids&previous_judgments.keys()) if previous_judgments[k]!=current_judgments[k]]
++                    journal.record('perceptual_comparison',{'reference':best_safe['file'] if best_safe else 'original_A','candidate':filename}, {'quality_improved':progress,'unknown_resolutions':[t for t in transitions if t['from']=='uncertain' and t['to']!='uncertain'],'known_quality_changes':[t for t in transitions if 'uncertain' not in (t['from'],t['to'])]},change='单列未知状态消解与已知质量变化；未知不是更低效果等级',impact='只有相对固定原图/最佳安全基准的进步可用于感知晋升')
+                     visual_anchor=visual
+                     if not safe_visual(visual):
+                         result['unconfirmed_safety']=True

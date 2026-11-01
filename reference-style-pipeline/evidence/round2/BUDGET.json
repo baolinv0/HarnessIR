@@ -1,0 +1,20 @@
+{
+  "experiment": "mapping_rendering_screening_r1",
+  "max_image_calls": 2,
+  "reserved_slots": [
+    {
+      "ordinal": 1,
+      "neutral_result_id": "result_58",
+      "status": "planned_not_called"
+    },
+    {
+      "ordinal": 2,
+      "neutral_result_id": "result_23",
+      "status": "planned_not_called"
+    }
+  ],
+  "actual_calls_recorded": 0,
+  "failed_or_unknown_consumes_slot": true,
+  "automatic_retry_allowed": false,
+  "prior_case_budget_modified": false
+}

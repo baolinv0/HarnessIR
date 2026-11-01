@@ -1,0 +1,6 @@
+experiment_id,arm,n_images,prompt_source,shadow,global,sh_std,evidence_status
+U4_LOWLIGHT_11_P0_P1_P2,LQ,11,input,0.207,0.196,0.150,USER_REPORTED
+U4_LOWLIGHT_11_P0_P1_P2,P0,11,manifest_baseline,0.358,0.343,0.199,USER_REPORTED
+U4_LOWLIGHT_11_P0_P1_P2,P1,11,HarnessIR_5stage_Compose,0.192,0.200,0.160,USER_REPORTED
+U4_LOWLIGHT_11_P0_P1_P2,P2,11,user_Qwen_lowlight_v1,0.353,0.328,0.206,USER_REPORTED
+U4_LOWLIGHT_11_P0_P1_P2,Author,11,HarnessIR_NB2_reference,0.228,0.216,0.175,USER_REPORTED

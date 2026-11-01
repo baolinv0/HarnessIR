@@ -1,0 +1,24 @@
+{
+  "source_commit": "ba9f5877910913a38d3072d1c2b1b2dc9c45af77",
+  "full": {
+    "scope": "engine/tests",
+    "passed": 477,
+    "failed": 0,
+    "warnings": 4,
+    "seconds": 413.89
+  },
+  "targeted": {
+    "scope": "engine/tests/tool_retouch",
+    "passed": 80,
+    "failed": 0,
+    "seconds": 14.26,
+    "source_note": "ran immediately before commit; identical source/test bytes committed as ba9f587"
+  },
+  "real_photocraft_enabled": true,
+  "worker_sha256": "2c87bc8bfb9a5a69388afebbbb82ff1875e566b03ca8599768803f2b88ae0f74",
+  "command_prefix": "HRE_TEST_PHOTOCRAFT_WORKER=/workspace/HarnessIR/engine/photocraft_worker/target/release/harnessir-photocraft-worker PYTHONPATH=engine/src:/tmp/harness-test-deps python -m pytest",
+  "production_scope": "workflow.py only relative to v2; numeric targets/protocol/solver/verifier/MPO unchanged",
+  "new_anchor_regression_cases": 6,
+  "full_source_changed_during_test": false,
+  "subsequent_changes": "documentation and evidence only"
+}

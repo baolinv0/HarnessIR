@@ -1,0 +1,10 @@
+{
+  "max_image_calls": 2,
+  "actual_calls": 2,
+  "completed": 2,
+  "failed": 0,
+  "unknown": 0,
+  "remaining": 0,
+  "status": "exhausted_complete",
+  "prior_budgets_unchanged": true
+}

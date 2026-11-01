@@ -1,0 +1,85 @@
+{
+  "scope": "S26 RGB A to iPhone17 RGB B; upstream linear prediction explicitly skipped",
+  "split": "development",
+  "files": [
+    {
+      "label": "A01",
+      "drive_id": "PRIVATE_DRIVE_ID_REMOVED",
+      "file_name": "20260625_165113_AI_PHOTO_FRONT_DAY_HDR.jpg",
+      "expected_sha256_from_parent": "be21c8219a7ad4f0e93487a35398db8f1361213e3d454396215d6aab35c08c19",
+      "mime_type": "image/jpeg",
+      "bytes_from_drive": 1046436,
+      "raw_reference_received": true,
+      "local_materialized": false
+    },
+    {
+      "label": "B01",
+      "drive_id": "PRIVATE_DRIVE_ID_REMOVED",
+      "file_name": "1.jpg",
+      "expected_sha256_from_parent": "c89ab833b417b4474ced099853a007582a208867f76c4e293d45853870c091e6",
+      "mime_type": "image/jpeg",
+      "bytes_from_drive": 2083964,
+      "raw_reference_received": true,
+      "local_materialized": false
+    },
+    {
+      "label": "A07",
+      "drive_id": "PRIVATE_DRIVE_ID_REMOVED",
+      "file_name": "20260625_170358_AI_PHOTO_FRONT_DAY_HDR.jpg",
+      "expected_sha256_from_parent": "ebee84ed9e12d8c345a8360d1ed78c5232e3fdb23a094127a00673dd66a8ba66",
+      "mime_type": "image/jpeg",
+      "bytes_from_drive": 1296881,
+      "raw_reference_received": true,
+      "local_materialized": false
+    },
+    {
+      "label": "B07",
+      "drive_id": "PRIVATE_DRIVE_ID_REMOVED",
+      "file_name": "7.jpg",
+      "expected_sha256_from_parent": "2b0165f3e02142c8f5726c9da1ff68ca3b15c2eeafa2ee5d8600e78abfc8ba36",
+      "mime_type": "image/jpeg",
+      "bytes_from_drive": 2111034,
+      "raw_reference_received": true,
+      "local_materialized": false
+    },
+    {
+      "label": "A19",
+      "drive_id": "PRIVATE_DRIVE_ID_REMOVED",
+      "file_name": "20260625_185324_AI_PHOTO_FRONT_LOWLIGHT_HDR.jpg",
+      "expected_sha256_from_parent": "9e4ed792242b2295b24ffd2fd0eb45b9b055fe97cb55a385bb526c739649f264",
+      "mime_type": "image/jpeg",
+      "bytes_from_drive": 1747235,
+      "raw_reference_received": true,
+      "local_materialized": false
+    },
+    {
+      "label": "B19",
+      "drive_id": "PRIVATE_DRIVE_ID_REMOVED",
+      "file_name": "19.jpg",
+      "expected_sha256_from_parent": "1155468a00eef3e6bc3d950cc035fd2d4715923b5dc0d974426c4b2d438dbccf",
+      "mime_type": "image/jpeg",
+      "bytes_from_drive": 1207820,
+      "raw_reference_received": true,
+      "local_materialized": false
+    }
+  ],
+  "local_pixel_verification": false,
+  "blocker": "download_file tool unavailable; authenticated file_uri download rejected by proxy CONNECT 403; no retry or proxy bypass",
+  "pairing": "parent scene-selected; not pixel aligned; interval unknown",
+  "library_zip_transfer": {
+    "library_file_id": "[PRIVATE_LIBRARY_ID]",
+    "file_id": "[PRIVATE_BACKING_FILE_ID]",
+    "version": 0,
+    "expected_bytes": 9502530,
+    "expected_sha256_from_parent": "031beb6db543206d1d9a8793d6c3d3b058d442b2dd9f8bdc1337734192ecf761",
+    "destination": "/workspace/camera0717_inputs/Camera0717_RGB_pilot_A01_A07_A19_originals.zip",
+    "prepare_result": "signed URL; workspace_path null",
+    "official_helper_result": "library file transfer failed: download failed",
+    "exit_code": 1,
+    "file_exists_after_attempt": false,
+    "hash_verified": false,
+    "extracted": false,
+    "retry": false
+  },
+  "public_handoff_note": "Sanitized historical metadata only, not a usable download manifest or new verification record."
+}

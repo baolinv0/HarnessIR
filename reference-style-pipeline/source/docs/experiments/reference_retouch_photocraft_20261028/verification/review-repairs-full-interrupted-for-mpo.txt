@@ -1,0 +1,7 @@
+........................................................................ [ 15%]
+........................................................................ [ 30%]
+......
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! KeyboardInterrupt !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/tmp/harness-test-deps/PIL/ImageCms.py:294: KeyboardInterrupt
+(to show a full traceback on KeyboardInterrupt use --full-trace)
+150 passed in 152.36s (0:02:32)

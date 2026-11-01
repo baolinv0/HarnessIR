@@ -1,0 +1,34 @@
+{
+  "schema_version": "ref_enhance_v2",
+  "profiles": {
+    "G0": {
+      "workflow_profile": "direct_ref",
+      "max_generations": 1,
+      "input_roles": [
+        "A",
+        "B"
+      ]
+    },
+    "G1": {
+      "workflow_profile": "agent_single",
+      "max_generations": 1,
+      "input_roles": [
+        "A",
+        "B"
+      ]
+    },
+    "G2": {
+      "workflow_profile": "direct_ref",
+      "max_generations": 1,
+      "input_roles": [
+        "A",
+        "B",
+        "M"
+      ],
+      "requires_observed_mask_probe": true
+    }
+  },
+  "deterministic_renderer_enabled": false,
+  "adaptive_retry_enabled": false,
+  "reference_is_pixel_ground_truth": false
+}

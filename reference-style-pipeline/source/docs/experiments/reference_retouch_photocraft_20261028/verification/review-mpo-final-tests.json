@@ -1,0 +1,35 @@
+{
+  "code_commit": "f7cc9855ab8e9f207434ed5cc46ffe8e8c71d6e7",
+  "full": {
+    "command": "HRE_TEST_PHOTOCRAFT_WORKER=<actual verified worker> PYTHONPATH=engine/src:/tmp/harness-test-deps python -m pytest engine/tests -q",
+    "passed": 471,
+    "failed": 0,
+    "warnings": 4,
+    "seconds": 435.61
+  },
+  "targeted": {
+    "command": "same environment; python -m pytest engine/tests/tool_retouch -q",
+    "passed": 74,
+    "failed": 0,
+    "seconds": 9.17
+  },
+  "source_changed_during_tests": false,
+  "subsequent_changes": "documentation and verification records only",
+  "worker_sha256": "2c87bc8bfb9a5a69388afebbbb82ff1875e566b03ca8599768803f2b88ae0f74",
+  "real_photocraft": true,
+  "actual_current_chat_visual_reply": false,
+  "actual_mediapipe_in_this_environment": false,
+  "actual_camera0717_in_this_environment": false,
+  "package_isolated_subset": {
+    "passed": 20,
+    "seconds": 4.95,
+    "note": "extracted complete tracked source, CLI help and review/MPO cases; no original repository dependency"
+  },
+  "interrupted_intermediate_full": {
+    "code_commit": "11ebb85bc8293c8975cdc875108f625962c6a5f5",
+    "passed_before_interrupt": 150,
+    "seconds": 152.36,
+    "complete": false,
+    "reason": "MPO scope added; restarted final full regression"
+  }
+}

@@ -1,0 +1,11 @@
+[package]
+name = "harnessir-photocraft-worker"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+
+[dependencies]
+photocraft-doc = { git = "https://github.com/storytold/photocraft", rev = "b1794c6e0608ccfc887213dcf58398977c5cb75e" }
+photocraft-compose = { git = "https://github.com/storytold/photocraft", rev = "b1794c6e0608ccfc887213dcf58398977c5cb75e" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

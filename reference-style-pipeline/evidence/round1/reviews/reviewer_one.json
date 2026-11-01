@@ -1,0 +1,84 @@
+{
+  "reviewer": "independent_frozen_AB_oracle",
+  "baseline_file": "${SHARED_ROOT}/diagnosis_experiment_20261101/reference_oracle.md",
+  "baseline_sha256": "b4d83ece171b0970dceb0f28e8b846f7b4f456f4703e178b58e1ea011cc8307f",
+  "blindness": "Only six specified run files and shared_evidence.md read after baseline freeze. No arm mapping, protocol, other reviews or candidate images inspected. No baseline revision.",
+  "axes": ["B_description_fidelity", "action_correctness_direction_strength", "endpoint_and_preserved_attributes", "whole_region_relationships", "evidence_and_uncertainty"],
+  "scale": {"0":"unsupported/wrong/absent", "1":"partial/incomplete", "2":"specific and well-supported"},
+  "scores_are_coarse": true,
+  "runs": {
+    "run_018": {
+      "scores": [1,2,2,2,2], "total":9,
+      "axis_evidence": [
+        "准确描述浅薄荷绿顶板、近白中心与暖边灯箱、暖棕头发；但脸仅为‘更亮且偏暖肤色’，颈为‘偏暖黄’，未充分给出参考肤色本身的米桃/米棕及克制彩度，绝对外观描述不完整。",
+        "脸颈和柜体提亮暖移；衣物维持深色，灯箱不继续推白；用头发彩度近似不变和衣物变化小限制强度。方向正确。",
+        "完整柜面协调且保留阴影、接缝、反射，保持皮肤纹理、镜片反光和A表情；终点与保留项可用，肤色终点粒度略粗。",
+        "脸发分离、脸颈接近、柜顶冷暖差、灯脸差均正确；明确分开肩带与上衣。",
+        "明确未配准、混合类别、粗多边形、缺失掩膜与检测；不把中位数当增益或验收阈值。"
+      ],
+      "critical_incorrect_action_or_content_change": [],
+      "minor_cautions": ["‘偏暖黄’需与自然肤色约束一起读，单独拿去执行会比冻结参考更容易把颈部推黄。"]
+    },
+    "run_027": {
+      "scores": [2,2,2,2,2], "total":10,
+      "axis_evidence": [
+        "暖米桃脸、暖黄桃颈、暖棕黑发、近黑深蓝灰衣服、薄荷青绿及近白暖边，绝对材料外观充分且吻合。",
+        "衣服明度保持为主、冷蓝与彩度轻改；头发变化比脸克制；肩带向更清楚暖棕变化而独立数值未知，动作与强度齐全。",
+        "脸终点明确‘有血色但不橙化’；保留皮肤/眼镜异材质，不把眼白镜片染成肤色；柜面不统一刷橙。",
+        "解释中位数排序但明确不能让所有肤色像素都暗于面板；脸颈差不要变成双色分区，冷暖与深色锚点同时成立。",
+        "观察与成因分开，构图、光照、混合掩膜及无标定增益/容差均说明。"
+      ],
+      "critical_incorrect_action_or_content_change": [],
+      "minor_cautions": ["颈部‘暖黄桃’略偏黄向，但同段自然肤色及阴影约束足以限定；不构成错误动作。"]
+    },
+    "run_046": {
+      "scores": [2,1,2,2,2], "total":9,
+      "axis_evidence": [
+        "暖桃色脸颈、暖棕深发、深蓝黑衣、橙金柜体、薄荷绿顶板和微暖近白灯面，虽精简但覆盖主要绝对外观。",
+        "脸颈提亮暖移、头发去冷偏及衣服不等幅抬亮正确；但肩带只要求保留独立材质纹理，未提出参考中明显较亮暖的变化，动作覆盖不完整。",
+        "完整目标同时给出脸颈暖色中间调与深发衣服，并保留轮廓、发丝、反光、皮肤细节、文字和位置。",
+        "七条关系解释一致，尤其灯箱自身更亮但灯脸差变小并非压暗命令，避免了关键反向动作。",
+        "限定为已有测量、视觉方向；未配准、类别混入、无原掩膜、原因不可分解均充分。"
+      ],
+      "critical_incorrect_action_or_content_change": [],
+      "minor_cautions": ["上衣去蓝和降彩的行动多依赖后文数值解释而非直接建议，但可合理读出；本项扣分主要为肩带变化遗漏。"]
+    },
+    "run_063": {
+      "scores": [2,2,2,2,2], "total":10,
+      "axis_evidence": [
+        "暖米桃脸、暖米棕颈、深棕黑发、克制蓝黑衣，及较沉前挡板/亮金橙侧框，贴合冻结外观。",
+        "脸颈提可读性，发暗部打开但不浅棕，衣保持深色只改过强冷蓝；灯箱变化比人物柜体克制，并把侧灯幅度列未知。",
+        "脸不白皙化或橙盖、颈不等亮平涂、柜面不一色、灯箱不纯白填平，均提供有效终点与不变量。",
+        "脸发差、脸颈连续、柜体顶板亮度与色度差准确；材料身份和前挡板相对深度均保留。",
+        "原因仅为假设；明确中位数不是局部边缘反差，混合区域与缺失工具证据均限制结论。"
+      ],
+      "critical_incorrect_action_or_content_change": [],
+      "minor_cautions": ["‘不能…颠倒’脸柜中位数关系略像硬约束；需按文末视觉方向限定理解，不能变成新图逐像素或固定统计验收条件。"]
+    },
+    "run_081": {
+      "scores": [1,2,2,2,2], "total":9,
+      "axis_evidence": [
+        "灯箱暖白、暖棕发与棕织物描述正确；脸仅‘更明亮、偏暖红与黄’，顶板仅更亮青绿，欠缺米桃/米棕与浅薄荷的绝对目标精度。",
+        "明确肩带更亮暖，脸颈共同调整、柜体更明快、衣物保持深色、灯箱变化克制；数值说明各材料变化幅度不同。",
+        "自然阴影、痣、五官、镜片反射、衣领织纹、柜板反射和A文字均保留；全幅终点方向成立，肤色的精确观感较弱。",
+        "关系不仅罗列数字，提出不能只提脸而让背景暗沉，不能同幅增亮增艳；灯脸差解释正确。",
+        "成因无法唯一确定，未配准及区域非真值说明充分，无验收或新测量冒充。"
+      ],
+      "critical_incorrect_action_or_content_change": [],
+      "minor_cautions": ["‘暖红与黄’是色轴方向而非可辨终点，执行者可能过暖；文本仍以自然皮肤约束，不认定已发生严重错误。"]
+    },
+    "run_092": {
+      "scores": [2,2,2,2,2], "total":10,
+      "axis_evidence": [
+        "暖桃米脸、暖米棕颈、深棕黑发、沉稳金黄挡板与鲜亮金橙框架、浅薄荷顶板与微暖灯箱，准确。",
+        "头发适度开暗部而非压黑；衣服保持深色降过强蓝彩、肩带暖棕；灯箱明度调整比暗部克制，均有方向与强度。",
+        "不过橙肤色、非浅棕灰白头发、非同色脸颈、非均一橙面板与非白块灯箱，保留A几何细节，终点约束有用。",
+        "正确指出脸发两者都变亮但分离更强，柜顶色彩分离及暗色锚点完整；排序明确以区域中位数描述。",
+        "禁止混用线性Y与L*，明确混合区域、未配准、未知侧灯幅度和无校准资格，边界充分。"
+      ],
+      "critical_incorrect_action_or_content_change": [],
+      "minor_cautions": ["‘柜体…不能超越顶板’语气过硬；应是参考关系提示而非因构图不同仍强制中位数排序。全文否认数值命中目标，故不列关键错误。"]
+    }
+  },
+  "decision_summary": "No critical incorrect action or content-change found. All six capture the major selective brightening/warming and preserved materials. 027/063/092 tie at this coarse rubric; 018/046/081 have small specificity or coverage omissions, not demonstrated downstream failures. Differences do not support causal arm conclusions or image-quality ranking."
+}
