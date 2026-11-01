@@ -1,0 +1,18 @@
+{
+  "fixture_kind": "synthetic local UI only",
+  "timeout_seconds": 30,
+  "scenarios": [
+    {
+      "scenario": "pause_resume",
+      "pass": true
+    },
+    {
+      "scenario": "failed_retry",
+      "pass": true
+    },
+    {
+      "scenario": "released_retry",
+      "pass": true
+    }
+  ]
+}

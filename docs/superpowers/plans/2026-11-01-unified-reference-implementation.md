@@ -111,10 +111,10 @@ Files: engine/src/hre/reference_core/study.py plus CLI and tests/test_reference_
 
 Files: docs/reference_unified/{RUNBOOK,IMPLEMENTATION_REPORT,REVIEW}.md; .github/workflows/; README links; package metadata/examples.
 
-- [ ] Map R1-R12 to code/test commands and evidence. Run old95 focused tests, all new tests, imported175 style regressions, relevant runtime/batch/provider tests, JS syntax, CLI, wheel build/content checks and diff check. Run broader CPU tests once and record platform limitations separately.
+- [x] Map R1-R12 to code/test commands and evidence. Run old95 focused tests, all new tests, imported175 style regressions, relevant runtime/batch/provider tests, JS syntax, CLI, wheel build/content checks and diff check. Run broader CPU tests once and record platform limitations separately.
 - [x] CI matrix Linux/Windows with UTF-8, exact-byte fixtures and narrowly capability-skipped symlink creation. Include smoke import checks showing one hre package.
 - [x] Assign fresh read-only reviewer frozen contract+diff+reports. First require requirement compliance; then request correctness/compatibility review. Implementer repairs listed blockers, reviewer verifies fixes; iterate until no in-scope blocker remains.
-- [ ] Check scoped publication files exclude private images/masks/runs/credentials. Commit implementation and truthful reports; push codex/reference-unified-20261101; create PR against codex/reference-retouch-contract-20261026 and attach it to this chat. Verify remote SHA and PR file list; report real CI status without implying completion when pending.
+- [x] Check scoped publication files exclude private images/masks/runs/credentials. Commit implementation and truthful reports; push codex/reference-unified-20261101; create PR against codex/reference-retouch-contract-20261026 and attach it to this chat. Verify remote SHA and PR file list; report real CI status without implying completion when pending.
 
 ## Local commands and evidence policy
 
@@ -129,3 +129,7 @@ $env:PYTHONDONTWRITEBYTECODE='1'
 & .venv/Scripts/python.exe -m hre reference-style --help
 & .venv/Scripts/python.exe -m hre models --help
 ```
+
+## Completion record
+
+Completed 2026-11-02. Two independent review rounds: four blockers repaired, final PASS_TO_NEXT_STAGE. Published code bd25c7a passed Linux/Windows focused CI and Linux full-engine CI. PR #12 is open, attached and unmerged. Local broad failures and host/dependency follow-ups remain explicitly recorded in docs/reference_unified/LOCAL_REGRESSION.md; real model-quality experiments remain NOT_RUN. Final documentation-only evidence updates do not alter the reviewed engine/workflows.

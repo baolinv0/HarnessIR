@@ -26,10 +26,26 @@ Wheel SHA256 at the repaired-code freeze: `d866aaa99e43936c3aa449a450a2ad14ebe4f
 
 The production no-change example used actual temporary synthetic 64x48 A=A PNGs: returned original A pixels, `already_satisfied`, `generations=0`, `stage_calls=0`, `compiler_calls=0`.
 
-## Broad regression and independent re-review
+## Completed broad regression and independent re-review
 
-The full engine CPU run was launched before repair, using `python -m pytest engine/tests -q --durations=12 -o faulthandler_timeout=120`. It remains in progress at initial publication. A complete-suite green result is not claimed. The unchanged original `test_hre_assets.py::test_paths_reject_symlink` was separately confirmed to fail with Windows `WinError 1314` before reaching its assertion because this machine cannot create symbolic links. The unchanged `test_hre_model_workers.py::test_failed_worker_records_one_attempt` was separately rerun: four failed, one passed, because its 0.2-second deadline expires before fixture execution in this machine's current conditions. Production `model_workers.py`, `models.py` and that test are byte-unchanged relative to the base. These are recorded separately from repair validation. Final broad counts and any other failures will be added after completion.
+The full local Windows run finished: **905 passed, 15 failed, 3 skipped, 178 subtests passed in 3039.74 seconds**. Its initial-source/mixed-time boundary and all 15 actual tracebacks are classified in [LOCAL_REGRESSION.md](LOCAL_REGRESSION.md): four symlink fixture privilege failures, five existing 0.2-second subprocess deadline failures, six missing-Streamlit imports. No unified functionality assertion appears in its failed-test list. This is not an immutable final-snapshot green result.
 
-The fresh second reviewer passed the independent gate on `7eaec58`; its full [ROUND2 report](reviews/ROUND2.md) distinguishes reviewer executions from parent evidence and explicitly leaves broad/remote status unclaimed.
+After installing declared `streamlit==1.65.0`, the affected UI set produced **10 passed, 3 failed**; remaining failures were the unchanged three-second AppTest deadline. A separate actual UI probe using the public explicit 30-second timeout passed all three pause/resume/retry scenarios. Its script/output are archived, with no production monkeypatches. These observations do not alter the original full-run counts or establish three-second responsiveness.
 
-The final source also runs in the committed Linux/Windows focused CI matrix; the existing Linux full-engine job remains enabled. CI status is reported from actual GitHub results after publication, never inferred from these local checks.
+The fresh second reviewer passed the independent gate on `7eaec58`; its full [ROUND2 report](reviews/ROUND2.md) distinguishes reviewer executions from parent evidence.
+
+## Completed remote CI and publication
+
+Published code commit: `bd25c7a853c73945b17cfa75a569a8e6d45f0eb8`. Its full Git tree `89e41384d1d22b2ba6820cdb1b1c37354c201c1c` was verified identical to local source/documentation commit `32f1fa3fc9102a275e8149b50dead3cbdb7a148d`. Production code and workflow files are unchanged from independent review candidate `7eaec58`. Git transport repeatedly reset, so publication used the connected GitHub Git-data API; differing commit metadata did not change the verified bytes.
+
+Actual GitHub Actions checks on that published code all completed **success**:
+
+| Required check | Actual result |
+|---|---|
+| [Linux focused contracts/evidence/compatibility/CLI/JS/package](https://github.com/baolinv0/HarnessIR/actions/runs/41324443399/job/124901327506) | success |
+| [Windows focused contracts/evidence/compatibility/CLI/JS/package](https://github.com/baolinv0/HarnessIR/actions/runs/41324443399/job/124901327641) | success |
+| [Linux complete engine CPU and JavaScript](https://github.com/baolinv0/HarnessIR/actions/runs/41324443404/job/124901327265) | success |
+
+The duplicate push-triggered Linux/Windows focused jobs also succeeded; duplicate jobs are not counted as extra coverage. [PR #12](https://github.com/baolinv0/HarnessIR/pull/12) targets `codex/reference-retouch-contract-20261026` from `codex/reference-unified-20261101`, remains open/unmerged, and is attached to the chat. Initial remote ref, tree and all 97 initial changed paths were verified through GitHub readbacks.
+
+Final documentation-only commits append this completed evidence, the local audit and the executed diagnostic probe. They do not change the reviewed engine/workflows. Their commit message uses `[skip ci]` to avoid repeating successful code checks for a documentation-only update; the green check links above refer explicitly to the code commit. The final head/tree/path readback is recorded in the PR description and delivery response.

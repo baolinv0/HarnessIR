@@ -2,7 +2,7 @@
 
 Contract: [CONTRACT.md](CONTRACT.md). Plan: [implementation plan](../superpowers/plans/2026-11-01-unified-reference-implementation.md).
 
-Status: implementation and two independent review rounds complete at local code candidate `7eaec58e97ac03bbe4a117d4692a0863e758e49a`; all four first-round blockers were repaired and independently re-verified. No unresolved in-scope blocker remains. Actual validation and pending broad/remote checks are recorded in [VALIDATION.md](VALIDATION.md). No real image/GPU/paid model experiment has been performed for this change.
+Status: implementation and two independent review rounds complete at local code candidate `7eaec58e97ac03bbe4a117d4692a0863e758e49a`; all four first-round blockers were repaired and independently re-verified. No unresolved in-scope blocker remains. Published code `bd25c7a` passed Linux/Windows focused CI and Linux full-engine CI. [PR #12](https://github.com/baolinv0/HarnessIR/pull/12) is open, attached and unmerged. Actual local failures and remote successes remain separate in [VALIDATION.md](VALIDATION.md). No real image/GPU/paid model experiment has been performed for this change.
 
 ## Requirement traceability
 
