@@ -96,7 +96,7 @@
   "profile_id": "qwen21",
   "strategy": "model_aware",
   "workflow_contract": "reference_retouch_v2",
-  "brief": "Use A for content and B only for comparable photographic appearance; adjust the supported tone, color, skin and subject/background relations. Preserve A identity, text, geometry and authentic detail. Do not invent content. If already matched, preserve A. Return one image.",
+  "brief": "Use image A as the immutable source of identity, objects, expression, text, composition and authentic detail. Use B only for supported photographic appearance (overall tone, brightness, color, skin rendering and subject/background relations). Match the observable and comparable reference appearance; preserve content and natural detail. Do not copy B objects or invent detail. If already matched, preserve A. Return one image.",
   "source": {"path": "/ABS/private/G01_A_work.png"},
   "reference": {"path": "/ABS/private/G01_B_work.png"},
   "regions": [],
