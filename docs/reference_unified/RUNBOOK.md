@@ -181,3 +181,7 @@ python -m pip wheel --no-deps --no-build-isolation --wheel-dir engine/dist ./eng
 ```
 
 CPU 合同、临时合成像素和真实 loopback HTTP 验证规则与传输；没有新增付费生图或 GPU 调用。需真实模型回答的问题仍是：完整系统相对 Direct 的稳定增益、参考敏感性、Base 输出域、原尺度细节和反馈的等预算收益。按已冻结 study 执行并如实保留失败/未知后才能报告这些结论。
+
+## 8. 实验计划与单文档交付
+
+完整的研究执行规范见 [EXPERIMENT_PLAN.md](experiments/EXPERIMENT_PLAN.md)；唯一返回物模板见 [EXPERIMENT_REPORT.html](experiments/EXPERIMENT_REPORT.html)。后者是离线单文件 HTML，包含 tracker、逐 run 账本、原始评分/裁决、图像证据、成本、配置和现有 study Markdown 原文附录。下载原始 HTML 后在浏览器打开；GitHub 代码页不直接渲染它。当前是 NOT_RUN 模板，无真实实验成绩。现有 CLI 不会自动生成这份完整 HTML，需要按规范汇编并自检。
