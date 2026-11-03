@@ -1,0 +1,35 @@
+name: Unified reference contracts
+on:
+  push:
+    branches: ['codex/reference-unified-*']
+  pull_request:
+    paths: ['engine/**', '.github/workflows/reference-unified.yml', 'docs/reference_unified/**']
+jobs:
+  portable-contracts:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    env:
+      PYTHONPATH: engine/src
+      PYTHONUTF8: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e './engine[test]'
+      - name: Shared rules, holistic review, frozen study and installed CLI
+        run: python -m pytest engine/tests/test_reference_core.py engine/tests/test_reference_evaluation.py engine/tests/test_reference_study.py engine/tests/test_reference_entrypoints.py engine/tests/test_review_round1_repairs.py engine/tests/test_v3_reference_v2.py engine/tests/test_retouch_unified.py -q
+      - name: Audited evidence and semantic extensions
+        run: python -m unittest discover -s engine/tests/reference_style -v
+      - name: Original opt-in compatibility
+        run: python -m pytest engine/tests/test_retouch_delivery.py engine/tests/test_v3_reference_runner.py engine/tests/test_v3_reference_contract.py -q
+      - name: UI syntax and package
+        run: |
+          node --check engine/src/hre/retouch/static/app.js
+          node --check engine/src/hre/retouch/static/experiments.js
+          python -m pip wheel --no-deps --wheel-dir engine/dist ./engine

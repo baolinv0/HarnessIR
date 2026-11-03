@@ -82,11 +82,20 @@ def seal_condition(request: dict, config: dict, result: dict, *, elapsed_seconds
                               "intent_sha256": digest(request["intent"]) if request.get("intent") else None,
                               "target_ids": [row["id"] for row in (request.get("intent") or {}).get("targets", [])],
                               "input_order": [row["role"] for row in request["inputs"]]}
+    if request.get("workflow_contract")=="reference_retouch_v2":
+        from .semantic_audit import structural_audit,condition_identity
+        if config.get("backend")=="direct":result["semantic_audit"]=structural_audit(request,result)
+        elif "semantic_audit" not in result:
+            result["semantic_audit"]={"status":"pending","condition_sha256":condition_identity(result),
+                "reference_contract_sha256":request["reference_contract_sha256"]}
     return result
 
 
 def generate(request: dict, condition: dict, config: dict, output_dir: Path) -> dict:
     validate_request(request)
+    if request.get("workflow_contract")=="reference_retouch_v2":
+        from .semantic_audit import require_audit
+        require_audit(request,condition)
     require(condition.get("profile_id") == request["profile_id"] and
             condition.get("request_binding_sha256") == request_binding(request),
             "condition_binding_mismatch", "This condition was compiled for different inputs, geometry or intent")

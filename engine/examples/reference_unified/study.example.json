@@ -1,0 +1,121 @@
+{
+  "schema_version": "hre_reference_study_v1",
+  "study_id": "base-pilot-v1",
+  "runtime_config_path": "./runtime.json",
+  "models": [
+    "qwen21"
+  ],
+  "repeats": 1,
+  "seed_start": 42,
+  "delivery_mode": "source_native",
+  "working_size": null,
+  "pairs": [
+    {
+      "pair_id": "pair01",
+      "source": "./private/A.png",
+      "reference": "./private/B.png",
+      "input_domain": "base_model_output",
+      "base_model_version": "REPLACE_WITH_ACTUAL_BASE_VERSION",
+      "brief_ab": "Match supported whole-frame and whole-object photographic appearance of B while preserving A identity, text, expression, framing and geometry. Keep entire face units. Return A when already satisfied. Evaluate whole-image fidelity before local evidence.",
+      "brief_a": "Restore only supported visible content in A using no appearance reference.",
+      "brief_a_origin": "source_only",
+      "regions_ab": [],
+      "regions_a": [],
+      "evaluation": {
+        "schema_version": "front_camera_evaluation_contract_v2",
+        "semantics": {
+          "coverage": [
+            {
+              "attribute": "neutral_balance",
+              "status": "targeted",
+              "reason": "Confirm this observation on the actual A/B pair before freezing.",
+              "target_ids": [
+                "t1"
+              ]
+            },
+            {
+              "attribute": "chroma_by_hue",
+              "status": "preserve",
+              "reason": "Confirm this observation on the actual A/B pair before freezing.",
+              "target_ids": []
+            },
+            {
+              "attribute": "skin_rendering",
+              "status": "preserve",
+              "reason": "Confirm this observation on the actual A/B pair before freezing.",
+              "target_ids": []
+            },
+            {
+              "attribute": "shadow_midtone_highlight",
+              "status": "preserve",
+              "reason": "Confirm this observation on the actual A/B pair before freezing.",
+              "target_ids": []
+            },
+            {
+              "attribute": "highlight_transition",
+              "status": "preserve",
+              "reason": "Confirm this observation on the actual A/B pair before freezing.",
+              "target_ids": []
+            },
+            {
+              "attribute": "local_contrast",
+              "status": "preserve",
+              "reason": "Confirm this observation on the actual A/B pair before freezing.",
+              "target_ids": []
+            },
+            {
+              "attribute": "subject_background_balance",
+              "status": "preserve",
+              "reason": "Confirm this observation on the actual A/B pair before freezing.",
+              "target_ids": []
+            },
+            {
+              "attribute": "texture_and_noise_observation",
+              "status": "preserve",
+              "reason": "Confirm this observation on the actual A/B pair before freezing.",
+              "target_ids": []
+            }
+          ],
+          "targets": [
+            {
+              "target_id": "t1",
+              "attribute": "neutral_balance",
+              "source_observation": "Replace with actual A observation.",
+              "reference_observation": "Replace with actual B observation.",
+              "comparability": "conditional",
+              "uncertainty": "Only genuinely corresponding neutral materials may be compared; confirm illumination differences.",
+              "mandatory": true,
+              "acceptance_criterion": "Reference neutral appearance reached on comparable whole materials; preserve A content."
+            }
+          ],
+          "delivery_requirements": {
+            "require_native_source_resolution": true,
+            "require_detail_pass": false
+          }
+        },
+        "protections": [
+          "identity",
+          "geometry",
+          "text",
+          "texture"
+        ],
+        "artifact_checks": [
+          "naturalness",
+          "reference_content_leakage",
+          "unsupported_detail"
+        ],
+        "review_protocol": "Actual A/B/C, method labels hidden; whole-image first, whole regions second, numbers for explanation; disclose previous exposure."
+      },
+      "baseline": {
+        "status": "needs_edit",
+        "targets": [
+          {
+            "target_id": "t1",
+            "status": "unmet"
+          }
+        ],
+        "reason": "Replace with actual pre-output baseline review."
+      }
+    }
+  ]
+}

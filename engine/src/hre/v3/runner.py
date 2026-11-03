@@ -20,7 +20,7 @@ from .common import digest, require
 from .runner_journal import Journal, immutable_json
 from .stages import (SCHEMAS, TEMPLATE_VERSION, collect_basic_evidence, evidence_refs,
                      run_stage, stage_instruction, stage_template, validate_intent, validate_payload)
-from . import reference_retouch
+from . import reference_selector as reference_retouch
 
 
 class _UnknownSubmission(HREError):
@@ -96,7 +96,8 @@ def import_shared_intent(path: Path, spec: dict, state: dict) -> dict:
         require(value.get("planning_sha256") == digest(value["planning"]),
                 "shared_intent_modified", "Frozen planning evidence hash differs")
         planning = value["planning"]
-        require(isinstance(planning, dict) and not set(planning) - {"diagnosis", "evidence"},
+        require(isinstance(planning, dict) and not set(planning) - ({"diagnosis", "evidence", "initial_diagnosis", "evidence_review"}
+                if reference_retouch.unified(spec) else {"diagnosis", "evidence"}),
                 "shared_intent_invalid", "Frozen planning must contain only diagnosis/evidence")
         diagnosis, evidence = planning.get("diagnosis"), planning.get("evidence")
         if diagnosis is not None:
@@ -122,9 +123,17 @@ def import_shared_intent(path: Path, spec: dict, state: dict) -> dict:
     if reference_retouch.enabled(spec):
         require(isinstance(value.get("planning", {}).get("diagnosis"), dict),
                 "shared_reference_diagnosis", "Reference planning requires its bound diagnosis")
+        context={"diagnosis": value["planning"]["diagnosis"],"available_evidence_refs": sorted(allowed or [])}
+        if reference_retouch.unified(spec):
+            planning=value["planning"]
+            require(isinstance(planning.get("initial_diagnosis"),dict) and isinstance(planning.get("evidence_review"),dict),
+                    "evidence_review_required","Unified shared planning requires archived initial diagnosis and resolved review")
+            context.update(initial_diagnosis=planning["initial_diagnosis"],evidence=planning["evidence"],
+                           evidence_review=planning["evidence_review"])
+            validate_payload("evidence_review",planning["evidence_review"],{"workflow_contract":spec["workflow_contract"],
+                "task_mode":spec["task_mode"],"context":context})
         intent = validate_payload("compose", value["intent"], {"workflow_contract": spec["workflow_contract"],
-            "task_mode": spec["task_mode"], "context": {"diagnosis": value["planning"]["diagnosis"],
-                "available_evidence_refs": sorted(allowed or [])}})
+            "task_mode": spec["task_mode"], "context":context})
         require(value.get("reference_contract_sha256") == digest(reference_retouch.frozen_contract(intent)),
                 "shared_reference_contract", "Shared evaluation contract hash differs")
         return intent
@@ -264,7 +273,9 @@ def _stage_request(spec: dict, state: dict, stage: str, context: dict,
                "inputs": inputs, "canvas": state["canvas"], "context": context}
     if reference_retouch.enabled(spec):
         request["workflow_contract"] = spec["workflow_contract"]
-        if candidate and stage == "verify":
+        if "stage_adapter" in spec:
+            request["stage_adapter"] = spec["stage_adapter"]
+        if candidate and stage in {"verify","whole_image_review"}:
             request["inputs"].append({**deepcopy(candidate["native"]), "role": "candidate_native"})
     request["stage_template"] = stage_template(request)
     request["request_id"] = digest(request)
@@ -273,6 +284,8 @@ def _stage_request(spec: dict, state: dict, stage: str, context: dict,
 
 def _stage(journal: Journal, spec: dict, config: dict, request: dict, stage_fn) -> dict:
     if stage_fn is None:
+        from .stages import validate_stage_endpoint
+        validate_stage_endpoint(config.get("stage", {}))
         require(isinstance(config.get("stage"), dict), "stage_endpoint_required", "Configure the actual stage VLM endpoint")
         endpoint = config["stage"]
         require(isinstance(endpoint.get("base_url"), str) and isinstance(endpoint.get("model"), str)
@@ -300,7 +313,7 @@ def _get_round(state: dict) -> dict:
 
 
 def _accepted(candidate: dict, spec: dict) -> bool:
-    verification = candidate.get("verification")
+    verification = candidate.get("effective_verification",candidate.get("verification"))
     if reference_retouch.enabled(spec):
         if not candidate.get("delivery_assessment", {}).get("pass", False):
             return False
@@ -313,6 +326,14 @@ def _accepted(candidate: dict, spec: dict) -> bool:
 def _reference_delivery(candidate: dict, spec: dict, canvas: dict) -> dict:
     """Check actual native pixels independently of appearance or delivered size."""
     requirements = spec.get("delivery_requirements", {})
+    if reference_retouch.unified(spec):
+        from ..reference_core.delivery import assess_delivery
+        native=candidate["native"]
+        result=assess_delivery([canvas["width"],canvas["height"]],candidate.get("native_content_size",[native["width"],native["height"]]),
+            requirements,detail=(candidate.get("verification") or {}).get("detail_preservation","uncertain"),
+            geometry_valid=candidate.get("geometry_valid",False))
+        return {**result,"native_file_size":[native["width"],native["height"]],
+            "delivered_size":[candidate["delivered"]["width"],candidate["delivered"]["height"]]}
     minimum = requirements.get("minimum_native_size", [1, 1])
     if requirements.get("require_native_source_resolution", True):
         minimum = [max(minimum[0], canvas["width"]), max(minimum[1], canvas["height"])]
@@ -387,8 +408,12 @@ def _finish(journal: Journal, spec: dict, reason: str, *, failed: bool = False) 
 def _initial_context(state: dict, root: Path, regions: list[dict] | None = None) -> dict:
     diagnosis = _read_ref(root, state["artifacts"]["diagnosis"])["payload"] if "diagnosis" in state["artifacts"] else None
     evidence = _read_ref(root, state["artifacts"]["evidence"]) if "evidence" in state["artifacts"] else None
-    return {"diagnosis": diagnosis, "evidence": evidence, "regions": deepcopy(regions or []),
+    result={"diagnosis": diagnosis, "evidence": evidence, "regions": deepcopy(regions or []),
             "available_evidence_refs": evidence_refs(state["inputs"], diagnosis, evidence)}
+    if "evidence_review" in state["artifacts"]:
+        review=_read_ref(root,state["artifacts"]["evidence_review"])["payload"]
+        result.update(initial_diagnosis=diagnosis,evidence_review=review,diagnosis=review["effective_diagnosis"])
+    return result
 
 
 def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
@@ -451,6 +476,11 @@ def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
                                     "kind": "frozen_planning_import", "origin": imported.get("provenance")}})
                         if planning.get("evidence") is not None:
                             value["artifacts"]["evidence"] = _put(root, "artifacts/evidence.json", planning["evidence"])
+                        if reference_retouch.unified(spec):
+                            value["artifacts"]["diagnosis"]=_put(root,"artifacts/initial_diagnosis.json",{
+                                "payload":planning["initial_diagnosis"],"observation":{"kind":"frozen_planning_import"}})
+                            value["artifacts"]["evidence_review"]=_put(root,"artifacts/evidence_review.json",{
+                                "payload":planning["evidence_review"],"observation":{"kind":"frozen_planning_import"}})
                         value["phase"] = "condition"
                         value["planning_origin"] = {"kind": "imported", "path": str(source), "sha256": file_sha256(source)}
                     else:
@@ -480,8 +510,19 @@ def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
                                                     regions=spec.get("regions", []))
                     value = deepcopy(state)
                     value["artifacts"]["evidence"] = _put(root, "artifacts/evidence.json", result)
-                    value["phase"] = "compose"
+                    value["phase"] = "evidence_review" if reference_retouch.unified(spec) else "compose"
                     journal.commit(value, "evidence_collected", {})
+                elif phase == "evidence_review":
+                    context=_initial_context(state,root,spec.get("regions",[]))
+                    context["initial_diagnosis"]=context["diagnosis"]
+                    context.update(initial_diagnosis_sha256=digest(context["diagnosis"]),evidence_sha256=digest(context["evidence"]))
+                    result=_stage(journal,spec,config,_stage_request(spec,state,"evidence_review",context),stage_fn)
+                    value=deepcopy(journal.state)
+                    value["artifacts"]["evidence_review"]=_put(root,"artifacts/evidence_review.json",result)
+                    value["phase"]="compose"
+                    if result["payload"]["resolution"]!="resolved":
+                        value.update(status="paused",pause_reason="evidence_review_unresolved")
+                    journal.commit(value,"evidence_reviewed",{})
                 elif phase == "compose":
                     request = _stage_request(spec, state, "compose", _initial_context(state, root, spec.get("regions", [])))
                     result = _stage(journal, spec, config, request, stage_fn)
@@ -492,7 +533,9 @@ def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
                         _freeze_reference(value, root)
                     artifact = shared_intent_artifact(spec, value, value["intent"],
                                                      {"case_id": spec["case_id"], "composition": value["artifacts"]["composition"]},
-                                                     {key: _initial_context(value, root)[key] for key in ("diagnosis", "evidence")})
+                                                     {key: _initial_context(value, root)[key] for key in
+                                                      (("diagnosis", "evidence", "initial_diagnosis", "evidence_review")
+                                                       if reference_retouch.unified(spec) else ("diagnosis", "evidence"))})
                     value["artifacts"]["shared_intent"] = _put(root, "artifacts/shared_intent.json", artifact)
                     value["phase"] = "condition"
                     journal.commit(value, "intent_accepted", {"intent_sha256": digest(value["intent"])})
@@ -535,6 +578,15 @@ def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
                             "prepared_request_mismatch", "Prepared request differs from this round's frozen source, intent or policy")
                     for asset in request["inputs"]:
                         _asset(asset)
+                    if reference_retouch.unified(spec):
+                        from ..reference_core.delivery import preflight
+                        plan=request["geometry_plan"]
+                        planned=plan["working_size"] if plan["policy"]=="resize" else plan["unpadded_size"]
+                        assessment=preflight([state["canvas"]["width"],state["canvas"]["height"]],planned,spec.get("delivery_requirements",{}))
+                        value=deepcopy(journal.state);_get_round(value)["delivery_preflight"]=assessment
+                        journal.commit(value,"delivery_preflight",{})
+                        if assessment["status"]!="feasible":
+                            _finish(journal,spec,"delivery_preflight_"+assessment["status"]);continue
                     if state["round"] > 0 and spec["policy"]["mode"] == "resample":
                         previous = state["rounds"][0]
                         result = deepcopy(_read_ref(root, previous["condition"]))
@@ -553,17 +605,36 @@ def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
                                        + ": " + str(result["error"].get("message", "")))
                     require(isinstance(result.get("text"), str) and bool(result["text"].strip())
                             and isinstance(result.get("condition_kind"), str), "condition_invalid", "Compiler returned no executable native condition")
+                    if reference_retouch.unified(spec):
+                        from .semantic_audit import structural_audit,bind_semantic_audit,condition_identity
+                        if compiler_config.get("backend")=="direct":
+                            result["semantic_audit"]=structural_audit(request,result)
+                        else:
+                            audit_context={"condition":{k:deepcopy(result.get(k)) for k in ("text","native_output")},
+                                "condition_sha256":condition_identity(result),"reference_contract":reference_retouch.frozen_contract(state["intent"]),
+                                "reference_contract_sha256":request["reference_contract_sha256"],"available_evidence_refs":[]}
+                            if stage_fn is None and not config.get("stage",{}).get("base_url"):
+                                result["semantic_audit"]={"status":"pending","condition_sha256":condition_identity(result),
+                                    "reference_contract_sha256":request["reference_contract_sha256"],"reason":"No configured independent audit endpoint"}
+                            else:
+                                audit=_stage(journal,spec,config,_stage_request(spec,state,"audit_condition",audit_context),stage_fn)
+                                result["semantic_audit"]=bind_semantic_audit(request,result,audit["payload"])
                     value = deepcopy(journal.state)
                     record = _get_round(value)
                     record["request"] = _reference(prepared_path, root)
                     record["condition"] = _put(root, f"rounds/{state['round']:03d}/condition.json", result)
                     value["phase"] = "execute"
+                    if reference_retouch.unified(spec) and result["semantic_audit"]["status"]!="pass":
+                        value.update(status="paused",pause_reason="semantic_audit_pending")
                     journal.commit(value, "condition_accepted", {"round": state["round"], "cached": "cache_origin" in result})
                     if value["budget"]["compiler_calls"] > spec["policy"]["max_compiler_calls"]:
                         _finish(journal, spec, "compiler_budget_exceeded", failed=True)
                 elif phase == "execute":
                     record = _get_round(state)
                     request, condition = _read_ref(root, record["request"]), _read_ref(root, record["condition"])
+                    if reference_retouch.unified(spec):
+                        from .semantic_audit import require_audit
+                        require_audit(request,condition)
                     round_dir = root / "rounds" / f"{state['round']:03d}"
                     generation_attempt = state["operation_attempts"].get(f"generate-generate-r{state['round']:03d}", 0)
                     output_dir = round_dir / "native" / f"attempt_{generation_attempt:03d}"
@@ -616,11 +687,25 @@ def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
                                                      "native": deepcopy(native), "delivered": deepcopy(output),
                                                      "geometry_valid": (output["width"], output["height"]) == (state["canvas"]["width"], state["canvas"]["height"]),
                                                      "verification": None, "accepted": False})
+                        if reference_retouch.unified(spec):
+                            plan=request["geometry_plan"]
+                            value["candidates"][-1]["native_content_size"]=deepcopy(plan["working_size"] if plan["policy"]=="resize" else plan["unpadded_size"])
                     record["candidate_ids"] = ids
-                    value["phase"] = "verify"
+                    value["phase"] = "whole_image_review" if reference_retouch.unified(spec) else "verify"
                     journal.commit(value, "images_imported", {"candidate_ids": ids})
                     if len(assets) != 1 or value["budget"]["generations"] > spec["policy"]["max_generations"]:
                         _finish(journal, spec, "unexpected_generation_count", failed=True)
+                elif phase == "whole_image_review":
+                    from ..reference_core.holistic import image_bindings
+                    candidate=next(c for c in state["candidates"] if c["candidate_id"]==_get_round(state)["candidate_ids"][0])
+                    request=_stage_request(spec,state,"whole_image_review",{},candidate)
+                    request["context"]={"image_sha256":image_bindings(request["inputs"])}
+                    request["request_id"]=digest({k:v for k,v in request.items() if k!="request_id"})
+                    result=_stage(journal,spec,config,request,stage_fn)
+                    value=deepcopy(journal.state);current=next(c for c in value["candidates"] if c["candidate_id"]==candidate["candidate_id"])
+                    current["whole_image_review"]=result["payload"]
+                    _get_round(value)["whole_image_review"]=_put(root,f"rounds/{state['round']:03d}/whole_image_review.json",result)
+                    value["phase"]="verify";journal.commit(value,"whole_image_reviewed",{})
                 elif phase == "verify":
                     candidate = next(c for c in state["candidates"] if c["candidate_id"] == _get_round(state)["candidate_ids"][0])
                     context = {"evaluation": deepcopy(spec.get("evaluation", {})), "regions": deepcopy(spec.get("regions", [])),
@@ -633,20 +718,39 @@ def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
                                        available_evidence_refs=initial["available_evidence_refs"] + ["candidate", "candidate_native"],
                                        delivery_requirements=deepcopy(spec.get("delivery_requirements", {})),
                                        delivery_assessment=_reference_delivery(candidate, spec, state["canvas"]))
+                    if reference_retouch.unified(spec):
+                        context["whole_image_review"]=candidate["whole_image_review"]
+                        context["whole_image_review_sha256"]=digest(candidate["whole_image_review"])
                     request = _stage_request(spec, state, "verify", context, candidate)
                     result = _stage(journal, spec, config, request, stage_fn)
                     value = deepcopy(journal.state)
                     current = next(c for c in value["candidates"] if c["candidate_id"] == candidate["candidate_id"])
-                    current["verification"] = result["payload"]
+                    current["verification"] = deepcopy(result["payload"])
+                    if reference_retouch.unified(spec):
+                        from ..reference_core.holistic import verdict_gate
+                        current["verification"]["whole_image_review"]=deepcopy(candidate["whole_image_review"])
+                        if verdict_gate(candidate["whole_image_review"])=="reject":
+                            current["verification"].update(reported_verdict=result["payload"]["verdict"],verdict="reject")
                     if reference_retouch.enabled(spec):
-                        current["appearance_status"] = result["payload"]["verdict"]
+                        current["appearance_status"] = current["verification"]["verdict"]
                         current["delivery_assessment"] = _reference_delivery(current, spec, state["canvas"])
+                    if reference_retouch.unified(spec):
+                        from ..reference_core.feedback import normalize_feedback
+                        current["feedback"]=normalize_feedback(_read_ref(root,state["artifacts"]["reference_contract"]),current["verification"],
+                            candidate_id=current["candidate_id"],round_index=current["round"],delivery=current["delivery_assessment"])
+                        current["verification_versions"]=[{"version":0,"verification":deepcopy(current["verification"]),
+                            "verification_sha256":digest(current["verification"]),"predecessor_sha256":None}]
                     current["accepted"] = _accepted(current, spec)
                     _get_round(value)["verification"] = _put(root, f"rounds/{state['round']:03d}/verification.json", result)
                     journal.commit(value, "verified", {"candidate_id": candidate["candidate_id"], "accepted": current["accepted"]})
                     policy = spec["policy"]["mode"]
                     exhausted = value["budget"]["generations"] >= spec["policy"]["max_generations"]
-                    if policy == "single" or exhausted or (policy == "feedback" and current["accepted"]):
+                    if reference_retouch.unified(spec) and current["feedback"]["action"] in {"manual_review","gather_evidence"}:
+                        value=deepcopy(journal.state);value.update(status="paused",pause_reason="mandatory_review_pending",phase="refine")
+                        journal.commit(value,"review_required",{})
+                    elif reference_retouch.unified(spec) and current["feedback"]["action"]=="stop" and not current["accepted"]:
+                        _finish(journal,spec,"feedback_stopped")
+                    elif policy == "single" or exhausted or (policy == "feedback" and current["accepted"]):
                         _finish(journal, spec, "accepted" if current["accepted"] else "generation_budget_complete")
                     elif policy == "resample":
                         value = deepcopy(journal.state)
@@ -654,7 +758,7 @@ def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
                         journal.commit(value, "resample_requested", {})
                     else:
                         verification = result["payload"]
-                        actionable = [issue for issue in verification["issues"] if issue["suggested_change"]
+                        actionable = current["feedback"]["actionable_feedback_refs"] if reference_retouch.unified(spec) else [issue for issue in verification["issues"] if issue["suggested_change"]
                                       and issue["kind"] not in {"uncertain", "execution_contract_violation"}]
                         if verification["verdict"] == "uncertain" or not actionable:
                             _finish(journal, spec, "no_supported_refinement")
@@ -664,7 +768,7 @@ def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
                 elif phase == "refine":
                     candidate = next(c for c in state["candidates"] if c["candidate_id"] == _get_round(state)["candidate_ids"][0])
                     context = _initial_context(state, root, spec.get("regions", []))
-                    verification = candidate["verification"]
+                    verification = candidate.get("effective_verification",candidate["verification"])
                     refs = evidence_refs(state["inputs"], context["diagnosis"], context["evidence"],
                                          round_index=state["round"], verification=verification)
                     refs += ["candidate"] + state["intent"].get("feedback_refs", [])
@@ -676,6 +780,11 @@ def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
                                                              if issue["suggested_change"] and issue["kind"] not in {"uncertain", "execution_contract_violation"}])
                     if reference_retouch.enabled(spec):
                         context["reference_contract"] = _read_ref(root, state["artifacts"]["reference_contract"])
+                    if reference_retouch.unified(spec):
+                        feedback=candidate["feedback"]
+                        require(feedback["action"]=="revise_prompt","feedback_not_actionable","Resolve mandatory review or stop before refinement")
+                        context.update(normalized_feedback=feedback,actionable_feedback_refs=feedback["actionable_feedback_refs"])
+                        context["available_evidence_refs"]=sorted(set(context["available_evidence_refs"]+feedback["actionable_feedback_refs"]))
                     request = _stage_request(spec, state, "refine", context, candidate)
                     result = _stage(journal, spec, config, request, stage_fn)
                     value = deepcopy(journal.state)
@@ -718,6 +827,99 @@ def run_case(root: Path, *, stage_fn=None, compile_fn=None, execute_fn=None,
                     journal.commit(value, "run_error", {})
                     _finish(journal, spec, exc.code, failed=True)
                 break
+        return journal.state
+
+
+def import_planning_review(root: Path, payload: dict, *, kind: str) -> dict:
+    """Resolve an actual evidence/condition review without another compiler call."""
+    from .contracts import load_case
+    from .semantic_audit import bind_semantic_audit,condition_identity
+    root=Path(root).resolve()
+    with case_lock(root):
+        spec,config,loaded=load_case(root);journal=Journal(root,loaded)
+        value=deepcopy(journal.state)
+        require(reference_retouch.unified(spec) and not value.get("pending"),"review_version","Review requires a reconciled unified case")
+        if kind=="evidence":
+            require("reference_contract" not in value["artifacts"],"revision_required","Frozen targets require an explicit new task revision")
+            context=_initial_context(value,root,spec.get("regions",[]))
+            context["initial_diagnosis"]=context.get("initial_diagnosis",context["diagnosis"])
+            validate_payload("evidence_review",payload,_stage_request(spec,value,"evidence_review",context))
+            versions=value.setdefault("evidence_review_versions",[])
+            if not versions and "evidence_review" in value["artifacts"]:versions.append(deepcopy(value["artifacts"]["evidence_review"]))
+            ref=_put(root,f"artifacts/evidence_review_v{len(versions):03d}.json",{"payload":payload,"observation":{"kind":"explicit_review_import"}})
+            versions.append(ref);value["artifacts"]["evidence_review"]=ref
+            value.update(status="running" if payload["resolution"]=="resolved" else "paused",phase="compose")
+            if payload["resolution"]!="resolved":value["pause_reason"]="evidence_review_unresolved"
+            else:value.pop("pause_reason",None)
+        else:
+            require(kind=="condition" and value.get("phase")=="execute","review_stage","Import the final pending condition audit before execution")
+            record=_get_round(value);request=_read_ref(root,record["request"]);condition=_read_ref(root,record["condition"])
+            audit=bind_semantic_audit(request,condition,payload)
+            condition["semantic_audit"]=audit
+            versions=record.setdefault("condition_versions",[deepcopy(record["condition"])])
+            ref=_put(root,f"rounds/{value['round']:03d}/condition_review_v{len(versions):03d}.json",condition)
+            versions.append(ref);record["condition"]=ref
+            value["status"]="running" if audit["status"]=="pass" else "paused"
+            if audit["status"]=="pass":value.pop("pause_reason",None)
+            else:value["pause_reason"]="semantic_audit_pending"
+        return journal.commit(value,"planning_review_imported",{"kind":kind})
+
+
+def import_candidate_review(root: Path, review: dict) -> dict:
+    """Append an observation to the same immutable A/B/C; no compiler/editor calls."""
+    from .contracts import load_case
+    from ..reference_core.feedback import normalize_feedback
+    root=Path(root).resolve()
+    with case_lock(root):
+        spec,config,loaded=load_case(root)
+        require(reference_retouch.unified(spec),"review_version","Same-candidate review requires reference_retouch_v2")
+        journal=Journal(root,loaded);value=deepcopy(journal.state)
+        require(not value.get("pending"),"submission_unknown","Reconcile unknown submissions before review")
+        current=next((c for c in value.get("candidates",[]) if c["candidate_id"]==review.get("candidate_id")),None)
+        require(current is not None and current["round"]==review.get("round"),"review_candidate_binding","Review candidate/round differs")
+        for role in ("native","delivered"):
+            _asset(current[role]);require(review.get(role+"_sha256")==current[role]["sha256"],"review_candidate_binding","Review pixels differ")
+        versions=current.get("verification_versions",[])
+        require(bool(versions) and review.get("predecessor_sha256")==digest(versions[-1]),"review_predecessor","Review must append to the exact predecessor record")
+        context=_initial_context(value,root,spec.get("regions",[]))
+        context.update(reference_contract=_read_ref(root,value["artifacts"]["reference_contract"]))
+        context["available_evidence_refs"] += ["candidate","candidate_native"]
+        from ..reference_core.holistic import validate_whole,image_bindings
+        whole_request=_stage_request(spec,value,"whole_image_review",{},current)
+        try:whole=validate_whole(review.get("whole_image_review"),image_bindings(whole_request["inputs"]))
+        except ValueError as exc:require(False,"whole_image_review_invalid",str(exc))
+        context["whole_image_review"]=whole
+        payload=validate_payload("verify",review.get("verification"),_stage_request(spec,value,"verify",context,current))
+        payload["whole_image_review"]=whole
+        from ..reference_core.holistic import verdict_gate
+        if verdict_gate(whole)=="reject":payload.update(reported_verdict=payload["verdict"],verdict="reject")
+        observation={"version":len(versions),"verification":payload,"verification_sha256":digest(payload),
+            "predecessor_sha256":digest(versions[-1]),"candidate_id":current["candidate_id"],"round":current["round"],
+            "native_sha256":current["native"]["sha256"],"delivered_sha256":current["delivered"]["sha256"]}
+        _put(root,f"reviews/{current['candidate_id']}/v{len(versions):03d}.json",observation)
+        versions.append(observation);current["effective_verification"]=payload
+        current["delivery_assessment"]=_reference_delivery({**current,"verification":payload},spec,value["canvas"])
+        current["feedback"]=normalize_feedback(context["reference_contract"],payload,candidate_id=current["candidate_id"],
+            round_index=current["round"],delivery=current["delivery_assessment"])
+        current["accepted"]=_accepted(current,spec)
+        active_ids=_get_round(value).get("candidate_ids",[])
+        actionable_current=(current["round"]==value["round"] and bool(active_ids) and current["candidate_id"]==active_ids[0])
+        if not actionable_current:
+            # Observation history is candidate-local. In particular, an older
+            # round cannot reopen a terminal decision or schedule refinement
+            # against the unrelated candidate selected by the current round.
+            return journal.commit(value,"candidate_review_appended",{"candidate_id":current["candidate_id"],
+                "version":observation["version"],"scheduling":"historical_observation_only"})
+        value.update(status="running",phase="refine",success=False);value.pop("pause_reason",None)
+        for key in ("terminal_reason","selected_candidate_id","selected_output","selected_kind","quality_status","delivery_assessment"):
+            value.pop(key,None)
+        journal.commit(value,"candidate_review_appended",{"candidate_id":current["candidate_id"],"version":observation["version"]})
+        if current["accepted"]: return _finish(journal,spec,"accepted_after_review")
+        if current["feedback"]["action"] in {"manual_review","gather_evidence"}:
+            value=deepcopy(journal.state);value.update(status="paused",pause_reason="mandatory_review_pending")
+            return journal.commit(value,"review_required",{})
+        if current["feedback"]["action"]=="stop" or spec["policy"]["mode"]!="feedback" or value["budget"]["generations"]>=spec["policy"]["max_generations"]:
+            return _finish(journal,spec,"review_not_accepted")
         return journal.state
 
 

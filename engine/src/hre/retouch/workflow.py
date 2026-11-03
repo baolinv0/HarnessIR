@@ -432,3 +432,10 @@ class Workbench:
                 c=self._load(id);c["waiting_stage"]=stage;c["status"]="needs_input"
                 self._event(c,stage,"result_rejected",str(exc))
                 self._save(c);raise
+
+
+# Keep every historical method above intact. New semantics select an explicit path.
+LegacyWorkbench=Workbench
+from .unified_workflow import UnifiedWorkbenchMixin
+class Workbench(UnifiedWorkbenchMixin,LegacyWorkbench):
+    pass

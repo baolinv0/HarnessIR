@@ -1,0 +1,35 @@
+{
+  "schema_version": "hre_task_v3",
+  "workflow_contract": "reference_retouch_v2",
+  "case_id": "unified-reference-example",
+  "task_mode": "reference_enhance",
+  "profile_id": "qwen21",
+  "strategy": "shared",
+  "brief": "Match supported whole-frame and whole-object photographic appearance of B while preserving A identity, text, expression, framing and geometry. Keep entire face units. Return A when already satisfied. Evaluate whole-image fidelity before local evidence.",
+  "source": {
+    "path": "/replace/with/source-A.png"
+  },
+  "reference": {
+    "path": "/replace/with/reference-B.png"
+  },
+  "geometry": {
+    "policy": "pad",
+    "grid": 32
+  },
+  "spatial": {
+    "mode": "full_frame"
+  },
+  "delivery_requirements": {
+    "require_native_source_resolution": true,
+    "require_detail_pass": false
+  },
+  "policy": {
+    "mode": "feedback",
+    "max_generations": 3,
+    "seed_schedule": [
+      0,
+      1,
+      2
+    ]
+  }
+}

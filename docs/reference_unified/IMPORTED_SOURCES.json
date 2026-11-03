@@ -1,0 +1,216 @@
+{
+  "source_commit": "6adfd0ba7054d453662df7e91c93f547a85e6fdc",
+  "scope": "public Python only; no private photos/masks/runs",
+  "files": [
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/__init__.py",
+      "source_sha256": "d5adb58149e03369a3f609e347d17b336f491f60ea71690d039861447d11910f",
+      "destination": "engine/src/hre/reference_style/__init__.py",
+      "import_sha256": "d5adb58149e03369a3f609e347d17b336f491f60ea71690d039861447d11910f"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/audit.py",
+      "source_sha256": "130dd7f57984b217f369ce751830f53ab1096ed52d43169685f97f5615c23815",
+      "destination": "engine/src/hre/reference_style/audit.py",
+      "import_sha256": "1839ef07c20d2b3cdb717ad14989eb26a6b5a46bdf50b03df3f57f89de7b563f"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/cli.py",
+      "source_sha256": "25b06297996c1a55ab51ef8e9c950febbad1d6bf824415cda069f4118278a89c",
+      "destination": "engine/src/hre/reference_style/cli.py",
+      "import_sha256": "25b06297996c1a55ab51ef8e9c950febbad1d6bf824415cda069f4118278a89c"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/contracts.py",
+      "source_sha256": "aa03efe70196293fd1c95d3a7a0af9f6ab3be4baaaf532b152c5c0badbae6547",
+      "destination": "engine/src/hre/reference_style/contracts.py",
+      "import_sha256": "aa03efe70196293fd1c95d3a7a0af9f6ab3be4baaaf532b152c5c0badbae6547"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/coordinator.py",
+      "source_sha256": "4b5e1d3c55e20f1397295dff81a896da758946e7ddafa777f5f818506c412de6",
+      "destination": "engine/src/hre/reference_style/coordinator.py",
+      "import_sha256": "4b5e1d3c55e20f1397295dff81a896da758946e7ddafa777f5f818506c412de6"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/s2_evidence.py",
+      "source_sha256": "c8ae20ad8fa62571ff62ba8716bd515fa9681f1b4531c9d4809190e245d06f5c",
+      "destination": "engine/src/hre/reference_style/s2_evidence.py",
+      "import_sha256": "c8ae20ad8fa62571ff62ba8716bd515fa9681f1b4531c9d4809190e245d06f5c"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/s2_measure.py",
+      "source_sha256": "afb3dceeeb276488b7131d840f2ebde86fedc053581a525f18975d2fb5a50220",
+      "destination": "engine/src/hre/reference_style/s2_measure.py",
+      "import_sha256": "afb3dceeeb276488b7131d840f2ebde86fedc053581a525f18975d2fb5a50220"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/s2_public.py",
+      "source_sha256": "b84765f7562428361d57912bef23b6d89bc61de512379fd78193f68ba54c749b",
+      "destination": "engine/src/hre/reference_style/s2_public.py",
+      "import_sha256": "b84765f7562428361d57912bef23b6d89bc61de512379fd78193f68ba54c749b"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/s2_stage.py",
+      "source_sha256": "7f4b8d9df3e28911b4c36c6d78d270edefbee1e807c85e46ad4509f78afbad6a",
+      "destination": "engine/src/hre/reference_style/s2_stage.py",
+      "import_sha256": "7f4b8d9df3e28911b4c36c6d78d270edefbee1e807c85e46ad4509f78afbad6a"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/s2_store.py",
+      "source_sha256": "da026ca68d63becb18b62cc87d3a2cb38a16c59d285eb80526af4afea4e5317a",
+      "destination": "engine/src/hre/reference_style/s2_store.py",
+      "import_sha256": "da026ca68d63becb18b62cc87d3a2cb38a16c59d285eb80526af4afea4e5317a"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/s3_candidate.py",
+      "source_sha256": "ab56852e523147669cee3cabe160d8caaf05083c5307f2c9ba20b5196946380d",
+      "destination": "engine/src/hre/reference_style/s3_candidate.py",
+      "import_sha256": "ab56852e523147669cee3cabe160d8caaf05083c5307f2c9ba20b5196946380d"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/s3_handoff.py",
+      "source_sha256": "ef6fc0a0e9c32ae1f481222087c8f30a2f5311176072cf227fde3b1fa752791e",
+      "destination": "engine/src/hre/reference_style/s3_handoff.py",
+      "import_sha256": "ef6fc0a0e9c32ae1f481222087c8f30a2f5311176072cf227fde3b1fa752791e"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/s4_budget.py",
+      "source_sha256": "0d9ea98079ef14ad3c4d8099fab6ff2133eb5296042aad04ecf5fb1d73d81be6",
+      "destination": "engine/src/hre/reference_style/s4_budget.py",
+      "import_sha256": "0d9ea98079ef14ad3c4d8099fab6ff2133eb5296042aad04ecf5fb1d73d81be6"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/s4_evaluate.py",
+      "source_sha256": "448a08252c5c081a864df58fedd2ca74dbfbb3357254ece466f67e98c363d920",
+      "destination": "engine/src/hre/reference_style/s4_evaluate.py",
+      "import_sha256": "448a08252c5c081a864df58fedd2ca74dbfbb3357254ece466f67e98c363d920"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/s4_feedback.py",
+      "source_sha256": "be372047626c8b0a23d6df68f6a6f3f0062142f93de4ff7cf554a81676d83b3e",
+      "destination": "engine/src/hre/reference_style/s4_feedback.py",
+      "import_sha256": "be372047626c8b0a23d6df68f6a6f3f0062142f93de4ff7cf554a81676d83b3e"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/s4_review.py",
+      "source_sha256": "6db061ab8ac2a73ac2f2bb90df248bffb8e94d2dcb67f5f52b8508d00fe73bf8",
+      "destination": "engine/src/hre/reference_style/s4_review.py",
+      "import_sha256": "6db061ab8ac2a73ac2f2bb90df248bffb8e94d2dcb67f5f52b8508d00fe73bf8"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/s4_selected.py",
+      "source_sha256": "71dd31c86dbcc8a0c2de0e5f5a428d0a525fefcdabfd4039d3c77c4796662689",
+      "destination": "engine/src/hre/reference_style/s4_selected.py",
+      "import_sha256": "71dd31c86dbcc8a0c2de0e5f5a428d0a525fefcdabfd4039d3c77c4796662689"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/s4_targets.py",
+      "source_sha256": "be086681089025befcb499eea07cbc88d0a78d381a2dcd8a0cb67704ded88f20",
+      "destination": "engine/src/hre/reference_style/s4_targets.py",
+      "import_sha256": "be086681089025befcb499eea07cbc88d0a78d381a2dcd8a0cb67704ded88f20"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/s4_verify.py",
+      "source_sha256": "06162bc221c65fc887386e9a9e587fbad0ebb94d0e1304c0d44115231a28631f",
+      "destination": "engine/src/hre/reference_style/s4_verify.py",
+      "import_sha256": "06162bc221c65fc887386e9a9e587fbad0ebb94d0e1304c0d44115231a28631f"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/verification_store.py",
+      "source_sha256": "30c4fd03eb9a5c026f803b9f4236c3fb832528182bf4de627a15c066ec6983df",
+      "destination": "engine/src/hre/reference_style/verification_store.py",
+      "import_sha256": "30c4fd03eb9a5c026f803b9f4236c3fb832528182bf4de627a15c066ec6983df"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/reference_style/visual_goals.py",
+      "source_sha256": "987637a3be83db7290f74ca22adb17c180aa41027bd5ae19b41122d7cca54a95",
+      "destination": "engine/src/hre/reference_style/visual_goals.py",
+      "import_sha256": "987637a3be83db7290f74ca22adb17c180aa41027bd5ae19b41122d7cca54a95"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/tests/reference_style/test_audit.py",
+      "source_sha256": "b85f0dce4018fbe6c163782caf54c63b69f8861b87274017e9f0b9cdda6d06fa",
+      "destination": "engine/tests/reference_style/test_audit.py",
+      "import_sha256": "0f8e85ba40c9e49617451ba3e9ee00afefb962970dee5434a5d07363f6056997"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/tests/reference_style/test_camera_domain.py",
+      "source_sha256": "03800fa6651f5906c0191b294056ef0445e94e1146d836e3ebc686c0163fde79",
+      "destination": "engine/tests/reference_style/test_camera_domain.py",
+      "import_sha256": "03800fa6651f5906c0191b294056ef0445e94e1146d836e3ebc686c0163fde79"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/tests/reference_style/test_contracts.py",
+      "source_sha256": "91cdf3639a99919b1900c6093c6118a4d7a2fbe4a722e5ba0b0cfaee44931999",
+      "destination": "engine/tests/reference_style/test_contracts.py",
+      "import_sha256": "91cdf3639a99919b1900c6093c6118a4d7a2fbe4a722e5ba0b0cfaee44931999"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/tests/reference_style/test_coordinator.py",
+      "source_sha256": "47385d5e3f51c5aad4b9a4aa257f3d39b6d6c146aac9ad966f25d22d0d622c20",
+      "destination": "engine/tests/reference_style/test_coordinator.py",
+      "import_sha256": "47385d5e3f51c5aad4b9a4aa257f3d39b6d6c146aac9ad966f25d22d0d622c20"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/tests/reference_style/test_faithful_mapping.py",
+      "source_sha256": "3240e5f3e8b549a9e75e2b304fd019f9f7173d701e9bb3fa9a140b38c4971870",
+      "destination": "engine/tests/reference_style/test_faithful_mapping.py",
+      "import_sha256": "3240e5f3e8b549a9e75e2b304fd019f9f7173d701e9bb3fa9a140b38c4971870"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/tests/reference_style/test_r2_regressions.py",
+      "source_sha256": "06172b8221fefded39b466d570d2eaa95f29234959a581ec82c4ce425e6b108e",
+      "destination": "engine/tests/reference_style/test_r2_regressions.py",
+      "import_sha256": "3b6745776511ce7f95ab6c8fe6243f090fd11862015267561e18a4bae2218ff5"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/tests/reference_style/test_r3_regressions.py",
+      "source_sha256": "ab548ec624714c100b65aa41912bc846d50090d51a02f2a6be1fcf75f99ca7a8",
+      "destination": "engine/tests/reference_style/test_r3_regressions.py",
+      "import_sha256": "af970cee8d5be60053c028bb9bbc8301a298a9077ecb9354939513e7c5b59626"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/tests/reference_style/test_s2.py",
+      "source_sha256": "265c63f9aec931edee9a59cf22eb1fb6d1b77963eb55fd1dc3cf367ccc7e5441",
+      "destination": "engine/tests/reference_style/test_s2.py",
+      "import_sha256": "265c63f9aec931edee9a59cf22eb1fb6d1b77963eb55fd1dc3cf367ccc7e5441"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/tests/reference_style/test_s2_revision.py",
+      "source_sha256": "1ff2107dfb41d07c5f0414261b5eac317a0249d11c19d1008056296c1e044879",
+      "destination": "engine/tests/reference_style/test_s2_revision.py",
+      "import_sha256": "1ff2107dfb41d07c5f0414261b5eac317a0249d11c19d1008056296c1e044879"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/tests/reference_style/test_s3.py",
+      "source_sha256": "9cabfac97c0743f6c24beee4c03c5f3653d55a8d7a0435fb4b007d91c92419f2",
+      "destination": "engine/tests/reference_style/test_s3.py",
+      "import_sha256": "fe9b8f8630d429105f62643ed206d3e5e97356932e18225bcfb95d898c481070"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/tests/reference_style/test_s4.py",
+      "source_sha256": "b8040f8eecefa975c19289a9b257dfce829572769e8a6cd4af052bce4fd34b52",
+      "destination": "engine/tests/reference_style/test_s4.py",
+      "import_sha256": "b8040f8eecefa975c19289a9b257dfce829572769e8a6cd4af052bce4fd34b52"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/tests/reference_style/test_s4_r2.py",
+      "source_sha256": "786f23a17f858c34f9f84ca26c1bc76e7a5290fc9226f2862f50263b4bd82657",
+      "destination": "engine/tests/reference_style/test_s4_r2.py",
+      "import_sha256": "66e08cf6b6a00a267c3ee5937146cd5777397e3fe98b5b1ee8e703710f6b0c01"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/tests/reference_style/test_visual_goals.py",
+      "source_sha256": "ca2a796a526789fd7fff60b90235a8ebfbc37bd3b6afd3ab716ce7bfd20b1919",
+      "destination": "engine/tests/reference_style/test_visual_goals.py",
+      "import_sha256": "ca2a796a526789fd7fff60b90235a8ebfbc37bd3b6afd3ab716ce7bfd20b1919"
+    },
+    {
+      "source": "reference-style-pipeline/source/engine/src/hre/tool_retouch/color.py",
+      "source_sha256": "2ddc7ef3e3540a5048626597ce0bea734b7055c02e06debf0fdc79d5001da8f3",
+      "destination": "engine/src/hre/reference_style/color.py",
+      "import_sha256": "2ddc7ef3e3540a5048626597ce0bea734b7055c02e06debf0fdc79d5001da8f3"
+    }
+  ]
+}

@@ -112,6 +112,11 @@ def _task(case: dict, model: str, arm: dict, seed: int) -> dict:
         "task_mode", "source", "reference", "brief", "geometry", "spatial", "regions", "evaluation", "colour_policy", "alpha_policy",
         "workflow_contract", "delivery_requirements"
     ) if key in case}
+    # Explicit arm versions override the dataset default, never silently migrate it.
+    for key in ("workflow_contract","delivery_requirements"):
+        if key in arm: fields[key]=deepcopy(arm[key])
+    if arm.get("workflow_contract") is None and "workflow_contract" in arm:
+        fields.pop("workflow_contract",None);fields.pop("delivery_requirements",None)
     return {"schema_version": "hre_task_v3", "case_id": f"{case['id']}_{model}_{arm['name']}_{seed}"[:128],
             "profile_id": model, "strategy": arm["strategy"], **fields,
             "policy": {"mode": arm["policy"], "max_generations": arm["max_generations"],
@@ -185,36 +190,47 @@ def run_batch(manifest: dict, config: dict, root: Path, *, base: Path | None = N
         run_kwargs = {"stage_fn": stage_fn, "compile_fn": compile_fn, "execute_fn": execute_fn}
         for original_case in value["cases"]:
             case = _snapshot_case(original_case, frozen["frozen_inputs"])
-            shared = None
-            planning_problem = None
-            if value["share_planning"] and any(arm["strategy"] != "native" for arm in value["arms"]):
-                planning_root = root / "planning" / case["id"]
-                plan_arm = {"name": "planning", "strategy": "shared", "policy": "single", "max_generations": 1}
-                planning_spec = _task(case, case["models"][0], plan_arm, value["seeds"][0])
-                try:
-                    _snapshot_case(original_case, frozen["frozen_inputs"])
-                    if not (planning_root / "state.json").exists():
-                        create_case(planning_root, planning_spec, config)
-                    _snapshot_case(original_case, frozen["frozen_inputs"])
-                    _check_imported_case(planning_root, original_case)
-                    state = run_case(planning_root, stop_after="compose", **run_kwargs)
-                    result["planning"].append({"case_id": case["id"], "path": str(planning_root),
-                                               "status": state["status"], "budget": state.get("budget")})
-                    shared = planning_root / "artifacts" / "shared_intent.json"
-                    if not shared.is_file():
-                        shared = None
-                        planning_problem = state.get("terminal_reason") or state.get("pause_reason") or "planning_not_ready"
-                except Exception as exc:
-                    planning_problem = str(exc)
-                    result["planning"].append({"case_id": case["id"], "path": str(planning_root), "status": "failed", "error": str(exc)})
+            shared_by_contract = {}
+            problems_by_contract = {}
+            planning_arms = {}
+            for arm in value["arms"]:
+                if arm["strategy"] != "native":
+                    key=arm.get("workflow_contract",case.get("workflow_contract"))
+                    planning_arms.setdefault(key,arm)
+            if value["share_planning"]:
+                for contract_key,origin_arm in planning_arms.items():
+                    planning_root = root / "planning" / case["id"]
+                    if len(planning_arms)>1 or contract_key!=case.get("workflow_contract"):
+                        planning_root=planning_root/(contract_key or "legacy")
+                    plan_arm = {"name": "planning", "strategy": "shared", "policy": "single", "max_generations": 1}
+                    for field in ("workflow_contract","delivery_requirements","max_stage_calls"):
+                        if field in origin_arm:plan_arm[field]=deepcopy(origin_arm[field])
+                    planning_spec = _task(case, case["models"][0], plan_arm, value["seeds"][0])
+                    try:
+                        _snapshot_case(original_case, frozen["frozen_inputs"])
+                        if not (planning_root / "state.json").exists():
+                            create_case(planning_root, planning_spec, config)
+                        _snapshot_case(original_case, frozen["frozen_inputs"])
+                        _check_imported_case(planning_root, original_case)
+                        state = run_case(planning_root, stop_after="compose", **run_kwargs)
+                        result["planning"].append({"case_id": case["id"], "path": str(planning_root),
+                                                   "status": state["status"], "budget": state.get("budget")})
+                        shared = planning_root / "artifacts" / "shared_intent.json"
+                        if shared.is_file():shared_by_contract[contract_key]=shared
+                        else:problems_by_contract[contract_key]=state.get("terminal_reason") or state.get("pause_reason") or "planning_not_ready"
+                    except Exception as exc:
+                        problems_by_contract[contract_key]=str(exc)
+                        result["planning"].append({"case_id": case["id"], "path": str(planning_root), "status": "failed", "error": str(exc)})
             for model in case["models"]:
                 for arm in value["arms"]:
                     for seed in value["seeds"]:
                         case_root = root / "runs" / case["id"] / model / arm["name"] / f"seed_{seed}"
                         record = {"dataset_case_id": case["id"], "profile_id": model, "arm": arm["name"],
                                   "seed": seed, "case_root": str(case_root)}
+                        contract_key=arm.get("workflow_contract",case.get("workflow_contract"))
+                        shared=shared_by_contract.get(contract_key)
                         if arm["strategy"] != "native" and value["share_planning"] and shared is None:
-                            record.update(status="blocked_planning", error=planning_problem)
+                            record.update(status="blocked_planning", error=problems_by_contract.get(contract_key))
                         else:
                             try:
                                 _snapshot_case(original_case, frozen["frozen_inputs"])

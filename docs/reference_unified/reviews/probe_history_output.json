@@ -1,0 +1,21 @@
+{
+  "before": {
+    "status": "completed",
+    "success": true,
+    "selected": "r001-p000",
+    "round": 1
+  },
+  "after": {
+    "status": "running",
+    "success": true,
+    "selected": "r001-p000",
+    "round": 1,
+    "phase": "refine"
+  },
+  "resumed": {
+    "status": "failed",
+    "success": false,
+    "terminal_reason": "feedback_not_actionable",
+    "generations": 2
+  }
+}

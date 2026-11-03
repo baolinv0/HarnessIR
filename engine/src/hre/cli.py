@@ -193,6 +193,9 @@ def watch(case_root: Path, max_polls: int=1, interval: float=1.0, *, stop: threa
 def build_parser() -> argparse.ArgumentParser:
     parser=argparse.ArgumentParser(prog='hre',description=__doc__)
     groups=parser.add_subparsers(dest='command',required=True)
+    groups.add_parser('reference-style', help='Audited reference evidence and unified semantic records')
+    groups.add_parser('reference-study', help='Frozen comparison plans, independent ratings and Markdown reports')
+    groups.add_parser('reference-evaluate', help='Whole-image-first independent observations')
     def root(p):p.add_argument('--case-root',type=Path,required=True,help='Exact case revision directory containing state.json; never the collection.')
     case=groups.add_parser('case').add_subparsers(dest='action',required=True)
     p=case.add_parser('create');root(p)
@@ -325,6 +328,14 @@ def dispatch(args):
 
 
 def main(argv=None) -> int:
+    import sys
+    effective = list(sys.argv[1:] if argv is None else argv)
+    if effective and effective[0] == 'reference-style':
+        from hre.reference_style.cli import main as reference_main
+        return reference_main(effective[1:])
+    if effective and effective[0] in ('reference-study', 'reference-evaluate'):
+        from hre.reference_core.cli import main as core_main
+        return core_main(effective)
     args=build_parser().parse_args(argv)
     try:
         value=dispatch(args)
