@@ -16,7 +16,7 @@ from PIL import Image
 from jsonschema import Draft202012Validator
 
 from ..models import HREError, file_sha256
-from .common import chat, digest, image_message, require
+from .common import chat, digest, image_message, require, validate_chat_settings
 
 
 TEMPLATE_VERSION = "hre_stages_v3.1"
@@ -269,9 +269,40 @@ def stage_template(request: dict) -> dict:
     """Select an opt-in template without changing legacy request identities."""
     from .reference_selector import select
     selected = select(request)
-    return {"version": selected.TEMPLATE_VERSION if selected else TEMPLATE_VERSION,
+    template = {"version": selected.TEMPLATE_VERSION if selected else TEMPLATE_VERSION,
             "instruction": stage_instruction(request),
             "response_schema": deepcopy((selected.SCHEMAS if selected else SCHEMAS)[request["stage"]])}
+    if request.get("stage_adapter"):
+        from .stage_adapter import template as decision_template
+        return decision_template(request, template)
+    return template
+
+
+def _unique_json_object(pairs):
+    result = {}
+    for key, value in pairs:
+        require(key not in result, "stage_payload_invalid", "Duplicate JSON key: " + key)
+        result[key] = value
+    return result
+
+
+def validate_stage_endpoint(endpoint: dict) -> None:
+    require(isinstance(endpoint, dict), "stage_settings_invalid", "Stage endpoint must be an object")
+    validate_chat_settings(endpoint.get("settings", {}))
+    overrides = endpoint.get("stage_overrides", {})
+    names = {"diagnose", "compose", "verify", "refine", "evidence_review", "audit_condition", "whole_image_review"}
+    require(isinstance(overrides, dict) and not set(overrides) - names,
+            "stage_settings_invalid", "Unknown stage name in stage_overrides")
+    for override in [{}, *overrides.values()]:
+        require(isinstance(override, dict) and not set(override) - {"settings", "response_format", "timeout_seconds"},
+                "stage_settings_invalid", "Stage overrides accept settings, response_format and timeout_seconds")
+        validate_chat_settings(override.get("settings", {}))
+        value = {**endpoint, **override}
+        require(value.get("response_format", "json_object") in {"json_object", "json_schema", "none"},
+                "invalid_response_format", "Invalid stage response_format")
+        timeout = value.get("timeout_seconds", 600)
+        require(type(timeout) in {int, float} and math.isfinite(timeout) and timeout > 0,
+                "invalid_timeout", "HTTP timeout must be a positive number")
 
 
 def run_stage(request: dict, endpoint: dict) -> dict:
@@ -282,6 +313,9 @@ def run_stage(request: dict, endpoint: dict) -> dict:
     frozen_template = request.get("stage_template", expected_template)
     require(frozen_template == expected_template, "stage_template_changed",
             "Frozen stage instructions/schema differ from this implementation; restore its version or create a new case")
+    validate_stage_endpoint(endpoint)
+    override = endpoint.get("stage_overrides", {}).get(stage, {})
+    endpoint = {**endpoint, **override, "settings": {**endpoint.get("settings", {}), **override.get("settings", {})}}
     public_context = {"task_mode": request["task_mode"], "brief": request["brief"],
                       "context": request.get("context", {}), "result_schema": schema}
     content = [{"type": "text", "text": json.dumps(public_context, ensure_ascii=False)}]
@@ -293,15 +327,27 @@ def run_stage(request: dict, endpoint: dict) -> dict:
                                   {"role": "user", "content": content}], response_schema=schema)
     observation = {**observation, "stage": stage, "template_version": expected_template["version"],
                    "template_sha256": digest(frozen_template),
+                   "response_schema_sha256": digest(schema),
                    "stage_request_id": request["request_id"],
                    "stage_request_sha256": digest(request)}
     try:
-        payload = json.loads(observation["text"])
+        if observation.get("finish_reason") == "length":
+            return {"payload": None, "error": {"code": "stage_output_truncated",
+                    "message": "Completion reached its token limit"}, "observation": observation}
+        payload = json.loads(observation["text"], object_pairs_hook=
+                             _unique_json_object if request.get("stage_adapter") else None)
+        if request.get("stage_adapter"):
+            _schema_check(schema, payload, "stage_payload_invalid")
+            observation["decision_payload"] = deepcopy(payload)
         if isinstance(payload, dict) and isinstance(payload.get("error"), dict):
             error = payload["error"]
             require(isinstance(error.get("code"), str) and isinstance(error.get("message"), str),
                     "stage_payload_invalid", "Stage error requires code and message")
             return {"payload": None, "error": error, "observation": observation}
+        if request.get("stage_adapter"):
+            from .stage_adapter import STAGES, assemble
+            if stage in STAGES:
+                payload = assemble(request, payload)
         validate_payload(stage, payload, request)
         return {"payload": payload, "observation": observation}
     except (HREError, ValueError, TypeError, KeyError) as exc:

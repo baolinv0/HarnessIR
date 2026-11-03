@@ -167,10 +167,18 @@ def normalise_spec(spec: dict) -> dict:
         require(value["strategy"] != "native", "native_intent_forbidden", "Native baseline cannot import a shared intent")
     from .reference_selector import validate_spec
     validate_spec(value)
+    if "stage_adapter" in value:
+        from .stage_adapter import VERSION
+        require(value["stage_adapter"] == VERSION and value.get("workflow_contract") in
+                {"reference_retouch_v1", "reference_retouch_v2"}, "stage_adapter_invalid",
+                "Use reference_decisions_v1 with a reference-retouch workflow")
     return value
 
 
 def validate_config(config: dict, profile_id: str) -> dict:
+    from .stages import validate_stage_endpoint
+    if isinstance(config, dict):
+        validate_stage_endpoint(config.get("stage", {}))
     require(isinstance(config, dict) and isinstance(config.get("models"), dict)
             and profile_id in config["models"], "config_invalid", "Configure the selected model in config.models")
     model = config["models"][profile_id]

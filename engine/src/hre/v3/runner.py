@@ -273,6 +273,8 @@ def _stage_request(spec: dict, state: dict, stage: str, context: dict,
                "inputs": inputs, "canvas": state["canvas"], "context": context}
     if reference_retouch.enabled(spec):
         request["workflow_contract"] = spec["workflow_contract"]
+        if "stage_adapter" in spec:
+            request["stage_adapter"] = spec["stage_adapter"]
         if candidate and stage in {"verify","whole_image_review"}:
             request["inputs"].append({**deepcopy(candidate["native"]), "role": "candidate_native"})
     request["stage_template"] = stage_template(request)
@@ -282,6 +284,8 @@ def _stage_request(spec: dict, state: dict, stage: str, context: dict,
 
 def _stage(journal: Journal, spec: dict, config: dict, request: dict, stage_fn) -> dict:
     if stage_fn is None:
+        from .stages import validate_stage_endpoint
+        validate_stage_endpoint(config.get("stage", {}))
         require(isinstance(config.get("stage"), dict), "stage_endpoint_required", "Configure the actual stage VLM endpoint")
         endpoint = config["stage"]
         require(isinstance(endpoint.get("base_url"), str) and isinstance(endpoint.get("model"), str)

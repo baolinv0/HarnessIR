@@ -135,6 +135,21 @@ def image_message(path: str | Path) -> dict:
     return {"type": "image_url", "image_url": {"url": "data:image/png;base64," + encoded}}
 
 
+def validate_chat_settings(settings: dict) -> None:
+    require(isinstance(settings, dict), "unsupported_chat_setting", "Chat settings must be an object")
+    allowed = {"temperature", "top_p", "max_tokens", "max_completion_tokens", "seed",
+               "presence_penalty", "frequency_penalty", "stop", "reasoning_effort",
+               "thinking_token_budget", "chat_template_kwargs"}
+    require(not set(settings) - allowed, "unsupported_chat_setting",
+            "Unknown chat settings: " + ", ".join(sorted(set(settings) - allowed)))
+    if "thinking_token_budget" in settings:
+        require(type(settings["thinking_token_budget"]) is int and settings["thinking_token_budget"] >= 0,
+                "unsupported_chat_setting", "thinking_token_budget must be a nonnegative integer")
+    if "chat_template_kwargs" in settings:
+        require(isinstance(settings["chat_template_kwargs"], dict), "unsupported_chat_setting",
+                "chat_template_kwargs must be an object")
+
+
 def chat(config: dict, messages: list, response_schema: dict | None = None) -> dict:
     """Exactly one explicit OpenAI-compatible HTTP request; no provider defaults.
 
@@ -148,11 +163,8 @@ def chat(config: dict, messages: list, response_schema: dict | None = None) -> d
             "endpoint_required", "Set an explicit HTTP(S) base_url without credentials/query")
     model = config.get("model")
     require(isinstance(model, str) and model.strip(), "endpoint_required", "Set the deployed model name")
-    settings = dict(config.get("settings", {}))
-    allowed = {"temperature", "top_p", "max_tokens", "max_completion_tokens", "seed",
-               "presence_penalty", "frequency_penalty", "stop", "reasoning_effort"}
-    require(not set(settings) - allowed, "unsupported_chat_setting",
-            "Unknown chat settings: " + ", ".join(sorted(set(settings) - allowed)))
+    settings = config.get("settings", {})
+    validate_chat_settings(settings)
     body = {"model": model, "messages": messages, **settings, "stream": False}
     if response_schema is not None:
         # json_object is broadly supported by local servers; validate the actual
@@ -187,8 +199,11 @@ def chat(config: dict, messages: list, response_schema: dict | None = None) -> d
         result = json.loads(raw)
         choices = result["choices"]
         require(isinstance(choices, list) and len(choices) == 1, "chat_output_invalid", "Expected exactly one completion")
-        text = choices[0]["message"]["content"]
-        require(isinstance(text, str) and text.strip(), "chat_output_invalid", "Empty or non-text completion")
+        text = choices[0]["message"].get("content")
+        if text is None and choices[0].get("finish_reason") == "length":
+            text = ""
+        require(isinstance(text, str) and (text.strip() or choices[0].get("finish_reason") == "length"),
+                "chat_output_invalid", "Empty or non-text completion")
     except (KeyError, ValueError, TypeError) as exc:
         raise HREError("chat_output_invalid", "The configured endpoint returned an invalid completion") from exc
     return {"text": text, "model": result.get("model"), "model_requested": model,
