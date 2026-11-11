@@ -1,0 +1,416 @@
+{
+  "study_id": "sr_v02_dev8_test16",
+  "seed": 42,
+  "dev": [
+    {
+      "case_id": "dev01",
+      "source": {
+        "path": "/data/sr/dev01_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "dev02",
+      "source": {
+        "path": "/data/sr/dev02_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "dev03",
+      "source": {
+        "path": "/data/sr/dev03_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "dev04",
+      "source": {
+        "path": "/data/sr/dev04_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "dev05",
+      "source": {
+        "path": "/data/sr/dev05_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "dev06",
+      "source": {
+        "path": "/data/sr/dev06_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "dev07",
+      "source": {
+        "path": "/data/sr/dev07_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "dev08",
+      "source": {
+        "path": "/data/sr/dev08_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    }
+  ],
+  "test": [
+    {
+      "case_id": "test01",
+      "source": {
+        "path": "/data/sr/test01_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "test02",
+      "source": {
+        "path": "/data/sr/test02_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "test03",
+      "source": {
+        "path": "/data/sr/test03_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "test04",
+      "source": {
+        "path": "/data/sr/test04_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "test05",
+      "source": {
+        "path": "/data/sr/test05_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "test06",
+      "source": {
+        "path": "/data/sr/test06_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "test07",
+      "source": {
+        "path": "/data/sr/test07_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "test08",
+      "source": {
+        "path": "/data/sr/test08_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "test09",
+      "source": {
+        "path": "/data/sr/test09_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "test10",
+      "source": {
+        "path": "/data/sr/test10_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "test11",
+      "source": {
+        "path": "/data/sr/test11_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "test12",
+      "source": {
+        "path": "/data/sr/test12_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "test13",
+      "source": {
+        "path": "/data/sr/test13_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "test14",
+      "source": {
+        "path": "/data/sr/test14_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "test15",
+      "source": {
+        "path": "/data/sr/test15_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "test16",
+      "source": {
+        "path": "/data/sr/test16_lr.png"
+      },
+      "rois": [
+        {
+          "id": "detail",
+          "box": [
+            32,
+            32,
+            224,
+            224
+          ]
+        }
+      ]
+    }
+  ]
+}

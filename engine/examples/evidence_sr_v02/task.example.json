@@ -1,0 +1,16 @@
+{
+  "schema_version": "hre_sr_v02",
+  "case_id": "sr_dev01",
+  "source": {"path": "/data/sr/dev01_lr.png"},
+  "scale": 4,
+  "seed": 42,
+  "alpha_policy": "require_opaque",
+  "colour_policy": "assume_srgb",
+  "rois": [
+    {"id": "detail", "box": [32, 32, 224, 224]}
+  ],
+  "evidence_profile": {
+    "methods": ["lr_consistency_v1", "clipping_v1", "edge_energy_v1"],
+    "selection": "provisional"
+  }
+}

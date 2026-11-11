@@ -1,0 +1,40 @@
+.................................... [  3%]
+...................................................................................................................................................... [ 18%]
+..................................................................... [ 25%]
+........................................................................ [ 32%]
+........................................................................ [ 39%]
+........................................................................ [ 46%]
+........................................................................ [ 53%]
+........................................................................ [ 60%]
+........................................................................ [ 67%]
+........................................................................ [ 74%]
+............................................................... [ 80%]
+........................................................................ [ 88%]
+........................................................................ [ 95%]
+.................................................                        [100%]
+=============================== warnings summary ===============================
+tests/test_hre_storage.py::test_os_lock_serializes_processes
+tests/test_hre_storage.py::test_os_lock_serializes_processes
+tests/test_hre_storage.py::test_os_lock_serializes_processes
+tests/test_hre_storage.py::test_os_lock_serializes_processes
+  /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/multiprocessing/popen_fork.py:66: DeprecationWarning: This process (pid=5) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 15 durations =============================
+30.99s call     tests/test_hre_reference_feedback.py::test_first_pair_review_can_continue_same_cohort_then_receive_fresh_final_reviews
+16.73s call     tests/test_retouch_external_candidate.py::ExternalCandidateTests::test_explicit_full_frame_mapping_preserves_native_and_exports_geometry_blindly
+16.67s call     tests/test_hre_reference_feedback.py::test_r1_first_pair_is_distinct_from_complete_reviewed_cohort[3-False-GO_TO_R2]
+15.48s call     tests/test_hre_integration.py::test_explicit_synthetic_demo_runs_direct_agent_and_refinement
+15.17s call     tests/test_hre_reference_feedback.py::test_r1_first_pair_is_distinct_from_complete_reviewed_cohort[3-True-PROBE]
+13.92s call     tests/test_hre_experiments.py::test_actual_generated_success_group_weighted_and_failed_attempt_retained
+13.67s call     tests/test_hre_experiments.py::test_review_comparability_conflict_is_order_independent_uncertainty[unusable-True]
+7.74s call     tests/test_hre_ui.py::test_streamlit_explicit_new_generation_retry_after_failure_or_confirmed_release[False]
+6.22s call     tests/test_hre_model_runner.py::test_real_subprocess_full_flow_and_independent_stage_check
+6.01s call     tests/test_hre_model_runner.py::test_full_runner_compiles_without_external_call_then_uses_editor_once
+5.91s call     tests/test_hre_workflow.py::test_fixed_k_does_not_stop_on_first_accepted
+5.75s call     tests/test_hre_reference_feedback.py::test_r1_first_pair_is_distinct_from_complete_reviewed_cohort[1-False-FIRST_PAIR_PASSED]
+5.40s call     tests/test_hre_workflow.py::test_actual_adaptive_image_refinement_and_last_slot_acceptance
+5.33s call     tests/reference_style/test_unified_review_repairs.py::UnifiedReviewRepairTest::test_bound_native_detail_pass_completes_delivery_while_fail_unknown_do_not
+5.29s call     tests/reference_style/test_unified_review_repairs.py::UnifiedReviewRepairTest::test_all_stage_conflicts_block_acceptance_and_bound_resolution_restores
+1015 passed, 4 warnings, 186 subtests passed in 579.97s (0:09:39)

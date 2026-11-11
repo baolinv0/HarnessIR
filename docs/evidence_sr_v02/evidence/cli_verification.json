@@ -1,0 +1,182 @@
+{
+  "code_commit": "f94dfcda6ced7bcc819b936843949e23a48436ab",
+  "fixture": {
+    "input_size": [
+      256,
+      256
+    ],
+    "selected_size": [
+      1024,
+      1024
+    ],
+    "candidate_statuses": {
+      "C0": "valid",
+      "C1": "valid",
+      "C2": "valid",
+      "C3": "valid"
+    },
+    "selected_slot": "C1",
+    "resume_unchanged": true,
+    "real_model_calls": 0,
+    "real_judge_calls": 0,
+    "quality_evidence": false
+  },
+  "unconfigured_real": {
+    "status": "unresolved",
+    "selected_output": null,
+    "candidate_statuses": {
+      "C0": "blocked",
+      "C1": "blocked",
+      "C2": "blocked",
+      "C3": "blocked"
+    },
+    "submitted_operations": 0,
+    "real_model_calls": 0,
+    "blockers": {
+      "reconstruction": [
+        "Missing Python executable",
+        "Missing RealESRNet_x4plus checkpoint",
+        "Missing official source checkout"
+      ],
+      "seesr": [
+        "Missing Python executable",
+        "Missing official source checkout",
+        "Missing SD2 base directory",
+        "Missing SeeSR checkpoint directory",
+        "Missing DAPE checkpoint",
+        "Missing RAM base checkpoint",
+        "Missing bert-base-uncased tokenizer directory"
+      ],
+      "qwen": [
+        "Missing Qwen checkpoint directory",
+        "Missing Qwen deployment manifest",
+        "Qwen revision and pipeline_version are required",
+        "torch: ModuleNotFoundError",
+        "diffusers: ModuleNotFoundError",
+        "transformers: ModuleNotFoundError",
+        "accelerate: ModuleNotFoundError",
+        "QwenImage21Pipeline: ModuleNotFoundError",
+        "CUDA is unavailable in the configured Python runtime",
+        "Qwen Diffusers version differs from pipeline_version"
+      ]
+    },
+    "judge_blockers": [
+      "Set the explicit Judge endpoint and deployed model"
+    ]
+  },
+  "commands": [
+    {
+      "command": [
+        "/workspace/scratch/5a405e7cb038/.venv/bin/python",
+        "engine/examples/evidence_sr_v02/make_fixture.py",
+        "--out",
+        "$TMP/input"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/workspace/scratch/5a405e7cb038/.venv/bin/python",
+        "-m",
+        "hre",
+        "sr",
+        "create",
+        "--case-root",
+        "$TMP/success",
+        "--spec",
+        "$TMP/input/task.json",
+        "--config",
+        "$TMP/input/config.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/workspace/scratch/5a405e7cb038/.venv/bin/python",
+        "-m",
+        "hre",
+        "sr",
+        "run",
+        "--case-root",
+        "$TMP/success"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/workspace/scratch/5a405e7cb038/.venv/bin/python",
+        "-m",
+        "hre",
+        "sr",
+        "resume",
+        "--case-root",
+        "$TMP/success"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/workspace/scratch/5a405e7cb038/.venv/bin/python",
+        "-m",
+        "hre",
+        "sr",
+        "report",
+        "--case-root",
+        "$TMP/success"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/workspace/scratch/5a405e7cb038/.venv/bin/python",
+        "-m",
+        "hre",
+        "sr",
+        "preflight",
+        "--config",
+        "$TMP/blocked.json"
+      ],
+      "exit_code": 2
+    },
+    {
+      "command": [
+        "/workspace/scratch/5a405e7cb038/.venv/bin/python",
+        "-m",
+        "hre",
+        "sr",
+        "create",
+        "--case-root",
+        "$TMP/blocked-case",
+        "--spec",
+        "$TMP/input/task.json",
+        "--config",
+        "$TMP/blocked.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/workspace/scratch/5a405e7cb038/.venv/bin/python",
+        "-m",
+        "hre",
+        "sr",
+        "run",
+        "--case-root",
+        "$TMP/blocked-case"
+      ],
+      "exit_code": 2
+    },
+    {
+      "command": [
+        "/workspace/scratch/5a405e7cb038/.venv/bin/python",
+        "-m",
+        "hre",
+        "sr",
+        "report",
+        "--case-root",
+        "$TMP/blocked-case"
+      ],
+      "exit_code": 0
+    }
+  ]
+}

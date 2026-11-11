@@ -1,0 +1,43 @@
+.................................... [  2%]
+...................................................................................................................................................... [ 15%]
+..................................................................... [ 21%]
+........................................................................ [ 27%]
+........................................................................ [ 33%]
+........................................................................ [ 39%]
+........................................................................ [ 45%]
+........................................................................ [ 51%]
+........................................................................ [ 57%]
+........................................................................ [ 62%]
+............................................................... [ 68%]
+........................................................................ [ 74%]
+........................................................................ [ 80%]
+........................................................................ [ 86%]
+........................................................................ [ 92%]
+........................................................................ [ 98%]
+.......................                                                  [100%]
+=============================== warnings summary ===============================
+tests/test_hre_storage.py::test_os_lock_serializes_processes
+tests/test_hre_storage.py::test_os_lock_serializes_processes
+tests/test_hre_storage.py::test_os_lock_serializes_processes
+tests/test_hre_storage.py::test_os_lock_serializes_processes
+  /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/multiprocessing/popen_fork.py:66: DeprecationWarning: This process (pid=6) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 15 durations =============================
+16.15s call     tests/test_hre_reference_feedback.py::test_first_pair_review_can_continue_same_cohort_then_receive_fresh_final_reviews
+13.65s call     tests/test_hre_experiments.py::test_actual_generated_success_group_weighted_and_failed_attempt_retained
+11.61s call     tests/test_hre_reference_feedback.py::test_r1_first_pair_is_distinct_from_complete_reviewed_cohort[3-True-PROBE]
+11.56s call     tests/test_hre_integration.py::test_explicit_synthetic_demo_runs_direct_agent_and_refinement
+11.23s call     tests/test_hre_reference_feedback.py::test_r1_first_pair_is_distinct_from_complete_reviewed_cohort[3-False-GO_TO_R2]
+6.45s call     tests/test_hre_experiments.py::test_review_comparability_conflict_is_order_independent_uncertainty[missing-True]
+6.38s call     tests/test_hre_experiments.py::test_invalid_external_contract_preserves_other_outcome_export_and_itt[missing_file]
+6.34s call     tests/test_hre_experiments.py::test_review_comparability_conflict_is_order_independent_uncertainty[usable-False]
+5.97s call     tests/test_hre_model_runner.py::test_real_subprocess_full_flow_and_independent_stage_check
+5.87s call     tests/test_hre_experiments.py::test_invalid_external_contract_preserves_other_outcome_export_and_itt[bad_sha]
+5.82s call     tests/test_hre_cli.py::test_cli_manual_candidate_and_json_response_complete_actual_selection
+5.43s call     tests/test_hre_workflow.py::test_fixed_k_does_not_stop_on_first_accepted
+5.40s call     tests/test_hre_cli.py::test_watch_deduplicates_unchanged_stale_or_conflicting_submission[False]
+4.96s call     tests/test_hre_experiments.py::test_review_comparability_conflict_is_order_independent_uncertainty[usable-True]
+4.67s call     tests/test_hre_workflow.py::test_actual_adaptive_image_refinement_and_last_slot_acceptance
+1205 passed, 4 warnings, 186 subtests passed in 515.09s (0:08:35)

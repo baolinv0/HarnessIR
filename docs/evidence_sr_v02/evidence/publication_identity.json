@@ -1,0 +1,19 @@
+{
+  "repository": "baolinv0/HarnessIR",
+  "base_commit": "90283e5189160c4c6e3429ddfa48f04d5bc27dfd",
+  "locally_tested_code_commit": "f94dfcda6ced7bcc819b936843949e23a48436ab",
+  "published_code_commit": "22dd603b7f661608bb78b33df2f6a9043ec3a950",
+  "local_code_tree": "fae71799792a378536d6f4e0cfec2f788df0d85b",
+  "remote_code_tree": "fae71799792a378536d6f4e0cfec2f788df0d85b",
+  "all_tree_contents_identical": true,
+  "shell_push": {
+    "exit_code": 128,
+    "error": "fatal: could not read Username for 'https://github.com': No such device or address",
+    "post_failure_remote_branch_exists": false,
+    "retried_same_transport": false
+  },
+  "publication_transport": "Connected GitHub application's Git data API after confirming repository push permission",
+  "new_branch": "codex/evidence-sr-v02-20261111",
+  "force_update": false,
+  "independent_code_review": "pending"
+}

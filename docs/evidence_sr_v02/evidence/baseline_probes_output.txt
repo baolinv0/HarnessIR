@@ -1,0 +1,4 @@
+resize_delivery {"prepared_size": [1024, 1024], "delivered_size": [256, 256]}
+finish_bad_candidate {"selected_kind": "candidate_unaccepted", "selected_candidate_id": "bad", "success": false, "quality_status": "quality_not_met"}
+actual_serialized_judge_context {"evaluation": {"preserve_identity_text_geometry": true, "reference_content_transfer_allowed": false, "task_goal": "Restore image"}, "regions": [{"description": "center", "id": "roi", "source_box": [0.25, 0.25, 0.75, 0.75]}], "geometry_valid": true, "available_evidence_refs": ["source", "candidate"]}
+selected_after_content_fail candidate_unaccepted r000-p000

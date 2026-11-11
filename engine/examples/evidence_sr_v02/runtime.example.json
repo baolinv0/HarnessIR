@@ -1,0 +1,69 @@
+{
+  "mode": "real",
+  "models": {
+    "reconstruction": {
+      "python": "/opt/sr/realesrgan/bin/python",
+      "repo": "/opt/sr/Real-ESRGAN",
+      "revision": "a4abfb2979a7bbff3f69f58f58ae324608821e27",
+      "checkpoint": "/weights/RealESRNet_x4plus.pth",
+      "timeout_seconds": 1800,
+      "settings": {"tile": 0, "tile_pad": 10, "pre_pad": 0, "fp32": true, "gpu_id": 0}
+    },
+    "seesr": {
+      "python": "/opt/sr/seesr/bin/python",
+      "repo": "/opt/sr/SeeSR",
+      "revision": "b13b8ac3bbcc6b9a6baa970ee5349628070877ee",
+      "pretrained_model_path": "/weights/stable-diffusion-2-base",
+      "seesr_model_path": "/weights/seesr",
+      "ram_ft_path": "/weights/DAPE.pth",
+      "bert_path": "/weights/bert-base-uncased",
+      "timeout_seconds": 3600,
+      "settings": {
+        "prompt": "",
+        "added_prompt": "clean, high-resolution, 8k",
+        "negative_prompt": "dotted, noise, blur, lowres, smooth",
+        "mixed_precision": "fp16",
+        "guidance_scale": 5.5,
+        "conditioning_scale": 1.0,
+        "blending_alpha": 1.0,
+        "num_inference_steps": 50,
+        "process_size": 512,
+        "vae_decoder_tiled_size": 224,
+        "vae_encoder_tiled_size": 1024,
+        "latent_tiled_size": 96,
+        "latent_tiled_overlap": 4,
+        "upscale": 4,
+        "sample_times": 1,
+        "align_method": "adain",
+        "start_steps": 999,
+        "start_point": "lr",
+        "save_prompts": true
+      }
+    },
+    "qwen": {
+      "model_id": "Qwen/Qwen-Image-2.1",
+      "revision": "",
+      "local_path": "/weights/Qwen-Image-2.1",
+      "deployment_manifest": "/weights/qwen21-deployment.json",
+      "pipeline_version": "",
+      "device": "cuda",
+      "torch_dtype": "bfloat16",
+      "settings": {
+        "num_inference_steps": 40,
+        "true_cfg_scale": 1.0,
+        "negative_prompt": "",
+        "num_images_per_prompt": 1,
+        "output_resolution": 1024,
+        "use_kv_cache": true
+      }
+    }
+  },
+  "judge": {
+    "base_url": "http://127.0.0.1:8000/v1",
+    "model": "REPLACE_WITH_DEPLOYED_VLM_ID",
+    "api_key_env": "SR_JUDGE_API_KEY",
+    "settings": {"temperature": 0, "max_tokens": 4096, "seed": 0},
+    "timeout_seconds": 600,
+    "response_format": "json_object"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "python": "3.12.14",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "baseline_commit": "90283e5189160c4c6e3429ddfa48f04d5bc27dfd",
+  "dependencies": {
+    "Pillow": "13.0.0",
+    "numpy": "2.5.4",
+    "pydantic": "2.13.4",
+    "pytest": "9.2.0",
+    "jsonschema": "4.26.0",
+    "Jinja2": "3.1.6",
+    "streamlit": "1.67.0"
+  },
+  "torch_available": false,
+  "gpu_inference": "not_run",
+  "real_image_quality_experiment": "not_run",
+  "note": "Local isolated test environment uses recorded installed versions; repository dependency lock was not replaced."
+}

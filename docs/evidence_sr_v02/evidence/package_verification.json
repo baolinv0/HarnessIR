@@ -1,0 +1,19 @@
+{
+  "code_commit": "f94dfcda6ced7bcc819b936843949e23a48436ab",
+  "build_command": "uv build --wheel --out-dir /workspace/scratch/5a405e7cb038/sr-wheel ./engine",
+  "exit_code": 0,
+  "wheel": "harness_ref_enhance-0.4.0-py3-none-any.whl",
+  "wheel_sha256": "6b23b2033b62eff25d5162b71cbf13ef6554736533ff47a6af343540143fa921",
+  "sr_modules": [
+    "hre/sr/__init__.py",
+    "hre/sr/_official.py",
+    "hre/sr/adapters.py",
+    "hre/sr/cli.py",
+    "hre/sr/contracts.py",
+    "hre/sr/evidence.py",
+    "hre/sr/runtime.py",
+    "hre/sr/study.py"
+  ],
+  "sr_module_bytes_match_source": true,
+  "installed_entrypoint_help_exit_code": 0
+}
