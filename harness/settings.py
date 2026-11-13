@@ -72,13 +72,16 @@ VLM_TEMPERATURE = 0.2
 # Executor (generative image editing model)
 # ---------------------------------------------------------------------------
 
-MFM_BACKEND = "nb2"                          # nb2 | gpt-image-2.5
+MFM_BACKEND = "minimax-h3-image"            # minimax-h3-image | nb2 | gpt-image-2.5
 # Short name -> the model id the endpoint expects in the URL. Add an entry for
 # any other editing model the endpoint serves, then select it with --executor.
 MFM_GEMINI_ENDPOINTS = {
     "nb2": "gemini-3.1-flash-image-preview",
     "gpt-image-2.5": "gpt-image-2.5-sunburst",
 }
+# H3 uses multipart /v1/images/edits; it is not a Gemini generateContent model.
+MFM_EXECUTORS = {**MFM_GEMINI_ENDPOINTS, "minimax-h3-image": "MiniMaxAI/MiniMax-H3-Image"}
+MFM_H3_BASE_URL = os.environ.get("HARNESS_H3_BASE_URL", "http://127.0.0.1:30000")
 MFM_TIMEOUT_SEC = 600
 MFM_MAX_RETRIES = 2
 # generationConfig.imageConfig.imageSize: 512 / 1K / 2K / 4K
