@@ -126,7 +126,7 @@ def main() -> int:
     ap.add_argument("--out", required=True,
                     help="output run directory; created if missing")
     ap.add_argument("--executor", default=settings.MFM_BACKEND,
-                    choices=sorted(settings.MFM_GEMINI_ENDPOINTS),
+                    choices=sorted(settings.MFM_EXECUTORS),
                     help=f"image editing model (default: {settings.MFM_BACKEND})")
     ap.add_argument("--workers", type=int, default=4,
                     help="samples processed concurrently (default 4)")
