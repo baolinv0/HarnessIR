@@ -54,10 +54,13 @@ def edit(images: list, prompt: str, *, base_url: str, image_size: str,
     if not isinstance(timeout_sec, (int, float)) or timeout_sec <= 0:
         raise ValueError("H3 timeout must be positive")
 
-    first = Image.open(images[0]) if isinstance(images[0], (str, os.PathLike)) else images[0]
-    if not isinstance(first, Image.Image):
+    if isinstance(images[0], (str, os.PathLike)):
+        with Image.open(images[0]) as first:
+            size = _canvas(first, image_size)
+    elif isinstance(images[0], Image.Image):
+        size = _canvas(images[0], image_size)
+    else:
         raise TypeError("H3 inputs must be paths or PIL images")
-    size = _canvas(first, image_size)
     files = []
     for index, image in enumerate(images, 1):
         if isinstance(image, (str, os.PathLike)):
