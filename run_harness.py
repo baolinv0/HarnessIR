@@ -140,9 +140,9 @@ def main() -> int:
     ap.add_argument("--vlm-model", default=None,
                     help="explicit model id, overriding --vlm")
     ap.add_argument("--executor", default=None,
-                    choices=sorted(settings.MFM_GEMINI_ENDPOINTS),
+                    choices=sorted(settings.MFM_EXECUTORS),
                     help="image editing model; the choices are the keys of "
-                         "MFM_GEMINI_ENDPOINTS in harness/settings.py "
+                         "MFM_EXECUTORS in harness/settings.py "
                          f"(default {settings.MFM_BACKEND})")
 
     ap.add_argument("--redo", action="store_true",
