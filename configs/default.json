@@ -3,7 +3,7 @@
   "note": "",
   "vlm_backend": "gemini",
   "vlm_model": "gemini-3.7-flash",
-  "mfm_backend": "nb2",
+  "mfm_backend": "minimax-h3-image",
   "vlm_max_output_tokens": 16384,
   "enable_tools": true,
   "enable_redo": false,
