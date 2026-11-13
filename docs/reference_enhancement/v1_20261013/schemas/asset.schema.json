@@ -1,0 +1,394 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "asset.schema.json",
+  "type": "object",
+  "properties": {
+    "asset_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+    },
+    "path": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "role": {
+      "enum": [
+        "prediction",
+        "reference",
+        "candidate",
+        "evidence"
+      ]
+    },
+    "width": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "height": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "color_space": {
+      "enum": [
+        "sRGB",
+        null
+      ]
+    },
+    "media_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pixel_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "source_file": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "color_description": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "icc_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "exif_orientation": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 8
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hdr": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type",
+        "color_description",
+        "icc_sha256",
+        "exif_orientation",
+        "hdr"
+      ],
+      "additionalProperties": false
+    },
+    "canonicalization": {
+      "type": "object",
+      "properties": {
+        "canonicalizer_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "conversion_policy_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "source_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "orientation_applied": {
+          "type": "boolean"
+        },
+        "icc_converted": {
+          "type": "boolean"
+        },
+        "sdr_export_record": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "canonicalizer_version",
+        "conversion_policy_sha256",
+        "source_sha256",
+        "orientation_applied",
+        "icc_converted",
+        "sdr_export_record"
+      ],
+      "additionalProperties": false
+    },
+    "candidate_binding": {
+      "type": "object",
+      "properties": {
+        "case_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+        },
+        "case_revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "task_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+        },
+        "round": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "generation_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+        },
+        "prediction_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "reference_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "case_id",
+        "case_revision",
+        "task_id",
+        "round",
+        "generation_id",
+        "prediction_sha256",
+        "reference_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "evidence_format": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "json",
+            "array",
+            "visualization"
+          ]
+        },
+        "dtype": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value_range": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "coordinate_asset_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "dtype",
+        "value_range",
+        "coordinate_asset_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "asset_id",
+    "path",
+    "sha256",
+    "role",
+    "width",
+    "height",
+    "color_space"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "role": {
+            "enum": [
+              "prediction",
+              "reference",
+              "candidate"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "width": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "color_space": {
+            "const": "sRGB"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "role": {
+            "const": "candidate"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "candidate_binding",
+          "source_file",
+          "canonicalization",
+          "pixel_sha256"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "role": {
+            "const": "evidence"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "evidence_format"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "evidence_format": {
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "json",
+                        "array"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "color_space": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "evidence_format": {
+                  "properties": {
+                    "kind": {
+                      "const": "visualization"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "color_space": {
+                  "const": "sRGB"
+                },
+                "width": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "height": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              }
+            }
+          }
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "evidence_format"
+          ]
+        }
+      }
+    }
+  ],
+  "description": "ref_enhance_v1：sha256是path实际文件bytes SHA；图像资产path指冻结SDR sRGB canonical PNG；candidate保留source_file原始生成图。非可视evidence color_space=null。路径resolve、文件hash、解码尺寸及角色绑定由语义校验器检查。"
+}
