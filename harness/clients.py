@@ -186,21 +186,34 @@ class MFMClient:
                  max_retries: int | None = None,
                  image_size: str | None = None) -> None:
         name = model or settings.MFM_BACKEND
-        if name not in settings.MFM_GEMINI_ENDPOINTS:
+        if name not in settings.MFM_EXECUTORS:
             raise ValueError(
                 f"unknown executor {name!r}; known: "
-                f"{sorted(settings.MFM_GEMINI_ENDPOINTS)}")
+                f"{sorted(settings.MFM_EXECUTORS)}")
         self.model = name
-        self.endpoint = settings.MFM_GEMINI_ENDPOINTS[name]
+        self.endpoint = settings.MFM_EXECUTORS[name]
         self.timeout_sec = timeout_sec or settings.MFM_TIMEOUT_SEC
         self.max_retries = max_retries or settings.MFM_MAX_RETRIES
         self.image_size = image_size or settings.MFM_IMAGE_SIZE
-        base = settings.api_base()
-        self.url = f"{base}/v1beta/models/{self.endpoint}:generateContent"
+        if name == "minimax-h3-image":
+            self.url = settings.MFM_H3_BASE_URL
+        else:
+            base = settings.api_base()
+            self.url = f"{base}/v1beta/models/{self.endpoint}:generateContent"
 
     def edit(self, images: list, prompt: str, *,
              size: str | None = None) -> Image.Image:
         assert images, "at least one input image is required"
+        if self.model == "minimax-h3-image":
+            from .h3_client import edit as h3_edit
+            # One non-idempotent image generation attempt; no automatic retry.
+            result = h3_edit(images, prompt, base_url=self.url,
+                             image_size=str(size or self.image_size),
+                             timeout_sec=self.timeout_sec)
+            with _USAGE_LOCK:
+                slot = _USAGE.setdefault("mfm:minimax-h3-image", {})
+                slot["calls"] = slot.get("calls", 0) + 1
+            return result
         first = images[0]
         pil = (Image.open(first).convert("RGB")
                if isinstance(first, (str, Path)) else first)
