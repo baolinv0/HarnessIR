@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """API clients: the VLM (text out) and the executor / MFM (image out).
 
-Both talk to a Gemini-compatible ``:generateContent`` endpoint, configured in
-``settings.API_BASE`` / ``settings.API_KEY``. Two clients rather than one because
-the response shapes differ: the VLM returns JSON text, the executor returns
-inline image bytes.
+The VLM uses a Gemini-compatible ``:generateContent`` endpoint. The executor
+uses that endpoint for NB2/GPT, or an independent SGLang ``/v1/images/edits``
+endpoint for MiniMax H3-Image. Both return decoded results through separate
+methods; no H3 image is ever sent to the VLM endpoint.
 
 Retries use exponential backoff on every exception. Rate limits, timeouts and
 5xx all look the same from here and all want the same treatment.
