@@ -1,0 +1,396 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "diagnosis.schema.json",
+  "title": "Diagnosis stage result",
+  "description": "Bare stage-result payload for schema_version ref_enhance_v1; envelope identity and errors are validated separately.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "reference_usable": {
+      "type": "string",
+      "enum": [
+        "usable",
+        "unusable",
+        "unknown"
+      ]
+    },
+    "comparability": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "scope": {
+            "type": "string",
+            "enum": [
+              "global",
+              "roi_pair"
+            ]
+          },
+          "roi_pair_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "comparable",
+              "partly_comparable",
+              "not_comparable",
+              "unknown"
+            ]
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            },
+            "maxItems": 8,
+            "uniqueItems": true
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "scope",
+          "roi_pair_id",
+          "status",
+          "reasons",
+          "confidence"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "scope": {
+                  "const": "global"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "roi_pair_id": {
+                  "type": "null"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "roi_pair_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "const": "unknown"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "confidence": {
+                  "const": 0
+                }
+              }
+            }
+          }
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 20
+    },
+    "global_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "gap_id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,63}$"
+          },
+          "dimension": {
+            "type": "string",
+            "enum": [
+              "brightness",
+              "white_balance",
+              "color_saturation",
+              "tonal_separation",
+              "local_contrast",
+              "highlight_rolloff",
+              "shadow_detail",
+              "texture_rendering",
+              "other"
+            ]
+          },
+          "observation": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "desired_change": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 400
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+            },
+            "uniqueItems": true,
+            "maxItems": 20
+          }
+        },
+        "required": [
+          "gap_id",
+          "dimension",
+          "observation",
+          "desired_change",
+          "priority",
+          "confidence",
+          "evidence_ids"
+        ]
+      },
+      "minItems": 0,
+      "maxItems": 3
+    },
+    "local_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "gap_id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,63}$"
+          },
+          "dimension": {
+            "type": "string",
+            "enum": [
+              "brightness",
+              "white_balance",
+              "color_saturation",
+              "tonal_separation",
+              "local_contrast",
+              "highlight_rolloff",
+              "shadow_detail",
+              "texture_rendering",
+              "other"
+            ]
+          },
+          "observation": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "desired_change": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 400
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+            },
+            "uniqueItems": true,
+            "maxItems": 20
+          },
+          "roi_pair_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "region_in_a": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "gap_id",
+          "dimension",
+          "observation",
+          "desired_change",
+          "priority",
+          "confidence",
+          "evidence_ids",
+          "roi_pair_id",
+          "region_in_a"
+        ]
+      },
+      "minItems": 0,
+      "maxItems": 3
+    },
+    "style_targets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "target": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 400
+          },
+          "support_gap_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]{0,63}$"
+            },
+            "uniqueItems": true,
+            "maxItems": 20,
+            "minItems": 1
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "priority",
+          "target",
+          "support_gap_ids",
+          "confidence"
+        ]
+      },
+      "minItems": 0,
+      "maxItems": 3
+    },
+    "preservation_constraints": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      },
+      "maxItems": 12,
+      "uniqueItems": true
+    },
+    "tool_plan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tool": {
+            "type": "string",
+            "enum": [
+              "T1_OCR",
+              "T2_FACE",
+              "T3_DEPTH",
+              "T4_SEGMENTATION",
+              "STATS",
+              "ROI_COMPARE"
+            ]
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "prediction",
+                "reference"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 2,
+            "uniqueItems": true
+          },
+          "purpose": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "roi_pair_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            },
+            "maxItems": 20,
+            "uniqueItems": true
+          },
+          "required": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "tool",
+          "roles",
+          "purpose",
+          "roi_pair_ids",
+          "required"
+        ]
+      },
+      "minItems": 0,
+      "maxItems": 8
+    },
+    "uncertainties": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      },
+      "maxItems": 20,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "reference_usable",
+    "comparability",
+    "global_gaps",
+    "local_gaps",
+    "style_targets",
+    "preservation_constraints",
+    "tool_plan",
+    "uncertainties"
+  ]
+}

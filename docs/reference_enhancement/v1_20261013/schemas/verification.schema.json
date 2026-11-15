@@ -1,0 +1,378 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "verification.schema.json",
+  "title": "Verification stage result",
+  "description": "Bare stage-result payload for schema_version ref_enhance_v1; envelope identity and errors are validated separately.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "style_alignment": {
+      "type": "string",
+      "enum": [
+        "improved",
+        "unchanged",
+        "worse",
+        "uncertain"
+      ]
+    },
+    "content_preservation": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "fail",
+        "uncertain"
+      ]
+    },
+    "critical_defects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "geometric_change",
+              "identity_change",
+              "text_change",
+              "invented_content",
+              "render_artifact",
+              "severe_clipping",
+              "other"
+            ]
+          },
+          "observation": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "region_in_a": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "kind",
+          "observation",
+          "region_in_a",
+          "confidence"
+        ]
+      },
+      "minItems": 0,
+      "maxItems": 12
+    },
+    "remaining_issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "dimension": {
+            "type": "string",
+            "enum": [
+              "brightness",
+              "white_balance",
+              "color_saturation",
+              "tonal_separation",
+              "local_contrast",
+              "highlight_rolloff",
+              "shadow_detail",
+              "texture_rendering",
+              "other"
+            ]
+          },
+          "observation": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "region_in_a": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "comparability": {
+            "type": "string",
+            "enum": [
+              "comparable",
+              "partly_comparable",
+              "not_comparable",
+              "unknown"
+            ]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "dimension",
+          "observation",
+          "region_in_a",
+          "comparability",
+          "confidence"
+        ]
+      },
+      "minItems": 0,
+      "maxItems": 12
+    },
+    "retry_focus": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      },
+      "maxItems": 3,
+      "uniqueItems": true
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "style_observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "dimension": {
+            "type": "string",
+            "enum": [
+              "brightness",
+              "white_balance",
+              "color_saturation",
+              "tonal_separation",
+              "local_contrast",
+              "highlight_rolloff",
+              "shadow_detail",
+              "texture_rendering",
+              "other"
+            ]
+          },
+          "a_to_c_change": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "c_vs_b": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "comparability": {
+            "type": "string",
+            "enum": [
+              "comparable",
+              "partly_comparable",
+              "not_comparable",
+              "unknown"
+            ]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "dimension",
+          "a_to_c_change",
+          "c_vs_b",
+          "comparability",
+          "confidence"
+        ]
+      },
+      "minItems": 0,
+      "maxItems": 8
+    },
+    "preservation_observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "composition",
+              "geometry",
+              "identity",
+              "text",
+              "scene_content"
+            ]
+          },
+          "observation": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail",
+              "uncertain"
+            ]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "kind",
+          "observation",
+          "status",
+          "confidence"
+        ]
+      },
+      "minItems": 0,
+      "maxItems": 12
+    }
+  },
+  "required": [
+    "style_alignment",
+    "content_preservation",
+    "critical_defects",
+    "remaining_issues",
+    "retry_focus",
+    "confidence",
+    "style_observations",
+    "preservation_observations"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "content_preservation": {
+            "const": "pass"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "critical_defects": {
+            "maxItems": 0
+          },
+          "preservation_observations": {
+            "minItems": 5,
+            "items": {
+              "properties": {
+                "status": {
+                  "const": "pass"
+                }
+              }
+            },
+            "allOf": [
+              {
+                "contains": {
+                  "properties": {
+                    "kind": {
+                      "const": "composition"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                }
+              },
+              {
+                "contains": {
+                  "properties": {
+                    "kind": {
+                      "const": "geometry"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                }
+              },
+              {
+                "contains": {
+                  "properties": {
+                    "kind": {
+                      "const": "identity"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                }
+              },
+              {
+                "contains": {
+                  "properties": {
+                    "kind": {
+                      "const": "text"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                }
+              },
+              {
+                "contains": {
+                  "properties": {
+                    "kind": {
+                      "const": "scene_content"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "style_alignment": {
+            "const": "improved"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "style_observations": {
+            "minItems": 1,
+            "contains": {
+              "properties": {
+                "comparability": {
+                  "enum": [
+                    "comparable",
+                    "partly_comparable"
+                  ]
+                }
+              },
+              "required": [
+                "comparability"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}

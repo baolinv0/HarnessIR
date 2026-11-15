@@ -1,0 +1,585 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "response.schema.json",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "ref_enhance_v1"
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+    },
+    "case_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+    },
+    "stage": {
+      "enum": [
+        "diagnose",
+        "compose",
+        "execute",
+        "verify",
+        "refine"
+      ]
+    },
+    "round": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "attempt": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "request_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "config_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "state_revision_issued": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "input_assets": {
+      "type": "array",
+      "items": {
+        "$ref": "asset.schema.json"
+      },
+      "minItems": 2,
+      "allOf": [
+        {
+          "contains": {
+            "properties": {
+              "role": {
+                "const": "prediction"
+              }
+            },
+            "required": [
+              "role"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": {
+              "role": {
+                "const": "reference"
+              }
+            },
+            "required": [
+              "role"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ]
+    },
+    "prompt_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "error"
+      ]
+    },
+    "model_observed": {
+      "type": "object",
+      "properties": {
+        "ui_model_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exact_model_version": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "seed": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "transport": {
+          "enum": [
+            "desktop_manual",
+            "desktop_bridge",
+            "api",
+            "fixture"
+          ]
+        },
+        "operator_steps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "ui_model_name",
+        "exact_model_version",
+        "seed",
+        "observed_at",
+        "transport",
+        "operator_steps"
+      ],
+      "additionalProperties": false
+    },
+    "session_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "payload": {},
+    "error": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1
+            },
+            "retryable": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "code",
+            "message",
+            "retryable"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "case_id",
+    "case_revision",
+    "task_id",
+    "stage",
+    "round",
+    "attempt",
+    "request_sha256",
+    "config_sha256",
+    "state_revision_issued",
+    "input_assets",
+    "prompt_version",
+    "status",
+    "model_observed",
+    "session_id",
+    "payload",
+    "error"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "error"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "null"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1
+              },
+              "retryable": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "retryable"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "ok"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "error": {
+            "type": "null"
+          },
+          "payload": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "diagnose"
+          },
+          "status": {
+            "const": "ok"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "diagnosis.schema.json"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "compose"
+          },
+          "status": {
+            "const": "ok"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "composition.schema.json"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "verify"
+          },
+          "status": {
+            "const": "ok"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "verification.schema.json"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "refine"
+          },
+          "status": {
+            "const": "ok"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "refinement.schema.json"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "execute"
+          },
+          "status": {
+            "const": "ok"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/execution_payload"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "execution_payload": {
+      "type": "object",
+      "properties": {
+        "generation_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+        },
+        "candidate_asset": {
+          "$ref": "asset.schema.json",
+          "allOf": [
+            {
+              "properties": {
+                "role": {
+                  "const": "candidate"
+                }
+              }
+            }
+          ]
+        },
+        "submitted_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "actual_generation_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "provider_order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "selection_rule": {
+          "const": "first_complete_provider_order"
+        },
+        "extras": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "media_type": {
+                "type": "string",
+                "minLength": 1
+              },
+              "color_description": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "icc_sha256": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "exif_orientation": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 8
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "hdr": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "path",
+              "sha256",
+              "media_type",
+              "color_description",
+              "icc_sha256",
+              "exif_orientation",
+              "hdr"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "geometry_observations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "generation_id",
+        "candidate_asset",
+        "submitted_at",
+        "actual_generation_count",
+        "provider_order",
+        "selection_rule",
+        "extras",
+        "geometry_observations"
+      ],
+      "additionalProperties": false
+    },
+    "done_manifest": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "ref_enhance_v1"
+        },
+        "case_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+        },
+        "case_revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "task_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+        },
+        "request_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "response_file": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+        },
+        "response_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*:)(?!.*//)[A-Za-z0-9_][A-Za-z0-9_./-]*$"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "kind": {
+                "enum": [
+                  "raw_image",
+                  "canonical_image",
+                  "evidence",
+                  "auxiliary"
+                ]
+              }
+            },
+            "required": [
+              "path",
+              "sha256",
+              "kind"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "writer": {
+          "enum": [
+            "desktop_bridge",
+            "manual_import",
+            "api_adapter",
+            "fixture"
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "case_id",
+        "case_revision",
+        "task_id",
+        "request_sha256",
+        "response_file",
+        "response_sha256",
+        "artifacts",
+        "completed_at",
+        "writer"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "description": "严格通用envelope：所有request身份字段原样回显；ok必须有非空且符合stage schema的payload，error必须payload=null且结构化error非null。unknown后端信息不得编造；model_observed由adapter/operator登记。"
+}

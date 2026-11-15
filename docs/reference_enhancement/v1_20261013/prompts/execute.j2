@@ -1,0 +1,7 @@
+{% set invariants -%}
+Edit attached Image A, the original frozen Neural ISP prediction. Use attached Image B, the unaligned same-scene iPhone 17 photo, only as a rendering reference. Apply the following priorities with visible but natural brightness, color and tonal changes where requested. Preserve A's composition, object geometry, identities and exact existing text. Do not copy B's objects, textures, viewpoint or lighting. Work from A for this generation.
+{%- endset %}
+{
+  "image_bindings": {{ image_bindings | tojson }},
+  "edit_prompt": {{ (invariants ~ "\n\n" ~ edit_prompt) | tojson }}
+}
