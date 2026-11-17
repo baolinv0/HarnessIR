@@ -1,6 +1,7 @@
 # HarnessIR 多候选生成与证据驱动 Judge：工程实施方案 v1.1
 
 > 日期：2026-11-14  
+> 评审修订：2026-11-17。落实关键属性资格判定、ReviewPlan 与预算、完整请求冻结、独立 x1/x4 几何、Judge 预算对照和 E2 预注册。文档路径与 `hre_candidates_v1` 保持不变，新增合同均属于待实现规格。  
 > 交付性质：供工程师直接分阶段实现的设计/验收合同；**不是已经完成的代码或实验报告**。  
 > 仓库：[`baolinv0/HarnessIR`](https://github.com/baolinv0/HarnessIR)  
 > 参考设计：[`docs/restoration_candidates_v1/IMPLEMENTATION_PLAN.md`](https://github.com/baolinv0/HarnessIR/blob/docs/restoration-candidates-judge-plan-20261114/docs/restoration_candidates_v1/IMPLEMENTATION_PLAN.md)（v1.0）  
@@ -13,8 +14,8 @@
 3. 首轮固定**一个**现有 Qwen 执行器，固定模型 revision、steps、CFG、几何、后处理和环境。候选只能在事先定义的语义策略和 seed schedule 上变化；不能额外引入 PE、专用人脸/OCR 生成器、局部融合或训练。
 4. 四候选是**策略覆盖**，不是统一的弱/中/强生成档位：`C0=P0`；`CF=只替代人物恢复策略`；`CT=只替代文字恢复策略`；`CFT=同一人物替代策略+同一文字替代策略`。无人物/文字时按预定规则适配槽位，不假造人物/文字问题。
 5. **Code-first 是保留的，但淘汰权限严格限定**：Code 确定性检查可排除不可解码、输出尺寸错误、源/候选/ROI/证据绑定不一致等候选；锐度、OCR 置信度、LR consistency、NR-IQA 等**软指标不预先淘汰**候选，只向 Judge 供证。
-6. Judge 首先做每候选**可接受性**（content conflict、restoration adequacy、artifact），形成 `eligible_ids`；之后仅在 eligible 内做 Listwise 优选。允许 `best_available` 存在但 `best_candidate=null`，即 `unresolved`；严禁将“相对最好”等同于“已验证真实”。
-7. 默认优先实现 `J0=单 VLM+图像` 和 `J1=单 VLM+图像+绑定 Code 证据`；`J2=人物/文字/整图技术/日常观看四视角+终审` 是**消融验证方案**。若 J2 未带来净收益，使用 J1，不强行上线专家团。
+6. Judge 首先按逐关键属性、恢复充分性、伪影和评审覆盖判定每候选资格，形成 `eligible_ids`；之后仅在 eligible 内做 Listwise 优选。必需属性未评完或必需真实性无法验证的候选不能交付。允许 `best_available` 存在但 `best_candidate=null`，即 `unresolved`；严禁将“相对最好”等同于“已验证真实”。
+7. 默认优先实现 `J0=单 VLM+图像` 和 `J1=单 VLM+图像+绑定 Code 证据`；`J2=人物/文字/整图技术/日常观看四视角+终审` 是**消融验证方案**。先完成生成闭环与 J0/J1。若 J2 未带来净收益，使用 J1，不强行上线专家团。J2 与 J1 的比较检验系统收益；声称角色分工贡献还需预算匹配对照。
 8. 任务用途必须在生成前冻结：`photo_restoration` 容许无可见冲突但未经真实性验证的自然细节；`information_critical` 对关键字符/号码/身份的未知不能声称正确。
 9. 在线阶段**绝不读取 GT**；GT 与独立人工判断只用于离线评估。评审匿名，不暴露策略名、seed、执行模型、Prompt 和离线评分。
 10. 实验比较“P0 四次 seed 采样”与“C0+CF+CT+CFT”；**共享 C0，每图总计 7 次图像生成**。Pilot=10 张，协议冻结后 held-out=24 张；比较候选池覆盖和 Judge 选择能力，避免把二者混为一谈。
@@ -72,7 +73,7 @@ flowchart TD
   M --> N
 ```
 
-**冻结点 F0（C0 之前）**：任务/用途、模型 revision、参数、x1/x4、候选规划算法、策略预算、统一封装、seed schedule、评价政策、成本上限、tie_order，统一存档和 hash。
+**冻结点 F0（C0 之前）**：任务/用途、关键属性与验证要求、模型 revision、有效参数、x1/x4、候选规划算法、策略预算、统一封装、seed schedule、评价政策、ReviewPlan 分包/聚合算法及分类调用上限、成本上限、tie_order，统一存档和 hash。研究运行另在首次 E1 输出之前冻结 E2 抽样清单与评价 seed。
 
 **冻结点 F1（C0 之后、生成 CF 前）**：C0 的实际问题、各 issue 的 ROI/来源/证据/替代解释、F/T 策略、完整 PF/PT/PFT、fallback、审计结果。看到 CF/CT/CFT 后禁止修改计划补抽。
 
@@ -87,6 +88,10 @@ flowchart TD
 | `TaskSpec` | `case_id,source,task_mode,scale,usage_policy,user_intent,critical_attributes` | `task_mode ∈ {restoration_x1,sr_x4}`；x1/x4 输出几何确定；用途生成前冻结 |
 | `RuntimeConfig` | `harness_source_root/sha,diagnoser/composer/planner/judge endpoints,qwen profile/model revision,steps,cfg,dtype,device,geometry,PE=off,seeds,budgets,output_root` | 实际环境/模型权重缺失则 preflight=blocked；凭据只从环境变量读取 |
 | `EvaluationContract` | `task_goals,critical_attributes,content_policy,acceptance_rules,unverifiable_policy,tie_order` | 来源于用户任务与任务类型；不能从生成 Prompt 反推或事后宽松修改 |
+| `CriticalAttribute` | `attribute_id,region_selector,attribute,required_for_acceptance,verification_requirement` | F0 冻结语义；`verification_requirement∈{visible_consistency,verified_content}`；F1 解析实例 ROI，不得删除或放宽必需属性 |
+| `AttributeAssessment` | `candidate_id,attribute_id,region_id,content_state,coverage,evidence_refs,limitations` | 逐实例输出；未返回的必需项为 missing，不能从候选总评推断通过 |
+| `ReviewPlan` | `variant,pool_hash,roi_registry_hash,required_checks,packages,calls,budget,aggregation_rule,freeze_hash` | 首次 Judge 调用前冻结；全部必需检查均有负责角色与包；遵守 §8.6 |
+| `FrozenExecutionRequest` | `candidate_id,request,condition_text_sha256,canonical_source_sha256,prepared_source_sha256,geometry_sha256,editor_config_sha256,execution_manifest_sha256` | 完整 seed、模型及执行配置在提交前独立校验；遵守 §6.3 |
 | `BaselineContext` | `source_hash,original_diagnosis,tool_evidence,visual_pack,P0,C0,receipts` | P0 原文、生成器真实 condition、C0 原生/交付产物均归档 |
 | `Issue` | `issue_id,region_ids,attribute,observation,evidence_refs,alternative_explanation,desired_change,protected_attributes,support` | `support∈{supported,ambiguous,unavailable}`；不能用 VLM 自报概率当校准置信度 |
 | `CandidatePlan` | `issues,roi_registry,shared_requirements,candidate_specs,plan_reason,fallbacks,freeze_hash` | 最多 2 个问题轴 / 4 个槽；不读取 GT、后验候选评分 |
@@ -94,8 +99,10 @@ flowchart TD
 | `CandidateArtifact` | `request_id,status,native_image,delivered_image,sha256,geometry,model_version,compiler_version,seed,receipt,cost` | 原生尺寸错误=contract_fail；禁止 resize 冒充 x4 成功 |
 | `EvidenceBundle` | `roi_registry,anonymous_image_refs,measurements,measurement_status,bindings` | 匿名候选图片；禁止泄露策略名、Prompt、GT |
 | `ExpertReview` | `role,applicability,assessments,preference_groups,conflicts,evidence_refs,limitations` | 有证据定位与未确定状态；允许同分组并列 |
-| `SelectionResult` | `contract_valid_ids,eligible_ids,preference_groups,best_candidate,best_available_id,status,content_verification,reason` | best 必在 eligible 首组；eligible 为空则 best=null |
+| `SelectionResult` | `contract_valid_ids,eligible_ids,eligibility_decisions,coverage,review_plan_sha256,preference_groups,best_candidate,best_available_id,status,content_verification,reason` | best 必在 eligible 首组且必需检查完整；eligible 为空则 best=null |
 | `OracleLabels` | `candidate_hash,acceptable,best_set,GT_metrics,content_error,annotator_disagreement` | 仅 offline 使用，在线模块不得导入 |
+
+`source_hash` 与 `source_sha256` 在候选合同中均指规范化 LQ 的 `canonical_source_sha256`。实际 padding 后输入另用 `prepared_source_sha256`，两者按 §6.2 的来源链校验，不混用。
 
 `Measurement` 至少绑定 `source_sha256,candidate_sha256,roi_id,geometry_sha256,method_id,method_version,value,status`。`status∈{measured,missing,failed,stale,not_applicable}`；缺失≠0、缺失≠通过。
 
@@ -152,6 +159,26 @@ Planner 输入只含：原始 LQ、已生成 C0、P0、原诊断/工具/视觉�
 
 EXIF 先归一化，记录 ICC/sRGB 处理、padding 像素、裁切坐标、ROI 从 LQ 到交付图的投影矩阵；固定 `[x0,y0,x1,y1)` 左上原点。原 Composer 接收未经 padding 的图像，避免边框污染语义。保留 native 和 delivered 两套 hash/图像。对于模型或 adapter 实际不支持的 canvas 配置，preflight 阻断，不擅自降级倍率。
 
+**几何所有权**归候选 bridge。复用 diagnosis、tools、visual pack、compose 的 stage 函数，不调用旧 `run_sample()` 组织新流程，不经 `prepare_lq()` 做 1024 缩放，也不经 `run_execute()` 归一化结果。工具如自行缩放图像，须返回其坐标变换，再投影至规范化 LQ；不得把工具内部坐标直接登记为原图 ROI。
+
+现有 v3 `spatial.prepare_request()` 与 `deliver_outputs()` 以同源画布交付为目标，不能直接用于本模块严格 x4 的准备和交付。候选 bridge 自行实现上述 pad、原生尺寸校验和 crop，仅复用 `dispatch.seal_condition()`、`dispatch.generate()` 及独立安全函数。不得修改旧入口的几何语义。
+
+来源链分成原始文件、规范化 LQ、padding 后执行输入。四候选的 `canonical_source_sha256` 必须相同；相同几何设置下的 `prepared_source_sha256` 也必须相同。执行请求绑定后者，任务来源绑定前者，变换记录连接两者。合法 padding 不要求两种 hash 相等。禁止以 C0 参与准备执行输入。
+
+### 6.3 完整执行请求冻结与提交校验
+
+基线 `v3.dispatch.request_binding()` 不包含 seed。它绑定图像与条件的适用关系，不足以独立保证本方案的 seed schedule。执行回执中的完整请求 hash 是事后审计，不能代替提交前检查。
+
+候选模块使用 `FrozenExecutionRequest`。C0 在首次生成前冻结；其余候选在 F1 冻结。只读执行清单包含以下内容：
+
+- 完整 v3 request，包含 seed、brief、输入顺序、实际输入 hash、canvas 和 spatial。
+- UTF-8 完整 Prompt hash、规范化与准备后来源 hash、pad/crop 与 ROI 映射 hash。
+- 完整有效 editor config，包含模型 ID、revision、部署清单 hash、adapter 与 pipeline 版本、steps、CFG、negative prompt、output_resolution、use_kv_cache、dtype、device 和后处理政策。默认参数先展开再冻结；凭据值不得写入清单。
+
+`execution_manifest_sha256` 使用固定版本 canonical JSON 与 SHA-256。来源及几何算法在 F0 冻结；C0 的文本在 Composition 完成后、生成前冻结，不要求尚不存在的 P0 在 F0 有值。F1 不得改变 C0 的清单。
+
+runtime 在持久化 submitted **之前**，用实际待提交请求、condition 与有效配置重新计算清单并逐项比对。任何差异返回 `execution_manifest_mismatch`，不得调用生成器。通过后再完成预算预占、submitted 持久化与派发。回执同时绑定预提交清单 hash、实际 Prompt hash、完整请求 hash 和 editor config hash。resume 同样校验，不得重新 seal 修改过的请求使其看似合法。
+
 ## 7. 证据与 Code 权限：严格区分 Gate 和 Measurement
 
 ### 7.1 Code Hard Gate：可以淘汰的条件
@@ -172,7 +199,7 @@ EXIF 先归一化，记录 ICC/sRGB 处理、padding 像素、裁切坐标、ROI
 
 ### 7.3 ROI Registry 和 Judge 可见图片
 
-ROI 来源优先：已有 detector 或合法人工标注；必要时 Planner 建议但必须记录 `provenance`。Pilot 只允许**看 LQ**修正 ROI，不能看 GT/候选优劣后再移动框。默认主要 ROI ≤6（人/文字各最多 3），超过上限标记 `coverage_incomplete` 或分包，不允许静默遗漏。候选结构位移时保持同一投影框，位移本身是错误证据。
+ROI 来源优先：已有 detector 或合法人工标注；必要时 Planner 建议但必须记录 `provenance`。Pilot 只允许**看 LQ**修正 ROI，不能看 GT/候选优劣后再移动框。默认每个主图像包最多 6 个主要 ROI，人和文字各最多 3 个。这是单包容量，不是场景重要实例的总上限。超限按 §8.6 分包并登记必需检查；仅标记 `coverage_incomplete` 不允许交付。候选结构位移时保持同一投影框，位移本身是错误证据。
 
 Judge 输入包含：独立的 LQ 整图、四张匿名候选整图、相同位置/尺寸的人物与文字 ROI，以及必要上下文；不能只给缩水拼图。全部候选同一显示和压缩设置，保存实际传输图 hash。候选随机匿名 `A01…A04`，本地保留映射；**不传** Prompt/策略名/seed/GT/离线评分/最终综合分。
 
@@ -184,7 +211,7 @@ Judge 输入包含：独立的 LQ 整图、四张匿名候选整图、相同位�
 |---|---|---|---|---|
 | `J0` | 同一匿名整图及关键 ROI | 不提供 | 单 VLM | 视觉选择基线 |
 | `J1` | **与 J0 完全相同** | 提供 hash 绑定测量 | 单 VLM | Code 证据是否增益 |
-| `J2` | 同一个冻结候选池，关键 ROI 覆盖一致 | 提供相关绑定证据 | J-P/J-T/J-G/J-U 独立 + J-A | 专家分工是否增益 |
+| `J2` | 同一个冻结候选池，关键 ROI 覆盖一致 | 提供相关绑定证据 | J-P/J-T/J-G/J-U 独立 + J-A | 额外角色与调用预算下的系统收益 |
 
 同一策略/图像池下分别执行，不共享其他 Judge 的结论。J0/J1 匿名顺序必须相同；J2 顺序固定且记录。可以离线用固定图片包测试 Judge，无需重新生成。
 
@@ -207,30 +234,56 @@ Judge 输入包含：独立的 LQ 整图、四张匿名候选整图、相同位�
   "artifact_severity":"minor",
   "issues":[{"region_id":"face_01","attribute":"skin_texture","severity":"minor","observation":"slightly waxy","evidence_refs":["roi_face_01_A02"]}],
   "preference_reason":"more natural face texture than A01 without confirmed text conflict",
+  "attribute_assessments":[{"attribute_id":"critical_number","region_id":"sign_01","content_state":"unverifiable","coverage":"complete","evidence_refs":["lq_roi_sign_01","roi_sign_01_A02"],"limitations":["number is unreadable in LQ"]}],
   "limitations":["unknown fine text cannot be validated from LQ"]
 }
 ```
 
-枚举：`content_state ∈ {supported,no_visible_conflict,conflict,unverifiable}`；`restoration ∈ {insufficient,adequate,strong,uncertain}`；`artifact_severity ∈ {none,minor,major,uncertain}`。重要 `conflict` 必须有图像/ROI/可确认内容引用；否则转 `unresolved` 核查，不能做无证据硬否决。专家可以返回**并列偏好组**。
+枚举：`content_state ∈ {supported,no_visible_conflict,conflict,unverifiable}`；`restoration ∈ {insufficient,adequate,strong,uncertain}`；`artifact_severity ∈ {none,minor,major,uncertain}`。重要 `conflict` 必须有图像/ROI/可确认内容引用；否则作为未确定项核查，不能做无证据硬否决。专家可以返回**并列偏好组**。
+
+候选级 content_state 仅是摘要。资格判断必须读取 `attribute_assessments`，为每个必需属性的每个适用实例返回一条记录。`coverage∈{complete,missing,failed}`，表示是否看完要求的证据；看完后仍无法确认内容是 `coverage=complete,content_state=unverifiable`。未返回的必需记录由 Code 补记 missing，禁止自动填 supported。不适用必须符合预先冻结的适用规则并留依据，不能由 Judge 为了通过而自行省略关键属性。
 
 ### 8.4 Adjudicate：两阶段终选
 
-**第一阶段 Eligibility**：先看 Code Hard Gate；对 VLM 指出的问题独立核查原图与证据，确认/驳回/保留未知；按冻结用途政策逐候选判定。明确的关键内容冲突、严重伪影、任务核心恢复不足 → ineligible。软证据数值异常本身不得淘汰。人物/文字以外的背景严重欠恢复，也可以导致不合格。
+**第一阶段 Eligibility**：先看 Code Hard Gate；再核查 VLM 的原图、证据引用与逐属性结果，按 §8.5 的确定规则判定。每候选的 `eligibility_decision∈{eligible,ineligible,undetermined}`。明确的关键内容冲突、严重伪影、任务核心恢复不足为 ineligible；未完成必需评审、真实性要求未满足或关键争议未解决为 undetermined。两者都不进入 `eligible_ids`。软证据数值异常本身不得淘汰。人物/文字以外的背景严重欠恢复，也可以导致不合格。
+
+J0/J1 在单次主评审中同时输出逐项评估和偏好组，Code 校验引用、覆盖及资格规则。这里不声称又调用了一个独立 VLM。J2 的 J-A 依据原图与证据核查专家意见。任何额外模型核查都必须列入 ReviewPlan；未解决的必需项不能靠重复计票变为通过。
 
 **第二阶段 Best**：仅对 `eligible_ids` 进行 Listwise 分组排序，比较恢复充分性、自然度、整图协调、用途价值。若首组并列且有 C0，保留 C0；否则使用 F0 冻结 `tie_order`。前两名出现实质争议时最多一次二选一复核（交换匿名显示顺序，保留整图和相关 ROI）；多项关键争议不能用多数投票掩盖。
 
-输出：`best_available_id`（硬契约有效池相对最好，**可不合格**）、`eligible_ids`、`preference_groups`、`best_candidate`、`status∈{selected,baseline_retained,unresolved,judge_failed}`、`content_verification`、`reason`。所有候选 ineligible 则 `selected_output=null`，只记录 best_available 供分析。Judge 失败不使用综合 NR 分数悄悄选图。
+输出：`best_available_id`（硬契约有效池相对最好，**可不合格**）、`eligible_ids`、`preference_groups`、`best_candidate`、`status∈{selected,baseline_retained,unresolved,judge_failed}`、`content_verification`、`reason`。无 eligible 候选时，包括全部 ineligible、存在 undetermined 或覆盖不足，均有 `best_candidate=null,selected_output=null,status=unresolved`。响应解析失败且预定修复仍失败使用 `judge_failed`。硬契约有效池为空或预算不足以形成可靠相对排序时，`best_available_id` 也为 null。Judge 失败不使用综合 NR 分数悄悄选图。
 
-### 8.5 用途政策
+### 8.5 用途政策与逐属性资格表
 
-| 场景 | `photo_restoration` | `information_critical` |
+F0 为每个关键属性冻结 `required_for_acceptance` 与 `verification_requirement`。后者区分 `visible_consistency`，要求无可见冲突，和 `verified_content`，要求在线允许证据确实支持该内容。information_critical 的关键字符、号码和身份，以及用户明确要求准确的属性，必须有 `required_for_acceptance=true,verification_requirement=verified_content`。photo_restoration 可对自然微纹理使用 visible_consistency，不得通过切换用途放宽明确准确性要求。
+
+按下表判定每个必需属性。先检查覆盖，再检查内容。非必需属性仍报告限制，已确认且达到冻结严重度阈值的内容冲突不得因属性非必需而忽略。
+
+| 必需属性的结果 | visible_consistency | verified_content |
 |---|---|---|
-| 已确认文字/表情改变 | 不合格 | 不合格 |
-| 自然细纹理未能验证但无可见冲突 | 可接受，注明未知 | 非关键属性可接受 |
-| 关键号码/身份不确定 | 视觉候选可被保留但不得声称真实 | 不作为“已核实准确”交付；必要时 unresolved |
-| 恢复不足只剩内容一致 | 不合格 | 同样不合格 |
+| coverage=missing 或 failed | undetermined | undetermined |
+| complete，且有已核查的关键 conflict | ineligible | ineligible |
+| complete，supported 且证据适用于该属性 | 通过该项 | 通过该项 |
+| complete，no_visible_conflict | 通过该项，真实性仍未知 | undetermined |
+| complete，unverifiable | photo_restoration 的预先允许属性通过并标记未知，其他为 undetermined | undetermined |
 
-注意：`no_visible_conflict`≠`verified_true`。若用户明确要求身份和号码准确，未知项不能自动转 PASS。
+完整评审后仍有 restoration=uncertain、artifact_severity=uncertain 或未解决的关键冲突，同样为 undetermined。已确认的严重伪影或核心恢复不足为 ineligible。候选存在任一已确认拒绝项时为 ineligible，否则存在任一必需未确定项时为 undetermined；仅全部必需项通过时才为 eligible。自然细纹理未知不能自动证明身份或字符正确，候选总评不能覆盖逐属性结果。
+
+例如同一候选的人物自然、关键号码不可确认，在 photo_restoration 且无准确性要求时可作为注明未知的视觉结果；在 information_critical 时为 undetermined，禁止正式交付。若其余候选也无 eligible，case 必须 unresolved。离线 GT 不得用于消除在线 unknown。
+
+### 8.6 ReviewPlan、分包与预算
+
+F0 冻结角色、分包算法、提供商图像与上下文限制、聚合规则和调用预算。F1 解析该图必需属性与 ROI 实例，不能缩减 F0 规定的检查。证据包形成后、首次 Judge 调用前生成只读 ReviewPlan，绑定候选池、ROI、实际传输图像 hash、匿名顺序和配置版本。分包只依据容量与覆盖规则，不读取任何 Judge 结论。
+
+每包记录 `package_id,role,candidate_ids,region_ids,required_check_ids,image_hashes,context_refs`。每次模型调用记录 `call_id,kind,package_ids,max_output_tokens`。kind 为 primary、aggregate、dispute 或 format_repair。每个必需检查都有负责调用，所有候选使用相同 ROI、显示设置和覆盖范围。required_checks 同时包含逐属性检查、整图恢复充分性和伪影检查，防止只评完局部就视为整图合格。整图与必要上下文不能为省预算静默删除。
+
+默认单包 J0/J1 各 1 次 primary，至多预留 1 次 dispute 与 1 次 format_repair，总上限为 3。默认 J2 为 4 次专家 primary、1 次 J-A aggregate，至多 1 次 dispute 与 1 次 format_repair，总上限为 7。角色不适用可跳过，空出的预算不能自动用于追加探索。默认最多一次格式修复是整个 variant 的限额，不是每包各一次。
+
+ROI 超限时，依据 F0 的容量规则拆包。多包的主评审数为实际包调用数，聚合数为预先登记的调用数，不能仍把一个逻辑角色视为一次调用。多包配置必须在 F0 明确冻结更大的 `max_judge_calls` 与分类限额；不得运行中自动扩大单包默认预算。请求前预占预算，unknown 也占用调用额度，未执行的预留调用不计实际成本。
+
+汇总以 `candidate_id,attribute_id,region_id` 合并逐项结果，并核对 required_check_ids。未完成包产生 missing，重复相同意见不增加票数；同项互相冲突由有预算的复核核查，无结论保留 undetermined。J0/J1 多包需计划独立 aggregate 调用；J2 由 J-A 汇总。终审必须能访问相关原图、全部必需逐项结果与证据引用；若终审上下文装不下，按预注册规则分级汇总并逐次计费，禁止截断后声称完整覆盖。
+
+首次评审前若预算容纳不了必需包和聚合调用，结束为 `unresolved`，原因 `review_budget_insufficient`，不启动残缺评审。执行中额度耗尽、包失败或 unknown 后，受影响候选为 undetermined；只有必需检查和最终排序都完整的 eligible 候选才可正式选择。无此候选则 unresolved。覆盖不足时 best_available 只可在已完成比较的集合中给出，并显式标记比较范围，不能声称是全池最好。
 
 ## 9. 运行、审计、异常与预算
 
@@ -269,9 +322,9 @@ python -m hre candidates evaluate-offline --case-root runs/case01 --labels oracl
 
 每次模型/工具外部调用前先持久化 request + submitted（操作 ID、hash、预算），收到响应后保存 raw response/receipt，才能标记 completed；断连无回执 → `unknown`，不自动重发（需要人工 reconcile）。resume 复用 completed 内容、保留确实产生的成本。图片像素 hash 完全相同时记录 duplicate；不靠近似感知 hash 删掉可能不同的关键笔画/表情。
 
-每 case 存：`case.json`,`freeze.json`,`baseline/`,`plan/plan.json`,`plan/prompts/`,`candidates/<id>/request/condition/native/delivered/receipt`,`evidence/`,`judge/aliases+requests+responses`,`selection.json`,`report.md`,`contact_sheet.png`,`results.csv`,`offline/`。`offline/` 不能被在线模块遍历/导入。模型、Prompt、seed、输入、证据、执行回执与成本均能追溯；费用不可得标 `unknown`，不是 0。
+每 case 存：`case.json`,`freeze.json`,`execution_manifests/`,`baseline/`,`plan/plan.json`,`plan/prompts/`,`candidates/<id>/request/condition/native/delivered/receipt`,`evidence/`,`judge/review_plan.json`,`judge/attribute_assessments.json`,`judge/aliases+requests+responses`,`selection.json`,`report.md`,`contact_sheet.png`,`results.csv`,`offline/`。数据集级实验目录另存只读 `e2_manifest.json`。`offline/` 不能被在线模块遍历/导入。模型、Prompt、seed、输入、证据、执行回执与成本均能追溯；费用不可得标 `unknown`，不是 0。
 
-调用预算分开记 image generation、原 diagnosis/composer、planner/rewriter/audit、各 Judge、工具、复核。默认 J2 上限为 4 专家+1 终审+1 次争议复核；一次格式修复独立计费。超时/unknown 不自动触发格式修复或重复执行。
+调用预算分开记 image generation、原 diagnosis/composer、planner/rewriter/audit、各 Judge、工具、复核。Judge 的分包、primary、aggregate、dispute、format_repair 分类限额及总调用上限统一遵从 §8.6；所有实际调用独立计费，不存在预算外的免费修复。超时/unknown 不自动触发格式修复或重复执行。
 
 ## 10. 试验设计：生成覆盖与选图能力分开
 
@@ -291,13 +344,25 @@ python -m hre candidates evaluate-offline --case-root runs/case01 --labels oracl
 | s2 | P0 | PT |
 | s3 | P0 | PFT |
 
-同一 case 实际生成 7 张，分开记录不同策略/seed。策略相较纯 P0 的效果不等于同 seed 纯因果效应；系统级指标是 **Oracle Pass@4、Selected Pass、Cost**。另取少量典型样本做 4 策略 × 2 seed 同 seed 补充实验，用以区分策略方向与随机性。
+同一 case 实际生成 7 张，分开记录不同策略/seed。策略相较纯 P0 的效果不等于同 seed 纯因果效应；系统级指标是 **Oracle Pass@4、Selected Pass、Cost**。E2 按下述预注册规则做 4 策略 × 2 seed 同 seed 补充实验，用以区分策略方向与随机性。
+
+#### 10.2.1 E2 样本与评价 seed 预注册
+
+在读取 E1 生成结果、Judge 输出或 Oracle 标签之前，按原 LQ 场景类型、人物/文字尺寸和可确认程度分层抽取 E2 case。冻结 `e2_manifest.json`，记录数据划分、候选 case 清单、各层样本数、抽样算法及随机 seed、确定性缺额处理和清单 hash。不得用 C0 的恢复好坏选择研究样本。held-out 的清单在冻结协议后、首次 held-out 生成前固定。
+
+为所有已选 case 预先冻结两个评价 seed，与用于观察和规划的 C0 seed 不同。P0、PF、PT、PFT 在这两个 seed 上配对执行；先从原 C0 冻结 F1，再运行 E2，不根据 E2 结果修订 Prompt。只存在一个干预轴或发生 fallback 时照实保留槽位，并将 joint 指标标为 not_applicable，不事后换入成功样本。C0 失败、执行失败与缺失保持在清单中并分别报告。
+
+E2 新增调用与 E1 分账。事后挑选案例仅进入 exploratory 分析，不并入预注册的 Target Response、Off-target Damage 或 Joint Compatibility 估计，不用于声称总体控制收益。
 
 ### 10.3 Judge 消融
 
 冻结相同 B 池图像，执行 J0/J1/J2；J0/J1 图像、候选次序与用途政策相同，唯一差异是软证据输入；J2 同池、按角色分包且全区域覆盖。若比较 A/B 的最终系统质量，应**对两池使用相同 Judge 版本 J1**，避免同时变化生成和 Judge。
 
-可选第三种消融 `J_soft_gate`：先按预注册软数值阈值删候选，再交给同 J1。**不是默认生产路径**；专门用来检验软 Gate 的 false reject 和省下的成本，不能事后挑有利阈值。
+若只比较 J2 与 J1，结论限定为多角色、多调用预算下的系统收益。若要声称专家角色分工有独立贡献，另做离线 `J1_budget_matched` 对照。它不改变默认生产入口，使用与 J2 相同的模型、候选池、软证据、逐属性资格政策、必需 ROI 和最终选择规则；将专家角色换为互不读取结论的通用整图评审，再由相同规则终审。
+
+对照逐 case 匹配 primary、aggregate 及预留复核、修复的调用上限，匹配模型采样设置和总输出 token 额度，记录输入 token、实际输出 token、耗时与费用。角色提示和上下文长度可能仍不同，实际成本不完全一致时必须披露。主分析包含全部预注册 case，并单独报告预算、容量不足导致的失败；不得只报两者都成功的子集。未运行预算匹配对照时，不归因于专家分工。该对照受 §8.6 的 ReviewPlan 约束。
+
+可选另一种消融 `J_soft_gate`：先按预注册软数值阈值删候选，再交给同 J1。**不是默认生产路径**；专门用来检验软 Gate 的 false reject 和省下的成本，不能事后挑有利阈值。
 
 ### 10.4 必报指标
 
@@ -321,14 +386,14 @@ python -m hre candidates evaluate-offline --case-root runs/case01 --labels oracl
 | 阶段 | 工程工作 | 完成条件（Definition of Done） |
 |---|---|---|
 | P0 基线/预检 | 对照仓库 commit、环境/权重、现有工具和任务、预定配置；独立 worktree | 记录 baseline SHA+未提交 diff；旧入口无回归；缺依赖准确 blocked |
-| P1 最小生成闭环 | contracts、CLI、bridge、P0/C0、四个冻结 Prompt 与同 LQ 执行 | fixture + 1 张真实模型结果；Prompt 与 source/seed hash 正确；x1/x4 尺寸严格 |
+| P1 最小生成闭环 | contracts、CLI、bridge、P0/C0、四个冻结 Prompt 与同 LQ 执行 | fixture + 1 张真实模型结果及 Prompt diff、ROI 对照；完整请求提交前校验；双来源绑定正确；x1/x4 尺寸严格 |
 | P2 Planner / Evidence | C0 差异诊断、F/T 四槽、Rewriter、语义 audit、ROI+Measurement 绑定 | 欠修/蜡感/过锐、文本可知/未知、无脸/无文字、fallback 各有测试；证据匿名且无 GT |
-| P3 Judge 基线 | Hard Gate、J0、J1、Eligibility-first、Listwise、unresolved | 固定池可重跑、并列处理、无合格结果 null、重要内容错误有引用、软证据不淘汰 |
-| P4 专家消融 | J2 四视角+J-A，冲突复核和审计 | J0/J1/J2 同池独立；顺序置换/争议预算/专家 not_applicable 正确 |
-| P5 Pilot | 10 张、7 生成/图、人工 GT 终审、报告 | 10 张逐图全景/ROI对照；分离“生成无解”和“Judge 错选”；成本/错误归因完整 |
+| P3 Judge 基线 | Hard Gate、J0、J1、逐属性资格、ReviewPlan、Listwise、unresolved | 关键属性 unknown 按用途判定；缺包和缺评不能通过；预算预占；固定池、并列与 null 正确；软证据不淘汰 |
+| P4 专家消融，生成 Pilot 后按证据启动 | J2 四视角+J-A，冲突复核与可选预算匹配对照 | 同池独立；多包汇总、分类及总预算、not_applicable 正确；角色归因有预算对照或限定结论 |
+| P5 Pilot，先于可选 P4 | 10 张、每图最多 7 次 E1 生成、J0/J1、预注册 E2、人工 GT 终审 | 10 张逐图全景与 ROI 对照；生成覆盖、选图能力、E2 分账；成本及失败完整 |
 | P6 Freeze/Held-out | 修订一次协议后冻结，24 张外部测试，独立代码复审 | 配对统计、全部分母、失败证据、选型决策、可复现 commit 和 CLI 记录 |
 
-**门槛**：P1 只证明系统可运行，不等于恢复质量提高；P4 若 J2 未改善选图且提高成本，默认 J1；P6 只有当 Selected Pass、内容错误、Best Agreement 与成本整体支持时才建议上线。不要预设未经验证的提升百分点。
+**执行顺序**为 P0 → P1 → P2 → P3 → P5，生成 Pilot 和 J1 结果支持继续选图研究时再启动可选 P4，最后 P6。编号保持原有任务引用。P1 只证明系统可运行，不等于恢复质量提高；P4 若 J2 未改善选图且提高成本，默认 J1；未做 P4 时报告 J2=not_run，不阻止生成假设的检验。P6 只有当 Selected Pass、内容错误、Best Agreement 与成本整体支持时才建议上线。不要预设未经验证的提升百分点。
 
 ## 12. 必须覆盖的测试案例
 
@@ -341,6 +406,10 @@ python -m hre candidates evaluate-offline --case-root runs/case01 --labels oracl
 7. **状态与恢复**：操作已完成不重复请求、调用 unknown 不自动重发、模型失败/部分文件写入/工具超时不吞异常、不超预算、重复图仍记真实成本。
 8. **GT 隔离与回归**：在线请求日志中不得出现 GT 路径、标签或 OCR 真值；offline 输出不更新在线选择；原 `sr_v02`、reference、v3 CLI 回归测试；wheel 安装后模板与 harness source root 校验有效。
 9. **固定反例集**：清晰错字、锐利但换表情、低锐但自然、草地改善而人物变坏、人物改善而背景严重欠修；Judge 必须输出与对应证据匹配的理由。
+10. **逐属性资格**：人物合格但关键号码 unverifiable、遗漏必需属性、complete 与真实性未知的区别、同项相反结论；information_critical 必须拒绝 unknown 进入 eligible，photo_restoration 的允许未知项必须注明，准确性要求不得放宽。
+11. **ReviewPlan**：7 个及以上重要 ROI 的分包、缺一个必需包、终审容量不足、预算不足而零调用、格式修复占总额度、unknown 占预算、候选间覆盖不一致；不得仅附 coverage_incomplete 后交付。
+12. **提交前身份**：保持 condition 不变，仅修改 seed、steps、CFG、模型 revision、output_resolution、prepared source 或 crop 映射，均在生成器调用前拒绝；合法 padding 的 canonical/prepared hash 不同仍可通过。
+13. **预注册与实验归因**：E2 清单及 seed 先于 E1 输出冻结，禁止换入成功 case；E2 不混入七次预算；预算匹配对照的模型、证据、资格与分类调用限额一致，未运行时报告归因限制。
 
 ## 13. 逐图报告、批量报告和交付清单
 
@@ -350,8 +419,8 @@ python -m hre candidates evaluate-offline --case-root runs/case01 --labels oracl
 2. **原版诊断**：C0 与 LQ 主要残余问题、依据、候选策略选择的原因；PF/PT/PFT 改动文字 diff + prompt hash。
 3. **七图与局部比较**：A 池 4 张、B 池 4 张（共享 C0，只 7 张真实图）；同坐标人脸/文字/背景 ROI、Change Map。
 4. **Code**：硬契约、软数值、measurement 状态和来源绑定。
-5. **Judge**：J0/J1/J2 的合格集合、排序、最终选中、内容冲突与未知，关键人/文字评语；人工 offline `best_set`。
-6. **解释**：若结果失败，判断是**候选池没有答案、Prompt策略没有落实、Code 错筛、VLM 错选还是合同/系统失败**；时延与成本如实记录。
+5. **Judge**：J0/J1 及已运行 J2 的逐属性结果、ReviewPlan、必需检查覆盖、合格集合、排序、最终选中、内容冲突与未知；未运行 J2 标 not_run；人工 offline `best_set`。
+6. **解释**：若结果失败，判断是**候选池没有答案、Prompt策略没有落实、Code 错筛、VLM 错选、关键未知、评审覆盖或预算不足，还是合同/系统失败**；时延与成本如实记录。
 
 ### 13.2 批量输出
 
@@ -364,7 +433,8 @@ python -m hre candidates evaluate-offline --case-root runs/case01 --labels oracl
 - 可复现代码分支/commit、变更文件表、依赖与权重/模型 revision 记录、README/runbook 与配置示例；
 - 完整单元/集成/回归测试和测试日志；
 - 10 图 Pilot 及其图片/ROI/失败归因、24 图 held-out 统计报告；
-- J0/J1/J2 固定池选图对照与是否保留四视角的依据；
+- J0/J1 固定池选图对照；已运行 J2 时提供是否保留四视角的依据，否则标 not_run；声称角色贡献须附 J1_budget_matched 对照，未做时注明归因限制；
+- 逐属性资格表、ReviewPlan 与覆盖日志、完整执行清单、E2 预注册清单和 hash；
 - 独立复审记录（由未参与实现的工程师或另一个独立会话检查来源、几何、GT 隔离、Eligibility、异常恢复）；
 - 所有未完成项与数据/模型/证据限制明确标注，不把设计合同当作实测结论。
 

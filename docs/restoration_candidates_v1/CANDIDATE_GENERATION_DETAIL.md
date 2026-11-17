@@ -1,6 +1,7 @@
 # HarnessIR Candidate Generation：工程专项实施规格 v1.1-CG
 
 > 日期：2026-11-17  
+> 评审修订：2026-11-17。与主规格的逐属性资格、ReviewPlan、完整请求冻结、独立几何及 E2 预注册合同同步。  
 > 状态：待实现的工程规格，不是已运行的代码或实测效果。  
 > 仓库：baolinv0/HarnessIR  
 > **唯一系统主规格**：[IMPLEMENTATION_PLAN_V1_1.md](./IMPLEMENTATION_PLAN_V1_1.md)  
@@ -131,7 +132,7 @@ Planner 第一轮最多选择两个有根据的问题轴；保留未处理问题
 
 每个 ROI 以 EXIF 规范化后的 **LQ 内容坐标**为准：[x0, y0, x1, y1)，右下端点不含；记录 id / semantic_type / importance / box / provenance / availability / key_attributes。
 
-优先采用已有 detector 或合法人工 ROI；必要时 Planner 提议，但记录来源。Pilot 人工校正 ROI **仅可观察 LQ**，不得根据候选优劣移动 ROI，更不能看 GT 来选择在线 ROI。默认主要 ROI 不超过 6 个（人类实例最多 3、文字实例最多 3）；超过上限需拆成多个完整评审包或标 coverage_incomplete，不能静默漏掉重要实例。位移时使用相同坐标框加上下文并显式报告位移；不能追着生成结果新位置重新选框。
+优先采用已有 detector 或合法人工 ROI；必要时 Planner 提议，但记录来源。Pilot 人工校正 ROI **仅可观察 LQ**，不得根据候选优劣移动 ROI，更不能看 GT 来选择在线 ROI。默认每个主图像包最多 6 个主要 ROI，人和文字各最多 3 个；这不是全场景重要实例的总上限。超限按主规格 §8.6 的 ReviewPlan 拆包。必需 ROI 未完成评审时，相应候选为 undetermined，不能仅标 coverage_incomplete 后继续交付。位移时使用相同坐标框加上下文并显式报告位移；不能追着生成结果新位置重新选框。
 
 ## 4. 候选策略库（v1 第一轮为受控目录，不是自由 Prompt 搜索）
 
@@ -175,7 +176,7 @@ LQ 信息状态在**生成前、仅根据 LQ**标注：
 - T3: “Prioritize source-supported stroke evidence and suppress unsupported character structures; do not treat OCR of generated outputs as original text.”
 - T4: “Improve the sign region's visual structure without claiming readable character content that cannot be confirmed from the source.”
 
-两种用途必须遵从主规格冻结政策：photo_restoration 可以接受合理自然但不可验证的微细节，不得声称文字真实；information_critical 对关键号码、身份或文字未知时不得交付为已验证准确。禁止为了让候选通过临时切换用途政策。
+两种用途必须遵从主规格 §8.5 的逐属性政策。photo_restoration 可对预先允许的自然微细节接受未知，但不得声称文字真实。information_critical 的关键号码、身份或文字，以及用户明确要求准确的属性，必须有 required_for_acceptance=true 且采用 verified_content；no_visible_conflict 或 unverifiable 都不能进入 eligible。F0 冻结属性规则，F1 解析 ROI 实例，禁止为了通过临时放宽准确性要求或切换用途。
 
 ### 4.3 多人物、多招牌与空间冲突
 
@@ -306,6 +307,7 @@ Candidate ID 不复用现有 sr_v02 的 C0–C3 命名空间，采用 strategy_i
 - **P0/PF/PT/PFT 均从同一冻结的规范化 LQ 执行**，不将 C0/CF/CT 作为生成模型 image input；
 - 复用 dispatch.seal_condition / dispatch.generate 的绑定能力；候选专属 bridge 直接以冻结完整 Prompt 构建 condition.text，避免通用 render_instruction 再加保持源画布模板改变策略或 x4 逻辑；
 - 必须测试 **frozen full_prompt SHA = actual condition.text SHA**，并记录模型实际调用入口、request binding、步骤/CFG/seed、模型 revision 和所有后处理；
+- 基线 request_binding 不含 seed，不能单独承担冻结校验。按主规格 §6.3 保存 FrozenExecutionRequest，并在 submitted 与模型调用前重新比较 execution_manifest_sha256。C0 在生成前冻结，其余候选在 F1 冻结；只改 seed 或 editor config 也必须在提交前拒绝；
 - PE=off、color_adjust=off；若保留必要的固定色彩/解码处理，四个候选完全相同且 native 与 delivered 都归档；
 - full_frame 的区域指令没有硬 Mask 保障；任何非目标区域变化均须留给后续整图评审和离线损害统计。
 
@@ -320,6 +322,10 @@ Candidate ID 不复用现有 sr_v02 的 C0–C3 命名空间，采用 strategy_i
 
 pad/crop 记录坐标、填充模式和像素内容；ROI 坐标按 x1 或 x4 投影。若 Qwen 实际 adapter 不支持该画布尺寸，preflight=blocked；不得悄悄使用缩放/插值伪造严格 x4。原生输出尺寸错误直接 contract_fail，不用 resize 兜底。保留 native.png、delivered.png 与 hash；Composer 看到未 padding 的 LQ，避免 padding 边框影响语义。
 
+几何由候选 bridge 独立拥有，遵从主规格 §6.2。复用 diagnosis、tools、visual pack、compose 的函数，不调用旧 run_sample、prepare_lq 或 run_execute 组织新链路。工具自行缩放时显式映射工具坐标至规范化 LQ。严格 x4 不直接复用现有 v3 spatial.prepare_request 或 deliver_outputs，它们以同源画布交付为目标。
+
+来源记录必须区分原始文件、规范化 LQ 与 padding 后实际执行输入。canonical_source_sha256 绑定规范化 LQ，prepared_source_sha256 绑定 Qwen 实际输入，geometry_sha256 连接来源及输出 crop。四候选共享同一 canonical source，固定几何下也共享 prepared source；两种来源 hash 无须彼此相等。不得把合法 padding 当作来源错误，也不得把 C0 作为准备输入。
+
 ### 7.3 CandidateSpec 与回执
 
 ~~~json
@@ -328,6 +334,10 @@ pad/crop 记录坐标、填充模式和像素内容；ROI 坐标按 x1 或 x4 �
   "candidate_id": "face_alt_s1_seed101",
   "strategy_id": "face_alt",
   "source_sha256": "hash-of-frozen-LQ",
+  "canonical_source_sha256": "hash-of-frozen-LQ",
+  "prepared_source_sha256": "hash-of-padded-executor-input",
+  "geometry_sha256": "hash-of-frozen-pad-crop-and-roi-map",
+  "execution_manifest_sha256": "hash-of-complete-frozen-execution-manifest",
   "prompt_path": "plan/prompts/PF.txt",
   "prompt_sha256": "hash-of-frozen-PF",
   "seed": 101,
@@ -340,7 +350,9 @@ pad/crop 记录坐标、填充模式和像素内容；ROI 坐标按 x1 或 x4 �
 }
 ~~~
 
-上例 seed 和 hash 是说明值，不是全局固定配置。每个外部操作必须先写 request、operation ID、submitted 和成本预算，再执行；结束后存原始响应、回执、实际 condition/尺寸/哈希/模型 revision、耗时和成本。无回执不能仅凭有一个 PNG 判定调用完成。
+上例 seed 和 hash 是说明值，不是全局固定配置。source_sha256 是 canonical_source_sha256 的兼容名称，两者必须相等。execution_manifest_sha256 的计算范围严格采用主规格 §6.3，包含实际请求的 seed、完整 condition hash、两种来源、几何与展开默认值后的有效 editor config。runtime 在 submitted 前重新计算并比较清单，差异报 execution_manifest_mismatch，不得先执行后补记。
+
+校验通过后，每个外部操作先持久化 request、operation ID、预算预占和 submitted，再执行；结束后存原始响应、回执、实际 condition/尺寸/哈希/模型 revision、耗时和成本。无回执不能仅凭有一个 PNG 判定调用完成。
 
 ## 8. 运行状态与异常语义
 
@@ -356,7 +368,10 @@ pad/crop 记录坐标、填充模式和像素内容；ROI 坐标按 x1 或 x4 �
 | 原生几何/哈希/来源错误 | contract_fail；不能以 resize 或改文件名补救 |
 | 文字/人物非目标区域变化 | 保留候选送整图 Judge；记录 off-target 风险，不先验宣称空间保持 |
 | 交付像素完全重复 | 保留独立调用与成本；可共享评价，但候选 ID 全部保留 |
-| 四个候选都不合格 | 不增加第 5 个候选，交既定 Judge 返回 unresolved |
+| 四个候选都不合格或必需属性均未确定 | 不增加第 5 个候选，交既定 Judge 返回 unresolved |
+| 重要 ROI 缺评、必需评审包失败或 unknown | 相应候选 undetermined，不以总评代替逐项；无 eligible 则 unresolved |
+| ReviewPlan 容纳不了必需包及聚合调用 | 首次评审前 unresolved，原因 review_budget_insufficient，不静默缩减覆盖 |
+| seed、有效执行配置或来源变换与冻结清单不符 | submitted 前 execution_manifest_mismatch，生成器零调用 |
 
 精确重复用 delivered 像素 hash；第一轮不用近似相似度淘汰图像，避免忽略笔画或表情微小而重要的变化。单 GPU 默认串行执行，复用已加载模型；多 GPU worker 只消费冻结请求，不允许自行再规划。
 
@@ -369,9 +384,11 @@ Candidate Generation 交付一个**冻结且完整的候选池**：
 - Code 硬契约及软指标（clipping、edge energy、可用时 OCR/face、LR consistency proxy、NR-IQA 等）；
 - 候选匿名映射（本地保存），向 Judge 仅传 A01…A04、匿名图像/证据、独立 EvaluationContract；
 - 缺失、stale、failed、not_applicable 均显式标记，不把 null 当 0 或通过；
+- 交付 F0 关键属性规则与 F1 解析后的必需实例，生成独立 ReviewPlan，绑定各候选和 ROI 的 required_check_ids、包、角色、预算及聚合规则；
+- 人物合格不能覆盖关键号码未知。逐属性 AttributeAssessment 与评审 coverage 采用主规格 §8.3–§8.6；缺项不能自动 eligible；
 - 生成策略名、Prompt、seed、模型信息和 GT/Oracle 指标**不进入 Judge 请求**。
 
-**Judge 的唯一定义在 IMPLEMENTATION_PLAN_V1_1.md**：J0 视觉单 Judge；J1 视觉+Code 证据；J2 四视角+终审的消融；Code Hard Gate → VLM Eligibility → 合格集合 Listwise Best；无合格结果为 unresolved，best_available 仅供审计。主规格还规定四专家、争议复核、信息准确性政策、预算及人工 GT 终审，工程师须直接复用，不得在本专项计划中再发明不同选择逻辑。
+**Judge 的唯一定义在 IMPLEMENTATION_PLAN_V1_1.md**：J0 视觉单 Judge；J1 视觉+Code 证据；J2 四视角+终审的消融；Code Hard Gate → VLM Eligibility → 合格集合 Listwise Best；无合格结果为 unresolved，best_available 仅供审计。主规格还规定逐属性资格、ReviewPlan 分包与调用总额、四专家、争议复核、信息准确性政策及人工 GT 终审，工程师须直接复用，不得在本专项计划中再发明不同选择逻辑。单包 J0/J1 总上限各 3 次，J2 总上限 7 次，均含预留复核和全 variant 最多一次格式修复；多包需 F0 预注册更大预算，实际调用逐次计费。重要覆盖不足不能仅靠标记后继续交付。
 
 ## 10. 最小实验：覆盖率、策略响应和最终选择分开
 
@@ -397,7 +414,11 @@ E1 主要比较 **Oracle Pass@4**（人工独立终审认定至少有一个合�
 | PT | PT-A | PT-B |
 | PFT | PFT-A | PFT-B |
 
-E2 仅在有代表性的诊断样本上执行，另外计入实际生成次数和成本，不悄悄混入 E1 的每图 7 次预算。仅比较一个 PF/CF 和一个 P0/C0（seed 不同）**不能证明策略因果效应**。
+E2 样本选取严格采用主规格 §10.2.1。在读取 E1 输出、Judge 或 Oracle 之前，按原 LQ 的场景、人物/文字尺寸和信息可确认程度分层抽样，冻结 e2_manifest.json。记录 case 清单、各层样本数、抽样算法、随机 seed、缺额处理和 hash；不得依据 C0 或其他候选的恢复成功与否选样。
+
+两个评价 seed 预先固定，均不同于用于规划的 C0 seed。每图先冻结原 C0 导出的 F1，再在相同评价 seed 下执行四策略，不重做 Planner、不修改 Prompt。仅一轴或发生 fallback 时原样保留并标 joint=not_applicable，C0 失败与生成失败保留在清单和对应分母中，不补选成功 case。
+
+E2 另外计入实际生成次数和成本，不混入 E1 的每图 7 次预算。仅比较 seed 不同的 CF 与 C0 **不能证明策略因果效应**。事后挑选案例只进入 exploratory 失败或机制分析，不并入预注册的策略收益估计。
 
 需要同时记录三个结果：
 
@@ -409,7 +430,7 @@ E2 仅在有代表性的诊断样本上执行，另外计入实际生成次数�
 
 ### 10.3 E3：Judge 消融沿用主规格
 
-固定完全相同候选池运行 J0/J1/J2，独立人工/GT 得到 Oracle。J1 比 J0 验证数值证据贡献，J2 比 J1 验证专家分工贡献；判断收益与成本。**本文件不增加新的 Judge 版本、不改四专家职责。**
+固定完全相同候选池运行 J0/J1/J2，独立人工/GT 得到 Oracle。J1 比 J0 验证软数值证据贡献。J2 比 J1 仅验证多角色、多调用预算下的系统收益；声称角色分工有独立贡献，必须运行主规格 §10.3 的离线 J1_budget_matched 对照，匹配模型、候选池、图像与软证据覆盖、资格政策、分类调用限额和总输出 token 额度，并披露实际成本差异。未运行时明确归因限制。**本文件不改默认生产 Judge、不改四专家职责。**
 
 ### 10.4 数据、统计、分母
 
@@ -452,9 +473,9 @@ Plan：
 | P1 真实 baseline | 复用前三阶段并归档 P0/C0、完整 condition/source/model hash、严格 x1/x4 geometry | fixture + 至少 1 张真实输出；C0 与原输入和原要求均可追踪 |
 | P2 Planner | IssueRecord、ROI、原因假设、策略优先级、两轴分配、多实例风险、fallback | F1–F4/T1–T4、无人物/文字、ROI 超限、contradictory targets 均有测试和可解释输出 |
 | P3 Rewriter / Audit | Requirements IR、限定作用域编辑、完整 PF/PT/PFT、独立审计及一次修复 | 可展示每一需求 old/new/retained；语义冲突不能悄悄放行 |
-| P4 多候选执行与记录 | bridge / runtime / seed / pad-crop / journal / resume | 同一 LQ、Hash 真直通、错误原生尺寸拒绝、unknown 不自动重复生成 |
-| P5 Judge 交接 | 完整冻结图池、匿名 ROI、Code 硬/软证据、主规格 J0/J1/J2 接口 | 不泄漏策略名或 GT；无需新增一套 Judge；空合格集合 unresolved |
-| P6 Pilot | 10 图 E1、代表性样本 E2、固定池 J0/J1/J2；离线人工/GT | 七图对照、Prompt diff、目标/非目标 ROI、失败归因及成本报告 |
+| P4 多候选执行与记录 | bridge / runtime / 完整请求冻结 / 独立 pad-crop / journal / resume | 同一 canonical 与 prepared source；seed、配置及变换提交前校验；严格原生尺寸；unknown 不重复生成 |
+| P5 Judge 交接 | 完整冻结图池、逐关键属性、ReviewPlan、匿名 ROI、主规格 J0/J1 | 不泄漏策略或 GT；缺评和关键 unknown 不进入 eligible；预算不足准确 unresolved |
+| P6 Pilot | 10 图 E1、预注册 E2、固定池 J0/J1；离线人工/GT；有选图研究依据再做 J2 | 七图对照、Prompt diff、目标/非目标 ROI、失败及成本；专家角色归因有预算对照或明确限制 |
 | P7 Held-out + Review | 冻结后 24 图；配对统计、独立代码复审 | 论文级证据边界、完整回归测试、所有失败报告与代码 commit |
 
 ### 12.1 必须编写的测试（建议命名）
@@ -469,6 +490,10 @@ Plan：
 - test_candidates_runtime.py：completed 幂等、submitted 未回执标 unknown、重复像素保留调用成本。
 - test_candidates_pool_report.py：七次生成预算、失败仍入分母、E1/E2 分开统计、对应图像和 ROI 存在。
 - test_candidates_regression.py：原 harness / sr_v02 / reference / v3 入口和 wheel prompt 资源回归。
+- test_candidates_execution_manifest.py：condition 不变而 seed、steps、CFG、revision、output_resolution、prepared source 或 crop 改变时，submitted 前拒绝且生成器零调用；合法 padding 允许 canonical/prepared hash 不同。
+- test_candidates_attribute_eligibility.py：人物合格但关键号码 unknown、漏掉必需属性、required ROI 缺评、候选总评与逐项矛盾，不得错误交付。
+- test_candidates_review_plan.py：ROI 超限分包、缺包、聚合容量不足、unknown 占额、修复占总额度、预算不足时零评审；重要覆盖不足不能 selected。
+- test_candidates_e2_preregistration.py：清单及评价 seed 先于 E1 输出固定，不使用 C0 seed 作评价 seed，不补选成功 case，exploratory 与预注册指标隔离。
 
 测试使用预制 mock VLM/Qwen 和少量**故意带错误的图像 fixture**；测试通过只是工程逻辑有效，不得声称模型恢复效果已提升。
 
@@ -480,6 +505,7 @@ Plan：
 case001/
   case.json                  # TaskSpec / 用户目标 / 执行环境身份
   freeze.json                # F0/F1、预算与哈希
+  execution_manifests/       # C0 及其余候选的只读完整执行清单
   baseline/
     diagnosis.json
     tool_evidence.json
@@ -511,7 +537,7 @@ case001/
     anonymous_images/
     roi_comparison/
     change_maps/
-  judge/                     # 主规格 J0/J1/J2 的请求与结果
+  judge/                     # 主规格各 variant 的 ReviewPlan、覆盖、请求与逐属性结果
   selection.json
   report.md
   contact_sheet.png
@@ -527,13 +553,13 @@ case001/
 2. F/T 策略、各作用域原要求和替换要求、完整 Prompt SHA、审计与 fallback。
 3. A/B 七图整图+同坐标关键 ROI、Change Map、人物/文字/背景完整覆盖情况。
 4. PF/PT/PFT 的 Target Response、Off-target Damage、Joint Compatibility 与失败归因；不要将纯像素变化当改善。
-5. 主规格 Judge 的合格集合、最终选择、未知真实性状态、独立人工 best_set。
+5. 主规格 Judge 的逐属性结果、ReviewPlan 与必需覆盖、合格集合、最终选择、未知真实性状态、独立人工 best_set；J2 未运行标 not_run。
 6. 完整数据/模型/执行身份、计费/时间/失败与 unknown 状态。
 7. 下一轮研究建议：是诊断失败、策略无效、空间控制不足、执行器响应弱，还是 Judge 错选。
 
 **批量报告**沿用主规格 EXPERIMENT_REPORT.md 和 per_case.csv、per_candidate.csv、judge_comparison.csv，并新增可选 strategy_effect.csv（按 case/strategy/seed/ROI 归档方向性响应及损害），不改主规格口径。
 
-**提交前验收**：提供可复现提交 SHA、config/task 样例、README/runbook、单测/集成/回归日志、1 图真实输出、10 图 Pilot、24 图 Held-out、所有失败及 unknown 记录、独立代码复审结果。生产质量和研究收益需要真实模型与独立评价证据；工程完备不等于论文假设成立。
+**提交前验收**：提供可复现提交 SHA、config/task 样例、README/runbook、单测/集成/回归日志、1 图真实输出、10 图 Pilot、24 图 Held-out、E2 预注册清单及 hash、ReviewPlan 与逐属性覆盖、完整执行清单、所有失败及 unknown 记录、独立代码复审结果。J2 未运行时标 not_run；未做预算匹配对照时不得声称专家角色贡献。生产质量和研究收益需要真实模型与独立评价证据；工程完备不等于论文假设成立。
 
 ## 14. Research Decision：失败时如何决定后续方向
 
