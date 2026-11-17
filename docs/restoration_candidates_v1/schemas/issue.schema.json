@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HarnessIR candidates Issue v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "issue_id",
+    "region_ids",
+    "domain",
+    "problem_type",
+    "attribute",
+    "severity",
+    "task_criticality",
+    "observation",
+    "evidence_refs",
+    "cause_hypotheses",
+    "alternative_explanations",
+    "desired_change",
+    "protected_attributes",
+    "expected_observation",
+    "support",
+    "intervention_feasibility",
+    "spatial_control_risk"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "hre_candidates_v1"
+    },
+    "issue_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+    },
+    "region_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "domain": {
+      "enum": [
+        "person",
+        "text",
+        "building",
+        "grass",
+        "other"
+      ]
+    },
+    "problem_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attribute": {
+      "type": "string",
+      "minLength": 1
+    },
+    "severity": {
+      "enum": [
+        "minor",
+        "major"
+      ]
+    },
+    "task_criticality": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "observation": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "minItems": 0
+    },
+    "cause_hypotheses": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "minItems": 0
+    },
+    "alternative_explanations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "minItems": 0
+    },
+    "desired_change": {
+      "type": "string",
+      "minLength": 1
+    },
+    "protected_attributes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "minItems": 0
+    },
+    "expected_observation": {
+      "type": "string",
+      "minLength": 1
+    },
+    "support": {
+      "enum": [
+        "supported",
+        "ambiguous",
+        "unavailable"
+      ]
+    },
+    "intervention_feasibility": {
+      "enum": [
+        "plausible",
+        "limited",
+        "unsupported"
+      ]
+    },
+    "spatial_control_risk": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "support": {
+            "const": "supported"
+          }
+        },
+        "required": [
+          "support"
+        ]
+      },
+      "then": {
+        "properties": {
+          "evidence_refs": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}

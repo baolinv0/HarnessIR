@@ -1,0 +1,111 @@
+{
+  "schema_version": "hre_candidates_v1",
+  "mode": "real",
+  "harness_source_root": "/srv/HarnessIR",
+  "harness_sha": "d44d40fa209a9978d37ce38efa9a6ef89abe7432",
+  "stages": {
+    "diagnoser": {
+      "base_url": "http://127.0.0.1:8000/v1",
+      "model": "REPLACE_WITH_LOCAL_VLM_MODEL_ID",
+      "api_key_env": "LOCAL_VLM_API_KEY",
+      "timeout_seconds": 600,
+      "settings": {
+        "temperature": 0,
+        "max_tokens": 8192
+      }
+    },
+    "composer": {
+      "base_url": "http://127.0.0.1:8000/v1",
+      "model": "REPLACE_WITH_LOCAL_VLM_MODEL_ID",
+      "api_key_env": "LOCAL_VLM_API_KEY",
+      "timeout_seconds": 600,
+      "settings": {
+        "temperature": 0,
+        "max_tokens": 8192
+      }
+    },
+    "planner": {
+      "base_url": "http://127.0.0.1:8000/v1",
+      "model": "REPLACE_WITH_LOCAL_VLM_MODEL_ID",
+      "api_key_env": "LOCAL_VLM_API_KEY",
+      "timeout_seconds": 600,
+      "settings": {
+        "temperature": 0,
+        "max_tokens": 8192
+      }
+    },
+    "rewriter": {
+      "base_url": "http://127.0.0.1:8000/v1",
+      "model": "REPLACE_WITH_LOCAL_VLM_MODEL_ID",
+      "api_key_env": "LOCAL_VLM_API_KEY",
+      "timeout_seconds": 600,
+      "settings": {
+        "temperature": 0,
+        "max_tokens": 8192
+      }
+    },
+    "audit": {
+      "base_url": "http://127.0.0.1:8000/v1",
+      "model": "REPLACE_WITH_LOCAL_VLM_MODEL_ID",
+      "api_key_env": "LOCAL_VLM_API_KEY",
+      "timeout_seconds": 600,
+      "settings": {
+        "temperature": 0,
+        "max_tokens": 8192
+      }
+    },
+    "judge": {
+      "base_url": "http://127.0.0.1:8000/v1",
+      "model": "REPLACE_WITH_LOCAL_VLM_MODEL_ID",
+      "api_key_env": "LOCAL_VLM_API_KEY",
+      "timeout_seconds": 600,
+      "settings": {
+        "temperature": 0,
+        "max_tokens": 8192
+      }
+    }
+  },
+  "editor": {
+    "model_id": "Qwen/Qwen-Image-2.1",
+    "local_path": "/srv/models/Qwen-Image-2.1",
+    "revision": "REPLACE_WITH_40_HEX_CHECKPOINT_REVISION",
+    "deployment_manifest": "/srv/models/qwen21-deployment.json",
+    "pipeline_version": "REPLACE_WITH_INSTALLED_DIFFUSERS_VERSION",
+    "device": "cuda:0",
+    "torch_dtype": "bfloat16",
+    "settings": {
+      "num_inference_steps": 40,
+      "true_cfg_scale": 1,
+      "negative_prompt": "",
+      "num_images_per_prompt": 1,
+      "output_resolution": 1024,
+      "use_kv_cache": true
+    }
+  },
+  "seed_schedule": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "tie_order": [
+    "C0",
+    "CF",
+    "CT",
+    "CFT"
+  ],
+  "experiment": {
+    "e1_ab": true,
+    "e2_manifest_path": null
+  },
+  "review": {
+    "max_rois_per_package": 6,
+    "max_images_per_call": 64,
+    "max_judge_calls": {
+      "J0": 3,
+      "J1": 3,
+      "J2": 7
+    },
+    "max_output_tokens": 8192
+  }
+}

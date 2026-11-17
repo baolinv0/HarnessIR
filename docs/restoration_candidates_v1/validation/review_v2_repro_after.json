@@ -1,0 +1,20 @@
+{
+  "null_axes_denominators": {
+    "CF:person": 4,
+    "CFT:joint": 4,
+    "CT:text": 4
+  },
+  "building_report_created": true,
+  "hard_gate_failed_oracle_pass": {
+    "denominator": 1,
+    "missing_count": 0,
+    "numerator": 0,
+    "value": 0.0
+  },
+  "hard_gate_failed_false_reject": {
+    "denominator": 0,
+    "missing_count": 0,
+    "numerator": 0,
+    "value": null
+  }
+}

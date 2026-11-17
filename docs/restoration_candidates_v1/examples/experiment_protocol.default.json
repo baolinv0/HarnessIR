@@ -1,0 +1,94 @@
+{
+  "protocol_version": "hre_candidates_experiment_v1",
+  "status": "template_requires_dataset_freeze",
+  "e1": {
+    "seed_schedule": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "max_image_calls_per_case": 7,
+    "automatic_image_retries": 0
+  },
+  "e2": {
+    "sampling_seed": 20261117,
+    "selection_algorithm": "stratified_round_robin_sha256_v1",
+    "evaluation_seeds": [
+      10001,
+      10002
+    ],
+    "pilot": {
+      "total": 4,
+      "scene_quotas": {
+        "person": 1,
+        "text": 1,
+        "mixed": 1,
+        "other": 1
+      },
+      "max_image_calls": 32
+    },
+    "held_out": {
+      "total": 8,
+      "scene_quotas": {
+        "person": 2,
+        "text": 2,
+        "mixed": 2,
+        "other": 2
+      },
+      "max_image_calls": 64
+    },
+    "shortfall_policy": "take_all_in_class_report_shortfall_no_cross_class_replacement",
+    "max_image_calls_per_case": 8
+  },
+  "dataset": {
+    "pilot": {
+      "total": 10,
+      "scene_quotas": {
+        "person": 3,
+        "text": 3,
+        "mixed": 3,
+        "other": 1
+      },
+      "max_e1_image_calls": 70
+    },
+    "held_out": {
+      "total": 24,
+      "scene_quotas": {
+        "person": 6,
+        "text": 6,
+        "mixed": 6,
+        "other": 6
+      },
+      "max_e1_image_calls": 168
+    },
+    "split_unit": "scene_id",
+    "information_levels": [
+      "legible",
+      "partly_legible",
+      "unreadable",
+      "not_applicable"
+    ],
+    "roi_size_bins_lq_pixels": [
+      16,
+      32
+    ]
+  },
+  "statistics": {
+    "resampling_unit": "case_id",
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 20261117,
+    "interval_quantiles": [
+      0.025,
+      0.975
+    ],
+    "zero_denominator": "null"
+  },
+  "required_before_e1": [
+    "dataset_manifest",
+    "e2_manifest",
+    "evaluation_target_registry",
+    "runtime_config",
+    "F0"
+  ]
+}

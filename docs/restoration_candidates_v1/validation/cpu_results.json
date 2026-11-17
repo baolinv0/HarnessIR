@@ -1,0 +1,141 @@
+{
+  "candidates": {
+    "tests": 146,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1,
+    "passed": 145,
+    "artifact": "artifacts/final-publish/candidates-tests.xml",
+    "sha256": "a7872faa35bb51e259bbd9a0751ef0e83f5688f61d3d2d0c51693be2db680791"
+  },
+  "legacy_targeted": {
+    "tests": 125,
+    "failures": 4,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 121,
+    "artifact": "artifacts/legacy-targeted-tests.xml",
+    "sha256": "5734a89a8cfcec59dc1ae387b130a7a8b4bb4ca662d2533e8c9a9d92f5e32619"
+  },
+  "unchanged_baseline_platform": {
+    "tests": 4,
+    "failures": 4,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 0,
+    "artifact": "artifacts/baseline-platform-tests.xml",
+    "sha256": "855beef1ca1f197ecfe6e02f6ee496d3f878e16156081040e5e9f52485dc32ee"
+  },
+  "recorded_at": "2026-11-17T10:03:05.639039+00:00",
+  "baseline_sha": "d44d40fa209a9978d37ce38efa9a6ef89abe7432",
+  "platform": "Windows",
+  "python_version": "3.12.13",
+  "wheel_sha256": "dddb48fc946e86e8858885ad4b6a9ca3c9ccba9992af0e228f11f20d4585fef4",
+  "installed_smoke_sha256": "6d6d6409562c84c5e8a15a209004052f42e4471247343297923119dde27657bb",
+  "gpu_execution_verified": false,
+  "scientific_improvement_verified": false,
+  "full_legacy_suite_completed": false,
+  "regressions": {
+    "runtime_red": {
+      "tests": 10,
+      "failures": 10,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 0,
+      "artifact": "artifacts/fix-review-v2/runtime-red.xml",
+      "sha256": "45998b37899ed734a7e5f9ff4391fbd16dcc2089799c9dcc3f9521b55e6ea444"
+    },
+    "runtime_green": {
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 11,
+      "artifact": "artifacts/fix-review-v2/runtime-integrity-green.xml",
+      "sha256": "22459b3f9e0d2bd6ae3e3ea1a0ae22c9cfd0c2f94bb99917e61589b2224003ca"
+    },
+    "statistics_red": {
+      "tests": 24,
+      "failures": 12,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 12,
+      "artifact": "artifacts/fix-review-v2/statistics-red.xml",
+      "sha256": "d1fe3aaa289882182a429264893e2f665b0bb31f8c8b5e1e1d41657a1df29816"
+    },
+    "statistics_edge_red": {
+      "tests": 4,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 1,
+      "artifact": "artifacts/fix-review-v2/statistics-edge-red.xml",
+      "sha256": "7ea710e3d7007f5a25a80561f7244d45b2e4dae640527f0c5fb6a76587d6e883"
+    },
+    "statistics_best_red": {
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 0,
+      "artifact": "artifacts/fix-review-v2/statistics-best-red.xml",
+      "sha256": "cb4ea9680c28b71c89609e390d6d83557eeb8472996040a67b552c24c21cb465"
+    },
+    "statistics_green": {
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 38,
+      "artifact": "artifacts/fix-review-v2/statistics-green.xml",
+      "sha256": "ec3689dcd46c8a81898715c5e4ff63b5322c444ccbea2feb33341bdf77ed8902"
+    },
+    "fresh_reviewer_tests": {
+      "tests": 37,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 37,
+      "artifact": "artifacts/fix-review-v2/reviewer-tests.xml",
+      "sha256": "8a82a84136bfc61335b0e4cb6fb2ffc0a914728138ba13b49ba5693a1de4a147"
+    },
+    "final_best_red": {
+      "tests": 17,
+      "failures": 7,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 10,
+      "artifact": "artifacts/final-publish/best-red.xml",
+      "sha256": "bb02b4299e40bc74bc034db6352f5be341f4a2c03c467ca0cfac533cd9679539"
+    },
+    "final_best_green": {
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 38,
+      "artifact": "artifacts/final-publish/best-green.xml",
+      "sha256": "efca0d001f5ec9c0cc24a08141f8445d77fbd1213ba9c9d43ae687c4977c91f7"
+    },
+    "final_independent_review": {
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 38,
+      "artifact": "artifacts/final-publish/reviewer-best-tests.xml",
+      "sha256": "0c2d811137c8c15cc1222eb56b41f0dde9cdb7eff5dd8a9940113722e9a26f2f"
+    }
+  },
+  "review_fix_regressions_verified": true,
+  "model_execution_verified": false,
+  "final_review_sha256": "9c549570d8c6e08f22905b11be52832cb24060126161dd9b6282edd44dc43d95",
+  "review_findings_closed": [
+    "R1",
+    "R2",
+    "R3",
+    "R4"
+  ],
+  "known_best_agreement_issue_fixed": true,
+  "original_installed_smoke_sha256": "e8ca05150646b4e0672c4120caa807a08c513bd222418027a658b8fc33522831"
+}

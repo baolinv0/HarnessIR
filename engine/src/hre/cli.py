@@ -330,6 +330,9 @@ def dispatch(args):
 def main(argv=None) -> int:
     import sys
     effective = list(sys.argv[1:] if argv is None else argv)
+    if effective and effective[0] == 'candidates':
+        from hre.candidates.cli import main as candidates_main
+        return candidates_main(effective[1:])
     if effective and effective[0] == 'sr':
         from hre.sr.cli import main as sr_main
         return sr_main(effective[1:])

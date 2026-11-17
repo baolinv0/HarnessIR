@@ -1,0 +1,185 @@
+{
+  "installed_module": "$WORKSPACE\\.work\\installed-publish-lf\\hre\\__init__.py",
+  "commands": [
+    {
+      "command": "fixture",
+      "result": {
+        "case_root": "$WORKSPACE\\.work\\installed-smoke-publish-lf\\case",
+        "fixture_only": true,
+        "next_command": "python -m hre candidates run --case-root \"$WORKSPACE\\.work\\installed-smoke-publish-lf\\case\""
+      }
+    },
+    {
+      "command": "run",
+      "result": {
+        "case_id": "cpu_mixed",
+        "error": null,
+        "f0_hash": "ef671d4ebb3ad32e6e2b334ad3a74047a71a30cf030b4de2c5f0d3325b578734",
+        "f1_hash": "4376d40a7ce4e49cfee3b3ca4057717a0f35a2a3e9b05c3db460308ad10109da",
+        "mode": "fixture",
+        "phase": "baseline_retained",
+        "schema_version": "hre_candidates_v1",
+        "selected_output": "$WORKSPACE\\.work\\installed-smoke-publish-lf\\case\\evidence\\anonymous_images\\A04.png"
+      }
+    },
+    {
+      "command": "judge",
+      "result": {
+        "schema_version": "hre_candidates_v1",
+        "contract_valid_ids": [
+          "baseline_resample_s2_seed2",
+          "baseline_resample_s3_seed3",
+          "baseline_resample_s1_seed1",
+          "baseline_s0_seed0"
+        ],
+        "eligible_ids": [
+          "baseline_resample_s2_seed2",
+          "baseline_resample_s3_seed3",
+          "baseline_resample_s1_seed1",
+          "baseline_s0_seed0"
+        ],
+        "eligibility_decisions": {
+          "baseline_resample_s2_seed2": "eligible",
+          "baseline_resample_s3_seed3": "eligible",
+          "baseline_resample_s1_seed1": "eligible",
+          "baseline_s0_seed0": "eligible"
+        },
+        "coverage": {
+          "baseline_resample_s2_seed2": {
+            "complete": true,
+            "observed_packages": 1,
+            "required_packages": 1
+          },
+          "baseline_resample_s3_seed3": {
+            "complete": true,
+            "observed_packages": 1,
+            "required_packages": 1
+          },
+          "baseline_resample_s1_seed1": {
+            "complete": true,
+            "observed_packages": 1,
+            "required_packages": 1
+          },
+          "baseline_s0_seed0": {
+            "complete": true,
+            "observed_packages": 1,
+            "required_packages": 1
+          }
+        },
+        "review_plan_sha256": "3c995f935dbed60050ef9e1a8008c1c9943e3bb5a6993614c3a10baff04df27e",
+        "preference_groups": [
+          [
+            "baseline_resample_s2_seed2",
+            "baseline_resample_s3_seed3",
+            "baseline_resample_s1_seed1",
+            "baseline_s0_seed0"
+          ]
+        ],
+        "best_candidate": "baseline_s0_seed0",
+        "best_available_id": "baseline_resample_s2_seed2",
+        "selected_output": "$WORKSPACE\\.work\\installed-smoke-publish-lf\\case\\evidence\\anonymous_images\\A04.png",
+        "status": "baseline_retained",
+        "content_verification": "per_attribute_only",
+        "reason": "eligible_ranked",
+        "fixture_only": true,
+        "variant": "J0",
+        "pool": "B",
+        "freeze_hash": "71d890452f6dbcba3f96a7a39f880af4d8e611e6e3a0406c1162f7fbee69c4b8"
+      }
+    },
+    {
+      "command": "judge",
+      "result": {
+        "schema_version": "hre_candidates_v1",
+        "contract_valid_ids": [
+          "baseline_resample_s2_seed2",
+          "baseline_resample_s3_seed3",
+          "baseline_resample_s1_seed1",
+          "baseline_s0_seed0"
+        ],
+        "eligible_ids": [
+          "baseline_resample_s2_seed2",
+          "baseline_resample_s3_seed3",
+          "baseline_resample_s1_seed1",
+          "baseline_s0_seed0"
+        ],
+        "eligibility_decisions": {
+          "baseline_resample_s2_seed2": "eligible",
+          "baseline_resample_s3_seed3": "eligible",
+          "baseline_resample_s1_seed1": "eligible",
+          "baseline_s0_seed0": "eligible"
+        },
+        "coverage": {
+          "baseline_resample_s2_seed2": {
+            "complete": true,
+            "observed_packages": 5,
+            "required_packages": 5
+          },
+          "baseline_resample_s3_seed3": {
+            "complete": true,
+            "observed_packages": 5,
+            "required_packages": 5
+          },
+          "baseline_resample_s1_seed1": {
+            "complete": true,
+            "observed_packages": 5,
+            "required_packages": 5
+          },
+          "baseline_s0_seed0": {
+            "complete": true,
+            "observed_packages": 5,
+            "required_packages": 5
+          }
+        },
+        "review_plan_sha256": "c50e654a0de64d3dfe0613f8b886c9e178c6df70a3796ad7f8d6b895408ee7d9",
+        "preference_groups": [
+          [
+            "baseline_resample_s2_seed2",
+            "baseline_resample_s3_seed3",
+            "baseline_resample_s1_seed1",
+            "baseline_s0_seed0"
+          ]
+        ],
+        "best_candidate": "baseline_s0_seed0",
+        "best_available_id": "baseline_resample_s2_seed2",
+        "selected_output": "$WORKSPACE\\.work\\installed-smoke-publish-lf\\case\\evidence\\anonymous_images\\A04.png",
+        "status": "baseline_retained",
+        "content_verification": "per_attribute_only",
+        "reason": "eligible_ranked",
+        "fixture_only": true,
+        "variant": "J2",
+        "pool": "B",
+        "freeze_hash": "01d35675b663d8a2588092e37ea79095f7b7923ef91dab997aafdb52fc06ecdd"
+      }
+    },
+    {
+      "command": "report",
+      "result": {
+        "report": "$WORKSPACE\\.work\\installed-smoke-publish-lf\\case\\report.md"
+      }
+    }
+  ],
+  "resume": {
+    "case_id": "cpu_mixed",
+    "error": null,
+    "f0_hash": "ef671d4ebb3ad32e6e2b334ad3a74047a71a30cf030b4de2c5f0d3325b578734",
+    "f1_hash": "4376d40a7ce4e49cfee3b3ca4057717a0f35a2a3e9b05c3db460308ad10109da",
+    "mode": "fixture",
+    "phase": "baseline_retained",
+    "schema_version": "hre_candidates_v1",
+    "selected_output": "$WORKSPACE\\.work\\installed-smoke-publish-lf\\case\\evidence\\anonymous_images\\A04.png"
+  },
+  "new_resume_operations": 0,
+  "modified_selected_output_rejected": true,
+  "wheel_sha256": "dddb48fc946e86e8858885ad4b6a9ca3c9ccba9992af0e228f11f20d4585fef4",
+  "installed_files_match_wheel": true,
+  "e1_unique_generation_records": 7,
+  "output_size": [
+    260,
+    196
+  ],
+  "fixture_only": true,
+  "gpu_execution_verified": false,
+  "paths_redacted_for_publication": true,
+  "original_artifact_sha256": "e8ca05150646b4e0672c4120caa807a08c513bd222418027a658b8fc33522831"
+}

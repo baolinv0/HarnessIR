@@ -1,0 +1,34 @@
+{
+  "schema_version": "hre_candidates_v1",
+  "issue_id": "F01",
+  "region_ids": [
+    "person_01_face"
+  ],
+  "domain": "person",
+  "problem_type": "waxy_skin",
+  "attribute": "natural_texture",
+  "severity": "major",
+  "task_criticality": "high",
+  "observation": "C0 face appears excessively smooth relative to visible structure",
+  "evidence_refs": [
+    "lq_roi_face_01",
+    "c0_roi_face_01"
+  ],
+  "cause_hypotheses": [
+    "P0 may suppress texture too strongly",
+    "Qwen may have an inherent smoothing tendency"
+  ],
+  "alternative_explanations": [
+    "visible input cues may be insufficient"
+  ],
+  "desired_change": "recover subtle natural skin texture",
+  "protected_attributes": [
+    "expression",
+    "visible facial geometry",
+    "skin color"
+  ],
+  "expected_observation": "reduced waxy appearance, no major structure regression",
+  "intervention_feasibility": "plausible",
+  "spatial_control_risk": "low",
+  "support_status": "supported"
+}

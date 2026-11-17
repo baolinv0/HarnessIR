@@ -1,0 +1,58 @@
+{
+  "schema_version": "hre_candidates_v1",
+  "case_id": "gpu_smoke_odd_x4",
+  "source": {
+    "path": "/srv/data/lq_257x193.png"
+  },
+  "task_mode": "sr_x4",
+  "scale": 4,
+  "usage_policy": "photo_restoration",
+  "user_intent": "Restore visible content while preserving expression, confirmed text, layout and colors.",
+  "task_types": [
+    "mix"
+  ],
+  "rois": [
+    {
+      "id": "person_01",
+      "semantic_type": "person",
+      "box": [
+        16,
+        16,
+        96,
+        160
+      ],
+      "importance": "high",
+      "provenance": "replace_with_LQ_only_annotation"
+    },
+    {
+      "id": "sign_01",
+      "semantic_type": "text",
+      "box": [
+        120,
+        30,
+        240,
+        80
+      ],
+      "importance": "high",
+      "provenance": "replace_with_LQ_only_annotation"
+    }
+  ],
+  "critical_attributes": [
+    {
+      "attribute_id": "expression",
+      "region_selector": "person_01",
+      "attribute": "expression",
+      "required_for_acceptance": true,
+      "verification_requirement": "visible_consistency",
+      "allow_unverifiable": false
+    },
+    {
+      "attribute_id": "text_content",
+      "region_selector": "sign_01",
+      "attribute": "text_content",
+      "required_for_acceptance": true,
+      "verification_requirement": "visible_consistency",
+      "allow_unverifiable": false
+    }
+  ]
+}
