@@ -1,5 +1,7 @@
 # Model-Aware HarnessIR: run and inspect stages in parallel
 
+For a file-driven proposal, evaluation and promotion loop on texture-only restoration, see the [manual search runbook](docs/manual_texture_search.md).
+
 ## Four-model completion: the new v3 entry point
 
 `hre models` now provides built-in Qwen 2.1 / FireRed 1.1 / FLUX 3 Klein /

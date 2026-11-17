@@ -233,6 +233,8 @@ def save_outputs(images, output_dir: Path, observation: dict) -> dict:
 
 
 _GUIDANCE = {
+    "minimax_h3": "Anchor edits to Picture 1 and keep the existing lighting and composition wherever the task permits.",
+    "flux2_klein": "Describe the desired edit explicitly and keep scene content and geometry anchored to the input.",
     "qwen21": "Express the required changes together in concise semantic instructions. Keep the specified subject/background and lighting relationships coherent; do not add new goals.",
     "firered11": "Express one coherent edit, anchoring identity, lettering and fine structures to the source. Describe the required local or global changes explicitly without inventing details.",
     "flux3_klein": "Use the native image-edit instruction format: describe required changes and a compact preservation clause. For bounded edits retain the rest of the scene; do not invent a new composition.",

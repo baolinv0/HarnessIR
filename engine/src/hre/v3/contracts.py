@@ -52,6 +52,21 @@ CATALOG = {
     },
 }
 
+# Additional explicit profiles. Keep the historical four-model default matrix.
+MODEL_CATALOG = {
+    **CATALOG,
+    "minimax_h3": {
+        "name": "MiniMax H3-Image (SGLang)", "model_id": "MiniMaxAI/MiniMax-H3-Image",
+        "pipeline": "SGLang image edits", "compiler": "direct", "compilers": ["direct"],
+        "grid": 32, "spatial_modes": ["full_frame", "crop_and_fuse"], "settings": {},
+    },
+    "flux2_klein": {
+        "name": "FLUX.2 Klein 4B (distilled)", "model_id": "black-forest-labs/FLUX.2-klein-4B",
+        "pipeline": "Flux2KleinPipeline", "compiler": "direct", "compilers": ["direct"],
+        "grid": 16, "spatial_modes": ["full_frame", "crop_and_fuse"], "settings": {},
+    },
+}
+
 
 def normalise_spec(spec: dict) -> dict:
     require(isinstance(spec, dict), "task_invalid", "Task must be a JSON object")
@@ -59,7 +74,7 @@ def normalise_spec(spec: dict) -> dict:
     require(value.get("schema_version", PROTOCOL_VERSION) == PROTOCOL_VERSION,
             "task_version_invalid", "Use a new hre_task_v3 case; legacy records are not rewritten")
     value["schema_version"] = PROTOCOL_VERSION
-    require(value.get("profile_id") in CATALOG, "profile_invalid", "Choose qwen21, firered11, flux3_klein or fibo2_dev")
+    require(value.get("profile_id") in MODEL_CATALOG, "profile_invalid", "Unknown model profile; see hre models catalog --all")
     require(value.get("task_mode") in {"restoration", "reference_enhance"}, "task_mode_invalid",
             "task_mode is restoration or reference_enhance")
     value.setdefault("case_id", "case_" + digest(spec)[:16])
@@ -77,7 +92,7 @@ def normalise_spec(spec: dict) -> dict:
     geometry = {"policy": "pad", "grid": 32, **value.get("geometry", {})}
     require(geometry["policy"] in {"strict", "pad", "resize"}, "geometry_invalid", "Unknown geometry policy")
     require(type(geometry["grid"]) is int and geometry["grid"] > 0
-            and geometry["grid"] % CATALOG[value["profile_id"]]["grid"] == 0,
+            and geometry["grid"] % MODEL_CATALOG[value["profile_id"]]["grid"] == 0,
             "geometry_invalid", "Geometry grid must be a positive multiple of the model's native grid")
     if geometry["policy"] == "resize":
         for dimension in ("width", "height"):
@@ -87,7 +102,7 @@ def normalise_spec(spec: dict) -> dict:
         raise HREError("geometry_invalid", "Set dimensions only with the explicit resize policy")
     value["geometry"] = geometry
     spatial = {"mode": "full_frame", **value.get("spatial", {})}
-    require(spatial["mode"] in CATALOG[value["profile_id"]]["spatial_modes"], "spatial_unsupported",
+    require(spatial["mode"] in MODEL_CATALOG[value["profile_id"]]["spatial_modes"], "spatial_unsupported",
             f"{value['profile_id']} does not implement {spatial['mode']}")
     if spatial["mode"] == "native_mask":
         require(value["task_mode"] == "restoration", "mask_reference_conflict",
@@ -184,10 +199,10 @@ def validate_config(config: dict, profile_id: str) -> dict:
     model = config["models"][profile_id]
     require(isinstance(model, dict) and isinstance(model.get("compiler"), dict) and isinstance(model.get("editor"), dict),
             "config_invalid", "Each model needs compiler and editor configurations")
-    require(model["compiler"].get("backend") in CATALOG[profile_id]["compilers"], "compiler_invalid",
+    require(model["compiler"].get("backend") in MODEL_CATALOG[profile_id]["compilers"], "compiler_invalid",
             "Unsupported compiler for the selected model")
-    require(model["editor"].get("model_id") == CATALOG[profile_id]["model_id"], "model_identity_mismatch",
-            "The runtime checkpoint must match the four-model catalog")
+    require(model["editor"].get("model_id") == MODEL_CATALOG[profile_id]["model_id"], "model_identity_mismatch",
+            "The runtime checkpoint must match the model profile")
     return deepcopy(config)
 
 
@@ -296,7 +311,7 @@ def load_case(root: Path) -> tuple[dict, dict, dict]:
 
 def validate_request(request: dict) -> None:
     require(request.get("schema_version") == "hre_model_request_v3", "request_invalid", "Expected a v3 native model request")
-    require(request.get("profile_id") in CATALOG, "profile_invalid", "Unknown model profile")
+    require(request.get("profile_id") in MODEL_CATALOG, "profile_invalid", "Unknown model profile")
     require(request.get("task_mode") in {"restoration", "reference_enhance"}, "task_mode_invalid", "Unknown task mode")
     expected_roles = ["source"] + (["appearance_reference"] if request["task_mode"] == "reference_enhance" else [])
     require([asset.get("role") for asset in request.get("inputs", [])] == expected_roles,
@@ -317,7 +332,7 @@ def validate_request(request: dict) -> None:
     require(type(request.get("seed")) is int and 0 <= request["seed"] < 2**63, "seed_invalid", "Invalid execution seed")
     require(isinstance(request.get("brief"), str) and request["brief"].strip(), "brief_required", "Empty instruction")
     spatial = request.get("spatial", {"mode": "full_frame"})
-    supported = set(CATALOG[request["profile_id"]]["spatial_modes"]) - {"crop_and_fuse"}
+    supported = set(MODEL_CATALOG[request["profile_id"]]["spatial_modes"]) - {"crop_and_fuse"}
     require(isinstance(spatial, dict) and spatial.get("mode") in supported,
             "spatial_unsupported", "Native requests must use a prepared, supported spatial mode")
     if spatial["mode"] == "native_mask":

@@ -9,7 +9,7 @@ import shutil
 from ..models import file_sha256, now
 from ..storage import case_lock, read_json, write_json
 from .common import digest, require
-from .contracts import CATALOG, create_case, load_case, normalise_spec, validate_config
+from .contracts import CATALOG, MODEL_CATALOG, create_case, load_case, normalise_spec, validate_config
 from .runner import run_case
 
 
@@ -52,7 +52,7 @@ def _normalise(manifest: dict, config: dict, base: Path, *, previous_manifest: d
     value = deepcopy(manifest)
     require(value.get("schema_version") == "hre_batch_v3", "batch_invalid", "Expected hre_batch_v3")
     models = value.setdefault("models", list(CATALOG))
-    require(isinstance(models, list) and models and len(models) == len(set(models)) and set(models) <= set(CATALOG),
+    require(isinstance(models, list) and models and len(models) == len(set(models)) and set(models) <= set(MODEL_CATALOG),
             "batch_models_invalid", "Choose unique models from the four-model catalog")
     for model in models:
         validate_config(config, model)

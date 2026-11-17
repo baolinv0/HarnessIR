@@ -11,14 +11,14 @@ from urllib.parse import urlsplit
 from ..models import file_sha256, now
 from ..storage import atomic_write, read_json, write_json
 from .common import model_identity, package_versions, require
-from .contracts import CATALOG, validate_config
+from .contracts import CATALOG, MODEL_CATALOG, validate_config
 
 
 def lock_checkpoint(path: Path, model_id: str, revision: str, output: Path) -> dict:
     path, output = Path(path).expanduser().resolve(), Path(output).resolve()
     require(path.is_dir(), "local_weights_missing", "Checkpoint directory does not exist")
     require(re.fullmatch(r"[0-9a-fA-F]{40}", revision), "revision_required", "Supply the actual checkpoint commit")
-    require(model_id in {row["model_id"] for row in CATALOG.values()} | {
+    require(model_id in {row["model_id"] for row in MODEL_CATALOG.values()} | {
         "Qwen/Qwen-Image-2.1-PE-I2I", "black-forest-labs/flux-3-image-klein-pup"},
         "model_identity_mismatch", "Unknown four-model or native compiler checkpoint")
     require(not output.exists(), "manifest_exists", "Deployment manifests are immutable; choose a new output path")
@@ -61,6 +61,13 @@ def probe_runtime(profile_id: str, kind: str, config: dict) -> dict:
         except Exception as exc:
             result["issues"].append({"name": name, "code": getattr(exc, "code", type(exc).__name__), "message": str(exc)})
 
+    if kind == "editor" and profile_id == "minimax_h3":
+        from .h3 import endpoint_config
+        check("sglang_configuration", lambda: endpoint_config(config))
+        result["ready"] = not result["issues"]
+        result["warnings"].append("Deployment revision is operator-declared; no remote inference was executed.")
+        return result
+
     backend = config.get("backend")
     needs_diffusers = kind == "editor" or backend in {"flux3_pup_local", "flux3_external_vlm_local"}
     required_packages = (["torch", "diffusers", "transformers"] if kind == "editor" else
@@ -73,17 +80,17 @@ def probe_runtime(profile_id: str, kind: str, config: dict) -> dict:
             return result["packages"][package]
         check(package, available)
     if kind == "editor":
-        check("checkpoint", lambda: model_identity(config, CATALOG[profile_id]["model_id"]))
+        check("checkpoint", lambda: model_identity(config, MODEL_CATALOG[profile_id]["model_id"]))
         def pipeline_version():
             require(config.get("pipeline_version") and config["pipeline_version"] == result["packages"].get("diffusers"),
                     "pipeline_version_mismatch", "Set pipeline_version to the explicitly deployed Diffusers version")
             return config["pipeline_version"]
         check("pipeline_version", pipeline_version)
         index = Path(config.get("local_path", "")) / "model_index.json"
-        if profile_id in {"qwen21", "firered11", "fibo2_dev"}:
+        if profile_id in {"qwen21", "firered11", "fibo2_dev", "flux2_klein"}:
             def pipeline_identity():
                 data = read_json(index)
-                require(data.get("_class_name") == CATALOG[profile_id]["pipeline"], "pipeline_class_mismatch",
+                require(data.get("_class_name") == MODEL_CATALOG[profile_id]["pipeline"], "pipeline_class_mismatch",
                         "Local model_index.json belongs to another pipeline class")
                 return data["_class_name"]
             check("pipeline_class", pipeline_identity)
@@ -116,8 +123,10 @@ def probe_runtime(profile_id: str, kind: str, config: dict) -> dict:
             names = [name for name in DIFFUSERS_BLOBS if "bria_fibo2" in name]
         elif profile_id == "qwen21":
             names = [name for name in DIFFUSERS_BLOBS if "qwenimage21" in name]
-        else:
+        elif profile_id == "firered11":
             names = [name for name in DIFFUSERS_BLOBS if "qwenimage" in name and "edit_plus" in name]
+        else:
+            names = []
         for name in names:
             check("source:" + name, lambda name=name: verify_source_file(package_root / name, name))
     result["ready"] = not result["issues"]

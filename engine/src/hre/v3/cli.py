@@ -4,18 +4,19 @@ from __future__ import annotations
 from pathlib import Path
 
 from ..storage import read_json
-from .contracts import CATALOG
+from .contracts import CATALOG, MODEL_CATALOG
 
 
 def add_models_parser(groups):
     group = groups.add_parser("models", help="Four-model v3 restoration/reference enhancement")
     commands = group.add_subparsers(dest="model_action", required=True)
-    commands.add_parser("catalog", help="List the four implemented native model adapters")
+    parser = commands.add_parser("catalog", help="List model profiles")
+    parser.add_argument("--all", action="store_true", help="Include additional opt-in profiles")
     parser = commands.add_parser("init", help="Write complete editable runtime/task/batch examples")
     parser.add_argument("--out", type=Path, required=True)
     parser = commands.add_parser("doctor", help="Check local dependencies and weights without inference")
     parser.add_argument("--config", type=Path, required=True)
-    parser.add_argument("--profile", choices=list(CATALOG), action="append")
+    parser.add_argument("--profile", choices=list(MODEL_CATALOG), action="append")
     parser = commands.add_parser("lock", help="Hash a locally deployed checkpoint once")
     parser.add_argument("--path", type=Path, required=True)
     parser.add_argument("--model-id", required=True)
@@ -59,7 +60,7 @@ def dispatch_models(args):
     from .batch import resolve_config_paths, resolve_spec_paths
     action = args.model_action
     if action == "catalog":
-        return {"schema_version": "hre_catalog_v3", "models": CATALOG, "gpu_tests": "not_run_in_this_delivery"}
+        return {"schema_version": "hre_catalog_v3", "models": MODEL_CATALOG if args.all else CATALOG, "gpu_tests": "not_run_in_this_delivery"}
     if action == "init":
         from .deployment import write_examples
         return write_examples(args.out)
@@ -95,7 +96,7 @@ def dispatch_models(args):
         return {"schema_version": "hre_dry_run_v3", "task_mode": spec["task_mode"], "profile_id": spec["profile_id"],
                 "strategy": spec["strategy"], "input_roles": [asset["role"] for asset in state["inputs"]],
                 "source_canvas": state["canvas"], "geometry": spec["geometry"], "spatial": spec["spatial"],
-                "compiler": model["compiler"]["backend"], "pipeline": CATALOG[spec["profile_id"]]["pipeline"],
+                "compiler": model["compiler"]["backend"], "pipeline": MODEL_CATALOG[spec["profile_id"]]["pipeline"],
                 "policy": spec["policy"], "model_calls": 0,
                 "steps": (["diagnose", "evidence", "compose"] if spec["strategy"] != "native" and not spec.get("shared_intent") else [])
                          + ["prepare_geometry", "compile", "generate", "deliver", "verify"]

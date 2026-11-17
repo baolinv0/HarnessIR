@@ -8,11 +8,12 @@ import time
 
 from ..models import HREError, file_sha256, sha256_bytes
 from .common import digest, render_instruction, require
-from .contracts import CATALOG, validate_request
+from .contracts import MODEL_CATALOG, validate_request
 from .spatial import prepare_request, deliver_outputs
 
 
-_MODULES = {"qwen21": "qwen", "firered11": "firered", "flux3_klein": "flux", "fibo2_dev": "fibo"}
+_MODULES = {"qwen21": "qwen", "firered11": "firered", "flux3_klein": "flux", "fibo2_dev": "fibo",
+            "minimax_h3": "h3", "flux2_klein": "flux2"}
 
 
 def request_binding(request: dict) -> str:
@@ -38,9 +39,12 @@ def _module(profile_id: str):
 def _compile_local(request: dict, config: dict) -> dict:
     validate_request(request)
     backend = config.get("backend")
-    require(backend in CATALOG[request["profile_id"]]["compilers"], "compiler_invalid", "Compiler/profile mismatch")
+    require(backend in MODEL_CATALOG[request["profile_id"]]["compilers"], "compiler_invalid", "Compiler/profile mismatch")
     if backend == "direct":
-        return {"text": render_instruction(request),
+        instruction = render_instruction(request)
+        if request["profile_id"] == "minimax_h3":
+            instruction = "Edit <Picture 1> following this instruction:\n" + instruction
+        return {"text": instruction,
                 "condition_kind": "semantic_instruction" if request["profile_id"] == "qwen21" else "edit_instruction",
                 "native_output": None, "observation": {"compiler_id": "hre-direct-v3",
                     "calls_attempted": 0, "calls_completed": 0, "fallback_used": False}, "warnings": []}
@@ -101,7 +105,7 @@ def generate(request: dict, condition: dict, config: dict, output_dir: Path) -> 
             "condition_binding_mismatch", "This condition was compiled for different inputs, geometry or intent")
     require(condition.get("text_sha256") == sha256_bytes(condition["text"].encode()),
             "condition_modified", "Accepted native condition text changed")
-    require(config.get("model_id") == CATALOG[request["profile_id"]]["model_id"], "model_identity_mismatch", "Editor/profile mismatch")
+    require(config.get("model_id") == MODEL_CATALOG[request["profile_id"]]["model_id"], "model_identity_mismatch", "Editor/profile mismatch")
     started = time.monotonic()
     if config.get("worker"):
         from .worker import invoke_worker

@@ -247,11 +247,16 @@ def build_parser() -> argparse.ArgumentParser:
     add_v2_parser(groups)
     from .v3.cli import add_models_parser
     add_models_parser(groups)
+    from .search.cli import add_search_parser
+    add_search_parser(groups)
     return parser
 
 
 def dispatch(args):
     from hre.storage import read_json
+    if args.command=='search':
+        from .search.cli import dispatch_search
+        return dispatch_search(args)
     if args.command=='models':
         from .v3.cli import dispatch_models
         return dispatch_models(args)
