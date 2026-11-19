@@ -242,6 +242,16 @@ Pilot 十张只用于接口、失败分析、模板与阈值校准。最多一�
 
 按源案例为单位计算以下指标，保留全部计数。下表 OraclePass@4、条件选择成功率、best_set agreement 和 avoidable unresolved 均使用 §10 的 system_oracle_ids，即合同有效且人工 acceptable=pass 的集合。执行合同无效的产物不进入这些系统可交付指标的成功集合，其人工原始标签仍保留。
 
+对每次实际交付，另记录 final_delivery_assessment。保留执行合同状态和人工 acceptable 原始标签，按确认失败优先合并。确定合同无效或人工 acceptable=fail 时，结果为 fail。只有合同有效且人工 acceptable=pass 时，结果为 pass。其余组合为 unknown。两项同时失败也只计一次错交，另一项 unknown 不能遮蔽已确认失败。
+
+| 执行合同状态 | 人工 acceptable=pass | 人工 acceptable=fail | 人工 acceptable=unknown |
+|---|---|---|---|
+| 合同有效 | pass | fail | unknown |
+| 确定合同无效 | fail | fail | fail |
+| 合同不可确认 | unknown | fail | unknown |
+
+上述 pass、fail、unknown 按实际交付互斥计数，合计等于全部交付数。可判交付数为 fail+pass。交付比率的分母为零时，该比率未定义，报告 null 并注明 zero_denominator，不能写成 0%。
+
 | 指标 | 分子与分母 |
 |---|---|
 | OraclePass@4 | system_oracle_ids 非空的案例数，除以全部预注册案例。合同无效、缺失产物和人工 unknown 不当 pass |
@@ -249,17 +259,17 @@ Pilot 十张只用于接口、失败分析、模板与阈值校准。最多一�
 | 条件选择成功率 | 在 system_oracle_ids 非空的案例中，实际选择落入该集合的比例 |
 | best_set agreement | 在系统 best_set 非空的案例中，选择落入该组的比例，另报 null 与不可判定。best_set 仅在 system_oracle_ids 内独立重评 |
 | 交付率 | selected 或 baseline_retained 的案例数，除以全部案例 |
-| 可判错交率 | 实际交付中，确定合同无效或合同有效且人工 acceptable=fail 的数，除以可判交付数。可判交付包括确定合同无效或合同有效且人工 acceptable 非 unknown 者，同时报告该分母占全部交付的比例 |
-| 未知交付比例 | 合同不可确认，或合同有效但人工 acceptable=unknown 的已交付数，除以全部交付。确定合同无效的交付已计确认错交，其人工 unknown 原始标签另报 |
+| 可判错交率 | final_delivery_assessment=fail 的交付数，除以 fail+pass 的可判交付数，同时报告该分母占全部交付的比例 |
+| 未知交付比例 | 仅 final_delivery_assessment=unknown 的交付数，除以全部交付。原始合同或人工标签中的 unknown 另报，不覆盖最终 fail |
 | 内容错误率 | 必需内容可判定的已交付中存在确认内容错误的比例，同时报告可判内容覆盖率 |
 | avoidable unresolved | unresolved 且 system_oracle_ids 非空的案例数，报告占全部案例与 unresolved 的比例 |
 | 无效产物的人工 pass | 明确 contract_fail 但人工 acceptable=pass 的产物数及比例，分母为可获得人工标签的明确无效产物。另报合同不可确认、缺失或无法标注数，不纳入系统 Oracle |
 | 专项覆盖与失败 | 按适用源实例统计，每个小脸跳过、无关、缺失、失败和不可验证原因分别计数，另报必需源清单枚举缺口案例数 |
 | 成本 | 每案例、每候选与每专家的实际调用、token、耗时、费用与 unknown 占额 |
 
-同时给出全部交付中的确认错交数及比例和未知数，不能只在可判子集报一个低错误率。将未知全部视为失败的保守成功口径和仅可判子集口径并列，避免掩盖证据不足。
+同时给出全部交付中的确认错交数及比例和未知数。确认错交数统一为 final_delivery_assessment=fail 的交付数，其占全部交付的比例使用全部交付作分母。不能只在可判子集报一个低错误率。将最终 unknown 全部视为失败的保守成功口径和仅可判子集口径并列，避免掩盖证据不足。
 
-在 Pilot 或专用验证集上，用预先声明的不同判定阈值或政策生成 risk-coverage 曲线，观察交付率与错交风险的权衡。held-out 仅评冻结操作点，不反复调参。不同语义用途的政策不能混为同一风险阈值。
+在 Pilot 或专用验证集上，用预先声明的不同判定阈值或政策生成 risk-coverage 曲线，观察交付率与错交风险的权衡。曲线和操作点均沿用 final_delivery_assessment 的确认失败优先规则，并同时报告可判覆盖与最终 unknown，不能因合同不可确认漏掉人工已确认的 fail。held-out 仅评冻结操作点，不反复调参。不同语义用途的政策不能混为同一风险阈值。
 
 A/B 使用源案例配对分析，区间和重复采样按独立源案例或源场景聚类，不能把同图四候选、多个人脸或多次模型回答当独立样本。比例报告分母、区间方法和不确定性。零观察错误不等于真实错误率为零。少量交付会导致风险区间很宽，不能据此宣布可靠。未知、跳过、失败和拒答不得从全案例结果中消失。
 
@@ -282,6 +292,8 @@ A/B 使用源案例配对分析，区间和重复采样按独立源案例或源�
 | x4 的 257×193 输入合法 pad/crop | pad 为 264×200，native 为 1056×800，冻结 crop 后 delivered 为 1028×772，几何检查通过 |
 | 同输入直接生成 1028×772 的 native | 虽为原 LQ 四倍，但不符冻结执行 canvas，contract_fail，不 resize 补救 |
 | 只有合同无效产物人工 pass，其余有效产物均 fail | system_oracle_ids 为空，OraclePass@4 不成立，合法 unresolved 不计 avoidable unresolved |
+| 十次交付中九次合同有效且人工 pass，一次合同不可确认但人工确认严重伪影 fail | 最终 pass=9、fail=1、unknown=0，可判错交率为 1/10=10%，全部交付确认错交比例同为 1/10，不得记为 0/9 或未知交付 |
+| 全部已交付结果的最终状态均为 unknown | 可判错交率分母为零，报告 null 与 zero_denominator，不写 0% |
 | 无效产物比有效 pass 更好看 | 在全部合同有效且人工 pass 的集合内重评 best_set，不因无效产物赢得原始视觉偏好而惩罚合法选择 |
 | 只有软指标异常 | 记录风险和证据，不能自动 ineligible |
 | 必需 verified_content 只有无可见冲突 | undetermined，不能宣称 supported |
