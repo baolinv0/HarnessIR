@@ -1,0 +1,21 @@
+{
+  "call_number": 2,
+  "purpose": "round-2-review",
+  "tool": "collaboration.spawn_agent",
+  "backend": "codex",
+  "agent_id": "/root/quality_plan_review_r2",
+  "requested_reviewer_model": "gpt-6-astra",
+  "reported_reviewer_model": null,
+  "reviewer_model_source": "requested",
+  "effort": "xhigh",
+  "review_completed": true,
+  "review_scope_complete": true,
+  "review_independence": "same-family",
+  "acceptance_status": "provisional",
+  "score": 8,
+  "verdict": "almost",
+  "open_findings": 1,
+  "review_positive": false,
+  "reviewed_commit": "9fe0b4ee499b38c7f174cdb3e8e67f41965461bc",
+  "prompt": "你是全新独立review agent，未参与作者工作。用户要HarnessIR图像质量评估方案修改、独立review、build修复循环，停止标准为无任何已确认未解决文档设计缺陷。只读审查，不改文件不发布，不要求尚无的模型实测结果。实际审查commit=9fe0b4ee499b38c7f174cdb3e8e67f41965461bc，parent=7f26666287095e3278b1ee484f2cb35466d7d9b5，仓库baolinv0/HarnessIR。必须直接读取 docs/restoration_candidates_v1/QUALITY_EVALUATION_PLAN.md 全文、IMPLEMENTATION_PLAN_V1_1.md 与 CANDIDATE_GENERATION_DETAIL.md 相关合同和diff，不能信任作者说明。通过functions.exec中ALL_TOOLS发现github_fetch_file/fetch_commit，全文过长分段，不要因截断声称完整覆盖。r1 reviewer发现3问题，必须独立检查是否彻底修复及交叉影响：F1源枚举coverageunknown未传播required检查，导致未登记对象空集合通过。F2Oracle/best_set/avoidableunresolved纳入contract_fail视觉pass，需独立人工原始标签与contractvalid组合且不能用onlineeligible；不得只删除旧top，必须能选出有效次优。F3x4原生4W4H与pad-native4Wpad4Hpad冲突，需与delivered裁切区分，257x193 pad264x200 native1056x800 delivered1028x772。除了这3项，独立寻找新实际失败路径，重点匿名GT隔离/预算复核repair全variant次数、smallface skip及source detectionfail、身份与画质与真实性区分、QSiT overall默认隐藏、可选Dream/PAL非硬门禁、J0J1J2J3定义、E1E2统计与冻结。已同意用户要求不应推翻：J3异构专家主案，小脸不逐一专项IQA，只有确定性执行失败硬排除，软证据不能单项自动拒绝，同源四候选最多一次预规划争议复核。每finding给severity、精确节行、实际可构造反例、最小修复。不要制造措辞偏好问题，不把显式待Pilot校准当已确认文档错误。给Score1-10，Verdict ready/almost/not ready，Openfindings及r1三项逐项关闭情况，Memory update，review_completed、scope_complete、stop_condition_satisfied。若真的无问题清楚写0，文档可进入实施/Pilot准备，不能声称准确性已验证。审查是同OpenAI家族独立上下文，不能称跨模型家族验证。保留完整原文供归档。"
+}

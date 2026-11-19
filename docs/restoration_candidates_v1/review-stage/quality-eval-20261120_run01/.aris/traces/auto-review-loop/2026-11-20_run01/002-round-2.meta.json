@@ -1,0 +1,20 @@
+{
+  "call_number": 2,
+  "purpose": "round-2-review",
+  "tool": "collaboration.spawn_agent",
+  "backend": "codex",
+  "agent_id": "/root/quality_plan_review_r2",
+  "requested_reviewer_model": "gpt-6-astra",
+  "reported_reviewer_model": null,
+  "reviewer_model_source": "requested",
+  "effort": "xhigh",
+  "review_completed": true,
+  "review_scope_complete": true,
+  "review_independence": "same-family",
+  "acceptance_status": "provisional",
+  "score": 8,
+  "verdict": "almost",
+  "open_findings": 1,
+  "review_positive": false,
+  "reviewed_commit": "9fe0b4ee499b38c7f174cdb3e8e67f41965461bc"
+}

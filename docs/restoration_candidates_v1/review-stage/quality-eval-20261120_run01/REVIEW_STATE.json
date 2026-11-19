@@ -1,0 +1,119 @@
+{
+  "run_id": "run_20261120_quality_eval_01",
+  "status": "completed",
+  "review_independence": "same-family",
+  "acceptance_status": "provisional",
+  "local_write_error": "Access denied creating C:/Users/xx.xing/Desktop/HarnessMIR/review-stage",
+  "rounds": [
+    {
+      "round": 1,
+      "commit": "7f26666287095e3278b1ee484f2cb35466d7d9b5",
+      "reviewer": "/root/quality_plan_review_r1",
+      "requested_model": "gpt-6-astra",
+      "reported_model": null,
+      "effort": "xhigh",
+      "review_completed": true,
+      "scope_complete": true,
+      "score": 8,
+      "verdict": "almost",
+      "open_findings": 3,
+      "review_independence": "same-family",
+      "acceptance_status": "provisional",
+      "findings": [
+        {
+          "id": "F1",
+          "severity": "high",
+          "title": "源实例枚举覆盖未知未传递到资格",
+          "status": "closed_by_r2"
+        },
+        {
+          "id": "F2",
+          "severity": "medium",
+          "title": "离线Oracle可能纳入合同无效产物",
+          "status": "closed_by_r2"
+        },
+        {
+          "id": "F3",
+          "severity": "medium",
+          "title": "native与delivered几何合同不一致",
+          "status": "closed_by_r2"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "commit": "9fe0b4ee499b38c7f174cdb3e8e67f41965461bc",
+      "reviewer": "/root/quality_plan_review_r2",
+      "requested_model": "gpt-6-astra",
+      "reported_model": null,
+      "effort": "xhigh",
+      "review_completed": true,
+      "scope_complete": true,
+      "score": 8,
+      "verdict": "almost",
+      "open_findings": 1,
+      "findings": [
+        {
+          "id": "F4",
+          "severity": "medium",
+          "title": "执行合同未知遮蔽已确认人工fail",
+          "status": "closed_by_r3"
+        }
+      ],
+      "review_independence": "same-family",
+      "acceptance_status": "provisional"
+    },
+    {
+      "round": 3,
+      "commit": "f2bf9eba7e3a54fdae95f5c5f9f68b20f67ce677",
+      "reviewer": "/root/quality_plan_review_r3",
+      "requested_model": "gpt-6-astra",
+      "reported_model": null,
+      "effort": "xhigh",
+      "review_completed": true,
+      "scope_complete": true,
+      "score": 9,
+      "verdict": "ready",
+      "open_findings": 0,
+      "review_independence": "same-family",
+      "acceptance_status": "provisional"
+    }
+  ],
+  "initial_findings": [
+    "专业指标不能单独证明真实性或自动淘汰",
+    "小人脸跳过与关键身份不可验证分开",
+    "必需证据覆盖与完整但不可验证分开",
+    "匿名终审需隔离overall与策略信息",
+    "独立人工标签与unknown分母明确",
+    "固定预算区分专家forward、多包与终审修复",
+    "10/24仅早期验证，报告风险与交付覆盖",
+    "新J3方案必须和旧J1文档明确优先级"
+  ],
+  "snapshot_r1": "7f26666287095e3278b1ee484f2cb35466d7d9b5",
+  "comment_audit": {
+    "status": "complete",
+    "findings": 0,
+    "response": "Audit complete for commit 7f26666287095e3278b1ee484f2cb35466d7d9b5 against e709f7158d180b1cc37f39cf7c7f39e75eab8ac7. Actual files/diff read. Touched files none; deletion count 0; MUST KILL none; REVIEW keeps none. Only added fenced examples are two Mermaid diagrams without comments, suppressions or commented-out code."
+  },
+  "snapshot_r2": "9fe0b4ee499b38c7f174cdb3e8e67f41965461bc",
+  "tree_r2": "3f1ff9b5623f0cf55131b3b7af637748074d5ce4",
+  "rendering": {
+    "mermaid_version": "11.4.1",
+    "browser": "Microsoft Edge via Playwright",
+    "diagram_count": 2,
+    "parse_and_render": "passed",
+    "visual_inspection": "passed",
+    "svg_native_text": true,
+    "local_files_written": false
+  },
+  "snapshot_r3": "f2bf9eba7e3a54fdae95f5c5f9f68b20f67ce677",
+  "tree_r3": "1ab1e73fc30d993665e43df9b01e6bef127fcc3d",
+  "stop_condition_satisfied": true,
+  "known_open_design_findings": 0,
+  "pending_experiments": [
+    "Implementation and Pilot calibration",
+    "Held-out validation",
+    "Model reliability and restoration gains"
+  ],
+  "completed_at": "2026-11-19 23:37:31 UTC"
+}

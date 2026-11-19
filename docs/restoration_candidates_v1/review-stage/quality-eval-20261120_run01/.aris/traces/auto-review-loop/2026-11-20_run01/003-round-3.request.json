@@ -1,0 +1,21 @@
+{
+  "call_number": 3,
+  "purpose": "round-3-review",
+  "tool": "collaboration.spawn_agent",
+  "backend": "codex",
+  "agent_id": "/root/quality_plan_review_r3",
+  "requested_reviewer_model": "gpt-6-astra",
+  "reported_reviewer_model": null,
+  "reviewer_model_source": "requested",
+  "effort": "xhigh",
+  "review_completed": true,
+  "review_scope_complete": true,
+  "review_independence": "same-family",
+  "acceptance_status": "provisional",
+  "score": 9,
+  "verdict": "ready",
+  "open_findings": 0,
+  "review_positive": true,
+  "reviewed_commit": "f2bf9eba7e3a54fdae95f5c5f9f68b20f67ce677",
+  "prompt": "你是新的独立review agent，不是作者。用户要求HarnessIR质量评估方案经review/build修订循环，直到无已确认未解决的设计问题。只读审查真实文档，不修改发布，不要求不存在的实测结果。审查commit=f2bf9eba7e3a54fdae95f5c5f9f68b20f67ce677，parent=9fe0b4ee499b38c7f174cdb3e8e67f41965461bc，仓库baolinv0/HarnessIR。直接完整分段阅读docs/restoration_candidates_v1/QUALITY_EVALUATION_PLAN.md，读取diff和IMPLEMENTATION_PLAN_V1_1.md/CANDIDATE_GENERATION_DETAIL.md相关执行/实验合同。工具通过ALL_TOOLS发现github_fetch_file/fetch_commit。r1发现F1源清单枚举unknown漏传播必需check、F2Oracle/bestset错误纳入contractinvalid人工pass、F3x4native与padding-delivered不一致，r2已复核关闭。r2新增F4：contractunknown + humanacceptablefail的已交付图被误计unknown，漏确认错交。r3应有fail优先完整3x3映射：fail if contractinvalid OR humanfail，pass if contractvalid AND humanpass，unknown其余；rate fail/(fail+pass)，0分母null，unknown/全部交付；9pass+1contractunknown但humanfail=>1/10错。请核实F4真正关闭、分母和其它指标无交叉回归。还应独立读全篇寻找新实际失败路径，特别状态、证据可采纳、预算多包/一次争议/repair、tinyface skip与关键身份unknown、QSiT总分默认隐藏、J3异构主案与J0J1J2消融、E1E2冻结、GT隔离/盲标/独立oracle/样本单位等。不要推翻已同意用户约束：不逐一检测所有极小脸，软专家不单项硬淘汰，同原LQ四候选，Dream/PAL可选。不要制造偏好性措辞问题，不把显式待Pilot参数当已确认文档bug；若确有问题给severity、精确节行、失败反例、最小修复。给Score1-10，Verdict ready/almost/not ready，Open findings数量及明细，F1-F4关闭状态，Memoryupdate，review_completed/scope_complete/stop_condition_satisfied。真正0时明确写无已确认未解决设计缺陷，可进入实施/Pilot准备；不声称模型准确性或恢复收益已验证。这是同OpenAI家族的独立上下文审查，非跨家族验证。保留完整报告原文供归档。"
+}

@@ -1,0 +1,30 @@
+flowchart TD
+  A["单个执行合同有效候选"] --> B["读取必需 SourceInventoryCheck 与 CriticalAttribute<br/>作用范围、验证要求、可采纳来源证据"]
+  B --> C["记录 coverage：complete、missing、failed<br/>源清单另有 enumeration_state<br/>属性另有内容状态，不让零实例自动通过"]
+  C --> D{"异常只有软指标或专家风险<br/>而无可复核冲突？"}
+  D -->|是| E["记录风险，不能直接拒绝<br/>检查对应图像与来源区域"]
+  D -->|否| F["核对具体缺陷及引用证据"]
+  E --> F
+  F --> G{"有重要争议且复核额度可用？"}
+  G -->|是| H["最多一次预注册复核<br/>未知不能由多数投票变真"]
+  G -->|否| I{"有确认关键冲突、严重伪影<br/>或恢复明显不足？"}
+  H --> I
+  I -->|是| J["ineligible，给出触发条款与证据"]
+  I -->|否| K{"必需源清单枚举不可确认<br/>或任一必需检查 missing、failed<br/>或关键争议未解决？"}
+  K -->|是| L["undetermined，记录缺口"]
+  K -->|否| M{"必需属性要求 verified_content？"}
+  M -->|是| N{"每个必需 verified_content<br/>都有可采纳来源证据支持？"}
+  N -->|否| L
+  N -->|是| O["检查其余必需 visible_consistency"]
+  M -->|否| O
+  O --> P{"核心可见结构已评完且满足要求<br/>未知仅为协议允许的自然微细节？"}
+  P -->|否| L
+  P -->|是| Q["eligible，披露可允许的未验证细节"]
+  R["预定 tinyface 跳过或可选专家失败<br/>不能自动当 pass，也不自动阻塞"] -.-> K
+  S["极小但明确要求精确身份<br/>仍无可采纳证据时不可验证"] -.-> N
+  J --> T["汇总全部候选资格"]
+  L --> T
+  Q --> T
+  T --> U{"合格集合非空？"}
+  U -->|否| V["unresolved<br/>best_candidate 与 selected_output 为 null"]
+  U -->|是| W["仅合格候选 listwise<br/>无法完成排名且无复核额度则 unresolved"]

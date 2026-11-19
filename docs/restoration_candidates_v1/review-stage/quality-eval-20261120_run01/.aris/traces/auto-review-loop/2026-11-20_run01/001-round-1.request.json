@@ -1,0 +1,21 @@
+{
+  "call_number": 1,
+  "purpose": "round-1-review",
+  "tool": "collaboration.spawn_agent",
+  "backend": "codex",
+  "agent_id": "/root/quality_plan_review_r1",
+  "requested_reviewer_model": "gpt-6-astra",
+  "reported_reviewer_model": null,
+  "reviewer_model_source": "requested",
+  "effort": "xhigh",
+  "review_completed": true,
+  "review_scope_complete": true,
+  "review_independence": "same-family",
+  "acceptance_status": "provisional",
+  "score": 8,
+  "verdict": "almost",
+  "open_findings": 3,
+  "review_positive": false,
+  "reviewed_commit": "7f26666287095e3278b1ee484f2cb35466d7d9b5",
+  "prompt": "你是独立 review agent，不是作者。用户要求审查 HarnessIR 图像质量评估方案，build agent据意见修订，直到无已知方案缺陷。只审查文档设计，不运行GPU，不要求凭空实验结果，不改文件不发布。请从真实GitHub文件直接阅读，禁止只看作者摘要。仓库 baolinv0/HarnessIR，审查commit=7f26666287095e3278b1ee484f2cb35466d7d9b5，父=e709f7158d180b1cc37f39cf7c7f39e75eab8ac7。路径 docs/restoration_candidates_v1/QUALITY_EVALUATION_PLAN.md（完整精读）、IMPLEMENTATION_PLAN_V1_1.md、CANDIDATE_GENERATION_DETAIL.md（重点改动及与新文冲突）。通过 functions.exec 内ALL_TOOLS发现 github_fetch_file/fetch_commit；可分段读取避免截断。重点独立寻找可构造实际失败的设计矛盾：证据真实性可采纳、QSiT维度不虚构、多人人脸匹配/tinyface跳过、身份与表情区分、候选失效与测量失效、required覆盖/unknown、资格与终审、预算与多包/修复/网络unknown、匿名与GT隔离、独立标注和实验分母/统计/E1E2、公平比较、旧文优先级。用户已确定小脸不用逐一faceIQA，overall分数默认不喂终审，异构专家J3主案、DreamSim/PAL可选、无软指标单项硬淘汰、同一原LQ四候选、最多一次预规划争议复核。不要建议推翻这些，若有漏洞提出最小修复。规则：每个finding给 severity、精确文档节/行、具体失败示例、最小修复。区分真实缺陷vs显式待实验验证，不因没结果给假阻塞；不要用措辞偏好制造问题。给 Score1-10，Verdict ready/almost/not ready，Open findings 明细，Memory update，明确review_completed及scope_complete。停止条件比skill默认更严：无任何已确认未解决设计缺陷，单写almost不够。即便通过也仅文档设计可进入Pilot，不等于可靠性验证。必须在回复中保留完整审查原文供父agent归档。"
+}
