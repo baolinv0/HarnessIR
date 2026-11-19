@@ -1,6 +1,6 @@
 # HarnessIR 多候选生成与证据驱动 Judge：工程实施方案 v1.1
 
-> 2026-11-19 现行质量评估规格为 [QUALITY_EVALUATION_PLAN.md](./QUALITY_EVALUATION_PLAN.md)。J3 异构专业证据加 VLM 终审是研究主方案。本文 J1 默认、J2 专家、旧评价预算与旧实验评价条款仅保留为历史背景，冲突时以新规格为准。候选生成和执行合同仍有效。设计合同不是已实现或实测结论。
+> 2026-11-20 现行质量评估规格为 [QUALITY_EVALUATION_PLAN.md](./QUALITY_EVALUATION_PLAN.md)。J3 异构专业证据加 VLM 终审是研究主方案。本文 J1 默认、J2 专家、旧评价预算与旧实验评价条款仅保留为历史背景，冲突时以新规格为准。候选生成和执行合同仍有效。设计合同不是已实现或实测结论。
 
 > 日期：2026-11-14  
 > 评审修订：2026-11-17。落实关键属性资格判定、ReviewPlan 与预算、完整请求冻结、独立 x1/x4 几何、Judge 预算对照和 E2 预注册。文档路径与 `hre_candidates_v1` 保持不变，新增合同均属于待实现规格。  
@@ -91,8 +91,9 @@ flowchart TD
 | `RuntimeConfig` | `harness_source_root/sha,diagnoser/composer/planner/judge endpoints,qwen profile/model revision,steps,cfg,dtype,device,geometry,PE=off,seeds,budgets,output_root` | 实际环境/模型权重缺失则 preflight=blocked；凭据只从环境变量读取 |
 | `EvaluationContract` | `task_goals,critical_attributes,content_policy,acceptance_rules,unverifiable_policy,tie_order` | 来源于用户任务与任务类型；不能从生成 Prompt 反推或事后宽松修改 |
 | `CriticalAttribute` | `attribute_id,region_selector,attribute,required_for_acceptance,verification_requirement` | F0 冻结语义；`verification_requirement∈{visible_consistency,verified_content}`；F1 解析实例 ROI，不得删除或放宽必需属性 |
+| `SourceInventoryCheck` | `check_id,scope_selector,required_for_acceptance,enumeration_state,coverage,evidence_refs,unresolved_regions` | 每个必需 selector 保留清单级检查并加入 required_checks，即使零实例；coverage 为 complete/missing/failed，enumeration_state 为 complete/unverifiable；必需枚举缺口传播为 undetermined，遵从现行质量规格 §4 |
 | `AttributeAssessment` | `candidate_id,attribute_id,region_id,content_state,coverage,evidence_refs,limitations` | 逐实例输出；未返回的必需项为 missing，不能从候选总评推断通过 |
-| `ReviewPlan` | `variant,pool_hash,roi_registry_hash,required_checks,packages,calls,budget,aggregation_rule,freeze_hash` | 首次 Judge 调用前冻结；全部必需检查均有负责角色与包；遵守 §8.6 |
+| `ReviewPlan` | `variant,pool_hash,roi_registry_hash,required_checks,packages,calls,budget,aggregation_rule,freeze_hash` | 首次评估调用前冻结；required_checks 包含源清单级与实例属性检查；职责、分包及预算以现行质量规格 §9 为准 |
 | `FrozenExecutionRequest` | `candidate_id,request,condition_text_sha256,canonical_source_sha256,prepared_source_sha256,geometry_sha256,editor_config_sha256,execution_manifest_sha256` | 完整 seed、模型及执行配置在提交前独立校验；遵守 §6.3 |
 | `BaselineContext` | `source_hash,original_diagnosis,tool_evidence,visual_pack,P0,C0,receipts` | P0 原文、生成器真实 condition、C0 原生/交付产物均归档 |
 | `Issue` | `issue_id,region_ids,attribute,observation,evidence_refs,alternative_explanation,desired_change,protected_attributes,support` | `support∈{supported,ambiguous,unavailable}`；不能用 VLM 自报概率当校准置信度 |
@@ -102,7 +103,7 @@ flowchart TD
 | `EvidenceBundle` | `roi_registry,anonymous_image_refs,measurements,measurement_status,bindings` | 匿名候选图片；禁止泄露策略名、Prompt、GT |
 | `ExpertReview` | `role,applicability,assessments,preference_groups,conflicts,evidence_refs,limitations` | 有证据定位与未确定状态；允许同分组并列 |
 | `SelectionResult` | `contract_valid_ids,eligible_ids,eligibility_decisions,coverage,review_plan_sha256,preference_groups,best_candidate,best_available_id,status,content_verification,reason` | best 必在 eligible 首组且必需检查完整；eligible 为空则 best=null |
-| `OracleLabels` | `candidate_hash,acceptable,best_set,GT_metrics,content_error,annotator_disagreement` | 仅 offline 使用，在线模块不得导入 |
+| `OracleLabels` | `candidate_hash,acceptable,execution_contract_status,system_oracle_ids,best_set,GT_metrics,content_error,annotator_disagreement` | 仅 offline 使用；保留人工原始标签；系统 Oracle 与 best_set 限于合同有效且人工 pass 的候选，不能按在线 eligible 过滤，遵从现行质量规格 §10–11 |
 
 `source_hash` 与 `source_sha256` 在候选合同中均指规范化 LQ 的 `canonical_source_sha256`。实际 padding 后输入另用 `prepared_source_sha256`，两者按 §6.2 的来源链校验，不混用。
 

@@ -1,6 +1,6 @@
 # HarnessIR 图像质量评估方案
 
-版本日期 2026-11-19。状态为待实现、待校准、待实验验证的设计合同。
+版本日期 2026-11-20。状态为待实现、待校准、待实验验证的设计合同。
 
 本文件是质量评估、Judge 选择与相关实验的现行权威规格，覆盖 IMPLEMENTATION_PLAN_V1_1.md 和 CANDIDATE_GENERATION_DETAIL.md 中同主题的旧条款。两份旧文保留候选生成、执行桥和历史设计背景，不能用旧 J1 默认配置替代本文件的 J3。
 
@@ -69,13 +69,23 @@ F1 在 C0 后、生成其他候选前冻结具体 Issue、源坐标 ROI、人物
 
 每次 submitted 前比较 FrozenExecutionRequest，包含 seed、完整实际 condition 文本、展开默认值后的有效执行配置、来源与几何。执行后才有的 receipt 不能代替执行前冻结。
 
-x1 和 x4 使用独立 candidate bridge。x1 的输出原生尺寸符合源尺寸合同，x4 为原 LQ 的 4W×4H，不能先 resize 错误输出使其通过。原始文件、EXIF 归一化后的 LQ、padding 后执行输入、原生输出和交付图分别记录身份与变换。prepared_source 与 canonical_source 不要求相等，但变换必须冻结、可验证。旧 square-1024、强制回原尺寸的 delivery 路径不能直接套用 x4。
+x1 和 x4 使用独立 candidate bridge。设 EXIF 归一化后的原 LQ 为 W×H。x1 将输入向右、下 pad 到 32 的倍数，native 必须为 Wpad×Hpad，经冻结 crop 后 delivered 必须为 W×H。x4 将输入向右、下 pad 到 8 的倍数，native 必须为 4Wpad×4Hpad，经冻结 crop 后 delivered 必须为 4W×4H。native 严格匹配冻结的执行 canvas，delivered 严格匹配对应的交付尺寸，两项分别校验。合法 crop 仅去除冻结的 padding，不是 resize 补救。native 尺寸错误时，不得靠 resize 或另设 crop 使其通过。
+
+例如原 LQ 为 257×193，x4 pad 到 264×200，合法 native 为 1056×800，按冻结坐标 crop 后 delivered 为 1028×772。直接生成 1028×772 的 native 不符合该执行 canvas，尽管尺寸恰为原 LQ 四倍，也必须 contract_fail。
+
+原始文件、规范化 LQ、padding 后执行输入、native 和 delivered 分别记录身份与变换。prepared_source 与 canonical_source 不要求相等，但变换必须冻结、可验证。几何与 IMPLEMENTATION_PLAN_V1_1.md §6.2 及 CANDIDATE_GENERATION_DETAIL.md §7.2 一致。旧 square-1024、强制回原尺寸的 delivery 路径不能直接套用 x4。
 
 ## 4. 源实例清单与评估范围
 
-候选生成前，以原 LQ 建立源实例清单。使用冻结检测器加整图观察补充规则，必要的 Pilot 人工校正只能看原 LQ。不能因检测器漏检，把明显重要的人物或文字记为 not_applicable。仍无法确认覆盖时记录 coverage unknown，不声称完整。此规则不要求逐个分析所有微小人脸。
+候选生成前，以原 LQ 建立源实例清单。使用冻结检测器加整图观察补充规则，必要的 Pilot 人工校正只能看原 LQ。不能因检测器漏检，把明显重要的人物或文字记为 not_applicable。仍无法确认必需范围枚举完整时，按下述源清单检查记录 unverifiable，不声称完整。此规则不要求逐个分析所有微小人脸。
 
 每个实例记录 source_instance_id、原 LQ 坐标、尺寸、任务重要性、可分析性、适用检查和理由。F1 只可依 F0 规则实例化清单与源坐标 ROI，不得按候选恢复成败增减必需对象。新出现、消失或明显移位的人物与文字由整图和上下文检查处理。
+
+每个必需 region_selector 另有源清单级 SourceInventoryCheck。它独立于已发现实例，包含 check_id、scope_selector、required_for_acceptance、enumeration_state、coverage、evidence_refs 和 unresolved_regions。scope_selector 说明要求枚举的对象类别与源图范围；enumeration_state 为 complete 或 unverifiable，表示能否确认该范围已依冻结规则枚举完整；coverage 为 complete、missing 或 failed，表示检查本身是否完成。已完成检查却仍不能确认枚举时，记录 coverage=complete 且 enumeration_state=unverifiable。无法定位的缺口可引用整图范围和原因，不得伪造实例框。
+
+F1 将这些检查的 check_id 显式加入 ReviewPlan.required_checks，即使 selector 没有匹配到任何实例也不能省略。必需源清单检查 missing、failed，或 enumeration_state=unverifiable，均为所有受该 selector 约束候选的覆盖缺口。已登记对象全部通过不能抵消该缺口。没有确认拒绝理由时，这些候选为 undetermined。只有源图证据支持该范围已完整检查且确实没有适用对象时，才可记录零实例并结束该范围的实例检查。
+
+源清单的作用范围按 F0 的重要性、尺寸和用途规则确定。预先豁免的极小非关键人脸和可选对象不产生必需枚举缺口；若用户明确要求极小人脸身份准确，则仍保留对应必需属性的 unverifiable，不以专项跳过解除要求。
 
 人物专项范围按原 LQ 中的像素尺寸、可分析性与任务重要性冻结。候选放大到 x4 不会让原本极小的人脸自动具备可信身份信息。具体尺寸阈值和可分析性规则由 Pilot 校准，未定时不以旧 detector 最小尺寸冒充质量阈值。
 
@@ -134,7 +144,7 @@ verification_requirement 分两种。
 | conflict | 有可定位、可复核的图像或来源内容证据证明冲突 |
 | unverifiable | 已检查但现有证据不能验证或排除关键问题 |
 
-coverage 单独记录 complete、missing、failed。complete 与 unverifiable 可以同时出现。缺项默认为 missing，不能默认为 supported。测量另外记录 measured、missing、failed、stale、not_applicable、skipped_small_face 或 not_run，值不存在不能写成零分。
+逐属性 coverage 单独记录 complete、missing、failed。complete 与内容状态 unverifiable 可以同时出现。源清单检查使用相同 coverage 枚举，并另存 §4 的 enumeration_state，不能把清单级枚举未知只写在备注中。缺项默认为 missing，不能默认为 supported。测量另外记录 measured、missing、failed、stale、not_applicable、skipped_small_face 或 not_run，值不存在不能写成零分。
 
 Q-SiT 的答案、识别相似度、OCR confidence、DreamSim 或 PAL 输出只能提出观察和风险。VLM 必须引用实际来源图像、对应区域及可采纳内容，不能用“模型非常确定”把 unverifiable 升级为 supported。即使两个模型同意，也不构成两个独立真值来源。
 
@@ -149,8 +159,8 @@ Q-SiT 的答案、识别相似度、OCR confidence、DreamSim 或 PAL 输出只�
 | 条件 | 结果 |
 |---|---|
 | 有确认的关键冲突，或可定位严重伪影，或按预注册用途恢复明显不足 | ineligible，引用证据与触发条款 |
-| 尚无确认拒绝理由，但必需属性缺评、失败、真实性无法验证或重要争议未解 | undetermined，说明缺口 |
-| 所有必需检查完成，满足各属性验证要求，且无确认拒绝理由 | eligible，披露未验证的可允许细节 |
+| 尚无确认拒绝理由，但必需源清单检查缺失、失败或枚举不可确认，或必需属性缺评、失败、真实性无法验证、重要争议未解 | undetermined，说明缺口 |
+| 所有必需源清单检查完成且枚举完整，所有必需属性检查完成并满足验证要求，且无确认拒绝理由 | eligible，披露未验证的可允许细节 |
 
 对 visible_consistency，complete 且 no_visible_conflict 可以满足预定要求。未知仅涉及协议允许的自然微细节时，不因此否定一般照片恢复。不能把核心结构仍无法判断也归入这项豁免。对 verified_content，只有可采纳证据支持的 supported 才满足。可选专家失败或预定 tinyface 跳过不自动导致 undetermined。
 
@@ -166,7 +176,7 @@ Q-SiT 的答案、识别相似度、OCR confidence、DreamSim 或 PAL 输出只�
 
 ## 9. ReviewPlan、预算与恢复
 
-ReviewPlan 在第一次评估推理前冻结具体 pool、ROI、检查职责、每包覆盖、模型与模板、匿名顺序、调用预算、聚合规则和结果绑定。F0 冻结构造规则，F1 实例化，不能弱化必需覆盖。
+ReviewPlan 在第一次评估推理前冻结具体 pool、ROI、检查职责、每包覆盖、模型与模板、匿名顺序、调用预算、聚合规则和结果绑定。required_checks 同时包含源清单级检查与已发现实例的属性检查。F0 冻结构造规则，F1 实例化，不能弱化必需覆盖。
 
 先计算全部必需包与聚合所需容量。预算或图像上下文不足时，零次部分评估后直接 unresolved，原因 review_budget_insufficient。不得先评容易的区域，再忽略其他必需项交付。此零调用指本 ReviewPlan 的评估推理，不否认此前已有诊断或生成成本。
 
@@ -201,7 +211,9 @@ Q-SiT 各问题和各 crop、OCR、人脸模型、可选 DreamSim 与其他专�
 - perceptual_acceptability 为 pass、fail 或 unknown。
 - required_content_status 为 pass、fail 或 unknown，并记录字符、身份、表情与结构类别以及证据范围。
 - acceptable 依据预注册用途合并上述标签。photo_restoration 可容许协议认可的未知微细节，information_critical 的必需内容 unknown 不能当作 pass。
-- 所有单张标签完成后，评价者再在人工独立判定为 pass 的候选中给出 best_set，允许并列。没有 pass 时 best_set 为空。
+- acceptable 保留为人工标签，不因执行合同状态覆盖其原值。无效产物仍可有感知或内容 pass，用于单独诊断。
+- 所有单张标签及分歧裁决完成后，离线代码只用确定性执行合同状态与人工标签构造 system_oracle_ids，集合成员必须同时 contract_valid=true 且 acceptable=pass。合同状态来自独立复核的冻结请求、原生几何和执行记录；明确不符记 contract_fail，证据不足则保留合同不可确认，不混作确认失败。禁止用在线 eligible 或 VLM 判断过滤。
+- 再向仍保持盲态的评价者展示 system_oracle_ids 中的全部候选，由其重新比较并给出系统 best_set，允许并列。候选子集不显示合同原因或在线结果。集合为空时 best_set 为空。不得只从合同过滤前的单一最佳组删除无效项，因为该组之外仍可能存在有效的最佳候选。
 
 GT 的像素差异不自动代表内容错误。参考本身不清晰、不匹配或信息不足时保留 unknown。无 GT 时不能强迫评价者猜真实文字或身份。只有一名评价者时显式标注，不能称为独立双人共识。
 
@@ -228,20 +240,21 @@ E2 在读取 E1 输出、Judge 与人工标签前，按原 LQ 场景、人物与
 
 Pilot 十张只用于接口、失败分析、模板与阈值校准。最多一次协议修订后冻结，再跑按源场景隔离的 held-out 二十四张。两者是早期验证，不足以证明生产可靠性。固定候选池调参也不得泄漏 held-out 结论。
 
-按源案例为单位计算以下指标，保留全部计数。
+按源案例为单位计算以下指标，保留全部计数。下表 OraclePass@4、条件选择成功率、best_set agreement 和 avoidable unresolved 均使用 §10 的 system_oracle_ids，即合同有效且人工 acceptable=pass 的集合。执行合同无效的产物不进入这些系统可交付指标的成功集合，其人工原始标签仍保留。
 
 | 指标 | 分子与分母 |
 |---|---|
-| OraclePass@4 | 四个候选中人工 acceptable 至少一个 pass 的案例数，除以全部预注册案例。unknown 不当 pass |
-| SelectedPass | 实际选中候选人工 acceptable=pass 的案例数，除以全部案例。null、失败和 unknown 不计成功 |
-| 条件选择成功率 | 在人工 OraclePass@4 成立的案例中选到人工 pass 的比例 |
-| best_set agreement | 在人工 best_set 非空的案例中，选择落入 best_set 的比例，另报 null 与不可判定 |
+| OraclePass@4 | system_oracle_ids 非空的案例数，除以全部预注册案例。合同无效、缺失产物和人工 unknown 不当 pass |
+| SelectedPass | 实际选中候选属于 system_oracle_ids 的案例数，除以全部案例。null、合同无效、失败和人工 unknown 不计成功 |
+| 条件选择成功率 | 在 system_oracle_ids 非空的案例中，实际选择落入该集合的比例 |
+| best_set agreement | 在系统 best_set 非空的案例中，选择落入该组的比例，另报 null 与不可判定。best_set 仅在 system_oracle_ids 内独立重评 |
 | 交付率 | selected 或 baseline_retained 的案例数，除以全部案例 |
-| 可判错交率 | 实际交付且人工可判定的交付中，acceptable=fail 的比例，同时报告可判定分母占全部交付的比例 |
-| 未知交付比例 | 人工 acceptable=unknown 的已交付数，除以全部交付 |
+| 可判错交率 | 实际交付中，确定合同无效或合同有效且人工 acceptable=fail 的数，除以可判交付数。可判交付包括确定合同无效或合同有效且人工 acceptable 非 unknown 者，同时报告该分母占全部交付的比例 |
+| 未知交付比例 | 合同不可确认，或合同有效但人工 acceptable=unknown 的已交付数，除以全部交付。确定合同无效的交付已计确认错交，其人工 unknown 原始标签另报 |
 | 内容错误率 | 必需内容可判定的已交付中存在确认内容错误的比例，同时报告可判内容覆盖率 |
-| avoidable unresolved | unresolved 且人工候选池至少一个 pass 的案例数，报告占全部案例与 unresolved 的比例 |
-| 专项覆盖与失败 | 按适用源实例统计，每个小脸跳过、无关、缺失、失败和不可验证原因分别计数 |
+| avoidable unresolved | unresolved 且 system_oracle_ids 非空的案例数，报告占全部案例与 unresolved 的比例 |
+| 无效产物的人工 pass | 明确 contract_fail 但人工 acceptable=pass 的产物数及比例，分母为可获得人工标签的明确无效产物。另报合同不可确认、缺失或无法标注数，不纳入系统 Oracle |
+| 专项覆盖与失败 | 按适用源实例统计，每个小脸跳过、无关、缺失、失败和不可验证原因分别计数，另报必需源清单枚举缺口案例数 |
 | 成本 | 每案例、每候选与每专家的实际调用、token、耗时、费用与 unknown 占额 |
 
 同时给出全部交付中的确认错交数及比例和未知数，不能只在可判子集报一个低错误率。将未知全部视为失败的保守成功口径和仅可判子集口径并列，避免掩盖证据不足。
@@ -263,7 +276,13 @@ A/B 使用源案例配对分析，区间和重复采样按独立源案例或源�
 | 极小非关键人脸 | skipped_small_face，不触发局部专项、不算通过，整图继续 |
 | 极小关键身份 | 不强制无意义 IQA，但所需身份不可证时 undetermined |
 | 源重要人脸已入专项，候选提取失败 | failed 或 missing，不能改记 skipped_small_face |
-| 源检测漏检重要人物或文字 | 源整图补充或 coverage unknown，不能自动 not_applicable |
+| 源检测漏检重要人物或文字 | 保留必需 SourceInventoryCheck，无法确认枚举时 complete 加 unverifiable，候选无确认拒绝理由时 undetermined，不能因零实例自动 not_applicable |
+| 已登记号码均通过，但另一必需范围无法确认枚举 | 源清单覆盖缺口仍阻塞受影响候选，不被已登记对象的 supported 抵消 |
+| 极小非关键人脸已按 F0 豁免 | 不产生必需枚举缺口，保持 skipped_small_face 与整图职责 |
+| x4 的 257×193 输入合法 pad/crop | pad 为 264×200，native 为 1056×800，冻结 crop 后 delivered 为 1028×772，几何检查通过 |
+| 同输入直接生成 1028×772 的 native | 虽为原 LQ 四倍，但不符冻结执行 canvas，contract_fail，不 resize 补救 |
+| 只有合同无效产物人工 pass，其余有效产物均 fail | system_oracle_ids 为空，OraclePass@4 不成立，合法 unresolved 不计 avoidable unresolved |
+| 无效产物比有效 pass 更好看 | 在全部合同有效且人工 pass 的集合内重评 best_set，不因无效产物赢得原始视觉偏好而惩罚合法选择 |
 | 只有软指标异常 | 记录风险和证据，不能自动 ineligible |
 | 必需 verified_content 只有无可见冲突 | undetermined，不能宣称 supported |
 | 可选专家失败 | 保留限制，不自动拒答 |
@@ -298,29 +317,29 @@ A/B 使用源案例配对分析，区间和重复采样按独立源案例或源�
 ```mermaid
 flowchart TD
   A["原 LQ、用途和关键属性"] --> B["F0 冻结规则、模型、seed、证据门槛和预算"]
-  B --> C["源实例清单：检测加整图补充<br/>小脸按原 LQ 规则标跳过"]
+  B --> C["源实例清单：检测加整图补充<br/>逐必需范围保留枚举状态与覆盖检查<br/>小脸按原 LQ 规则标跳过"]
   C --> D["Diagnosis、Tools、Composition<br/>提交前冻结 P0 和完整生成请求"]
   D --> E["同一原 LQ 生成 C0"]
   E --> F{"C0 执行合同有效？"}
   F -->|否| X["停止反馈规划，记录失败及成本<br/>纳入全案例分母"]
   F -->|是| G["F1 冻结问题、ROI、替代策略与 Prompt"]
   G --> H["同一原 LQ 独立生成 CF、CT、CFT<br/>单 GPU 串行，不加第五张"]
-  H --> I["Code 确定性检查<br/>无效来源或原生尺寸不符者排除"]
+  H --> I["Code 确定性检查<br/>native 匹配冻结 padded canvas<br/>delivered 匹配冻结 crop 后尺寸"]
   I --> J{"有有效候选且 ReviewPlan<br/>容量和预算覆盖全部必需检查？"}
   J -->|否| U["unresolved，交付为 null<br/>记录空池或预算不足"]
-  J -->|是| K["冻结匿名池、检查包、职责与聚合<br/>固定源坐标、显示尺度和成本上限"]
+  J -->|是| K["冻结匿名池、检查包、职责与聚合<br/>required_checks 含源清单及实例属性<br/>固定源坐标、显示尺度和成本上限"]
   K --> L["Q-SiT 局部画质解释<br/>适用重要人物的固定身份比较与上下文<br/>OCR 和整图检查，可选专家"]
   L --> M["保留原始证据、适用限制与失败状态<br/>Q-SiT 总分默认不供终审"]
   M --> N["匿名 VLM 主审<br/>逐属性区分内容状态与 coverage"]
   N --> O{"重要争议且预留复核可用？"}
   O -->|是| P["最多一次复核，换匿名顺序<br/>不生成新图，不引入 GT 或真值"]
-  O -->|否| Q["按证据权限判定<br/>eligible、ineligible、undetermined"]
+  O -->|否| Q["按证据权限判定三态资格<br/>必需枚举未知按覆盖缺口处理<br/>不能凭已登记对象全通过交付"]
   P --> Q
   Q --> R{"有 eligible 且可完成排名？"}
   R -->|否| U
   R -->|是| S["仅合格集合内 listwise<br/>第一并列组含 C0 则保留，否则固定 tie_order"]
   S --> T["交付、未验证内容说明、审计和成本"]
-  T --> V["独立盲评与离线 GT 核对<br/>先逐张 pass、fail、unknown，再 best_set"]
+  T --> V["独立盲评与离线 GT 核对<br/>逐张人工标签完成后构造 system_oracle_ids<br/>仅合同有效且人工 pass，再盲评系统 best_set"]
   U --> V
   X --> V
   V --> W["全案例成功、覆盖与拒答、错交及未知<br/>源案例配对统计、成本和不确定性"]
@@ -330,8 +349,8 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  A["单个执行合同有效候选"] --> B["读取每项 CriticalAttribute<br/>required、验证要求、可采纳来源证据"]
-  B --> C["记录 coverage：complete、missing、failed<br/>内容：supported、no_visible_conflict、conflict、unverifiable"]
+  A["单个执行合同有效候选"] --> B["读取必需 SourceInventoryCheck 与 CriticalAttribute<br/>作用范围、验证要求、可采纳来源证据"]
+  B --> C["记录 coverage：complete、missing、failed<br/>源清单另有 enumeration_state<br/>属性另有内容状态，不让零实例自动通过"]
   C --> D{"异常只有软指标或专家风险<br/>而无可复核冲突？"}
   D -->|是| E["记录风险，不能直接拒绝<br/>检查对应图像与来源区域"]
   D -->|否| F["核对具体缺陷及引用证据"]
@@ -341,7 +360,7 @@ flowchart TD
   G -->|否| I{"有确认关键冲突、严重伪影<br/>或恢复明显不足？"}
   H --> I
   I -->|是| J["ineligible，给出触发条款与证据"]
-  I -->|否| K{"存在必需检查 missing 或 failed<br/>或关键争议未解决？"}
+  I -->|否| K{"必需源清单枚举不可确认<br/>或任一必需检查 missing、failed<br/>或关键争议未解决？"}
   K -->|是| L["undetermined，记录缺口"]
   K -->|否| M{"必需属性要求 verified_content？"}
   M -->|是| N{"每个必需 verified_content<br/>都有可采纳来源证据支持？"}
