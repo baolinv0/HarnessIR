@@ -1,14 +1,16 @@
 # HarnessIR Candidate Generation：工程专项实施规格 v1.1-CG
 
+> 2026-11-19 现行质量评估规格为 [QUALITY_EVALUATION_PLAN.md](./QUALITY_EVALUATION_PLAN.md)。J3 异构专业证据加 VLM 终审是研究主方案。本文 J1 默认、J2 专家、旧评价预算与旧实验评价条款仅保留为历史背景，冲突时以新规格为准。候选生成和执行合同仍有效。设计合同不是已实现或实测结论。
+
 > 日期：2026-11-17  
 > 评审修订：2026-11-17。与主规格的逐属性资格、ReviewPlan、完整请求冻结、独立几何及 E2 预注册合同同步。  
 > 状态：待实现的工程规格，不是已运行的代码或实测效果。  
 > 仓库：baolinv0/HarnessIR  
-> **唯一系统主规格**：[IMPLEMENTATION_PLAN_V1_1.md](./IMPLEMENTATION_PLAN_V1_1.md)  
+> **候选生成与执行主规格**：[IMPLEMENTATION_PLAN_V1_1.md](./IMPLEMENTATION_PLAN_V1_1.md)  
 > 历史基线：[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)  
 > 本文件范围：**只细化 Candidate Generation（C0 → 缺陷诊断 → 策略规划 → Prompt 改写 → CF/CT/CFT → 策略效果分析）**；保留主规格已经确定的 Judge、Evidence、运行协议和离线评价，不另起一套 Judge。
 >
-> **规范优先级**：当本文件与系统主规格发生冲突时，以系统主规格为准；工程师不得自行引入新候选数量、新模型或新的选择政策。发现冲突应登记为 issue，提交方案维护者处理。
+> **规范优先级**：质量评估、Judge 与相关实验以 QUALITY_EVALUATION_PLAN.md 为准，候选生成和执行以系统主规格为准。不得自行引入新候选数量、新生成模型或新的选择政策。
 
 ## 0. 工程师执行摘要（必须遵守）
 
@@ -377,6 +379,8 @@ pad/crop 记录坐标、填充模式和像素内容；ROI 坐标按 x1 或 x4 �
 
 ## 9. Evidence / Judge 的交接合同（不重写 Judge）
 
+> 本节涉及的旧 J1 默认、旧 J2 专家设定、评价预算和验收条款已由 QUALITY_EVALUATION_PLAN.md 覆盖。生成策略与执行约束保持有效，当前评价主方案为 J3。
+
 Candidate Generation 交付一个**冻结且完整的候选池**：
 
 - 原始 LQ 与每个候选 full-frame，以及同坐标关键人物/文字 ROI；
@@ -388,9 +392,11 @@ Candidate Generation 交付一个**冻结且完整的候选池**：
 - 人物合格不能覆盖关键号码未知。逐属性 AttributeAssessment 与评审 coverage 采用主规格 §8.3–§8.6；缺项不能自动 eligible；
 - 生成策略名、Prompt、seed、模型信息和 GT/Oracle 指标**不进入 Judge 请求**。
 
-**Judge 的唯一定义在 IMPLEMENTATION_PLAN_V1_1.md**：J0 视觉单 Judge；J1 视觉+Code 证据；J2 四视角+终审的消融；Code Hard Gate → VLM Eligibility → 合格集合 Listwise Best；无合格结果为 unresolved，best_available 仅供审计。主规格还规定逐属性资格、ReviewPlan 分包与调用总额、四专家、争议复核、信息准确性政策及人工 GT 终审，工程师须直接复用，不得在本专项计划中再发明不同选择逻辑。单包 J0/J1 总上限各 3 次，J2 总上限 7 次，均含预留复核和全 variant 最多一次格式修复；多包需 F0 预注册更大预算，实际调用逐次计费。重要覆盖不足不能仅靠标记后继续交付。
+**Judge 的现行定义在 QUALITY_EVALUATION_PLAN.md**。J3 是异构专业证据加单 VLM 终审的研究主方案，J0、J1、J2 保留原定义用于消融。只有 eligible 进入 listwise，无可交付结果则 unresolved。小脸跳过、证据可采纳性、单包和多包预算、专家 forward 及 unknown 恢复均复用新规格，不另发明选择逻辑。
 
 ## 10. 最小实验：覆盖率、策略响应和最终选择分开
+
+> 本节涉及的旧 J1 默认、旧 J2 专家设定、评价预算和验收条款已由 QUALITY_EVALUATION_PLAN.md 覆盖。生成策略与执行约束保持有效，当前评价主方案为 J3。
 
 ### 10.1 E1：等 4 图预算，比较策略候选池与 P0 多 seed
 
@@ -403,7 +409,7 @@ Candidate Generation 交付一个**冻结且完整的候选池**：
 
 每张图**最多 7 次实际图像生成**（共享 C0）；生成失败必须留在分母，记录 partial pool。seed schedule 在 F0 冻结，必要时跨 case 预注册轮换 F/T 与 seed 的对应位置，以减轻固定偏置。B 多出 Planner/Rewriter/Audit 成本，因此“4 张图预算相同”不等于总 token/时延相同。
 
-E1 主要比较 **Oracle Pass@4**（人工独立终审认定至少有一个合格结果）、Oracle Improvement@4、Content Error、总成本。在比较 A/B 最终系统质量时，**两组使用相同的 J1**；不要一边用 J0、一边用 J2，同时改变生成和选图两项变量。
+E1 主要比较 **Oracle Pass@4**（人工独立终审认定至少有一个合格结果）、Oracle Improvement@4、Content Error、总成本。在比较 A/B 最终系统质量时，**两组使用相同冻结的 J3**；不要一边用 J0、一边用 J2，同时改变生成和选图两项变量。
 
 ### 10.2 E2：同 seed 的 4 策略 × 2 seed 因子补充
 
@@ -467,6 +473,8 @@ Plan：
 
 ## 12. 工程任务、优先级与验收门槛
 
+> 本节涉及的旧 J1 默认、旧 J2 专家设定、评价预算和验收条款已由 QUALITY_EVALUATION_PLAN.md 覆盖。生成策略与执行约束保持有效，当前评价主方案为 J3。
+
 | 里程碑 | 开发工作 | DoD（需要提供的证据） |
 |---|---|---|
 | P0 基线与 preflight | 以 codex/evidence-sr-v02-20261111 的锁定 revision 为候选起点，复查远端 SHA/未提交 diff/模型环境，独立 worktree | baseline_record、可执行性/阻塞原因，旧入口不受影响 |
@@ -498,6 +506,8 @@ Plan：
 测试使用预制 mock VLM/Qwen 和少量**故意带错误的图像 fixture**；测试通过只是工程逻辑有效，不得声称模型恢复效果已提升。
 
 ## 13. 目录、交付及工程师运行说明
+
+> 本节涉及的旧 J1 默认、旧 J2 专家设定、评价预算和验收条款已由 QUALITY_EVALUATION_PLAN.md 覆盖。生成策略与执行约束保持有效，当前评价主方案为 J3。
 
 每 case 建议存储：
 
@@ -562,6 +572,8 @@ case001/
 **提交前验收**：提供可复现提交 SHA、config/task 样例、README/runbook、单测/集成/回归日志、1 图真实输出、10 图 Pilot、24 图 Held-out、E2 预注册清单及 hash、ReviewPlan 与逐属性覆盖、完整执行清单、所有失败及 unknown 记录、独立代码复审结果。J2 未运行时标 not_run；未做预算匹配对照时不得声称专家角色贡献。生产质量和研究收益需要真实模型与独立评价证据；工程完备不等于论文假设成立。
 
 ## 14. Research Decision：失败时如何决定后续方向
+
+> 本节涉及的旧 J1 默认、旧 J2 专家设定、评价预算和验收条款已由 QUALITY_EVALUATION_PLAN.md 覆盖。生成策略与执行约束保持有效，当前评价主方案为 J3。
 
 | 有证据的观测 | 首要解释 | 下一步实验，而不是立即增补的新模块 |
 |---|---|---|
